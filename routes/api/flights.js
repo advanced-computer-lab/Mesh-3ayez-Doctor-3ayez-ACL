@@ -6,6 +6,19 @@ const Flight = require('../../src/Models/Flight');
 
 // APIs here
 
+//Get all flights
+
+router.get("/getAllFlights", (req, res) => {
+    Flight.find()
+        .then(result => {
+            res.send(result);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+})
+
+//Create Flight
 
 router.post("/createFlight", (req, res) => {
     const data = req.body;
@@ -27,6 +40,8 @@ router.post("/createFlight", (req, res) => {
         }
         )
 });
+
+
 
 
 module.exports = router
