@@ -1,15 +1,15 @@
 const express = require("express");
 const mongoose = require('mongoose');
+const app= express();
+const port =5000||process.env.port;
 
 const MongoURI = require("../config/keys").MongoURI ;
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-.then(result =>console.log("MongoDB is now connected") )
-.catch(err => console.log(err));
+    .then(result => console.log("MongoDB is now connected"))
+    .catch(err => console.log(err));
 
-const Flight = require('./models/Flight');
 
-const app = express();
 
 // defining the middleware functions to parse the body of the requests
 app.use(express.json());
@@ -19,7 +19,6 @@ app.use(express.urlencoded({extended : false}));
 app.use('/api/flights', require('../routes/api/flights'))
 
 
-var Xmas95 = new Date('2022-12-13');
 
 // const dummyRec ={
 // From:"oo",
@@ -31,11 +30,6 @@ var Xmas95 = new Date('2022-12-13');
 // const ndummyRec=new Date(dummyRec.FLight_Date);
 //dummyRec.save();
 // dummyRec['FLight_Date']=new Date(dummyRec.FLight_Date);
-Flight.find(function(err,res)
-{
-    if(!err)
-        console.log(res);
-});
 
 
 const PORT = process.env.PORT | 8000;
