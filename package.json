@@ -18,6 +18,7 @@
   "homepage": "https://github.com/advanced-computer-lab/Mesh-3ayez-Doctor-3ayez-ACL#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^6.0.12"
+    "mongoose": "^6.0.12",
+    "mongose": "0.0.2-security"
   }
 }

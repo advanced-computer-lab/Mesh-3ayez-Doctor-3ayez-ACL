@@ -9,6 +9,16 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const Flight = require('./models/Flight');
 
+const app = express();
+
+// defining the middleware functions to parse the body of the requests
+app.use(express.json());
+app.use(express.urlencoded({extended : false}));
+
+// defining the path for all APIs regarding flights
+app.use('/api/flights', require('../routes/api/flights'))
+
+
 var Xmas95 = new Date('2022-12-13');
 
 // const dummyRec ={
@@ -26,3 +36,7 @@ Flight.find(function(err,res)
     if(!err)
         console.log(res);
 });
+
+
+const PORT = process.env.PORT | 8000;
+app.listen(PORT, console.log(`server running on port ${PORT}`));
