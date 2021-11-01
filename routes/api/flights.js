@@ -9,9 +9,10 @@ const Flight = require('../../src/Models/Flight');
 //Get all flights
 
 router.get("/getAllFlights", (req, res) => {
-    Flight.find()
+    Flight.find({})
         .then(result => {
-            res.send(result);
+            
+            res.json(result);
         })
         .catch(err => {
             console.log(err);
