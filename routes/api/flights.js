@@ -41,7 +41,7 @@ router.post("/createFlight", (req, res) => {
         }
         )
 });
-
+//Update Flight details
 router.put('/:id',function( req, res){
     let orgRec;
     Flight.find({"_id":req.params.id},function(err,response){
