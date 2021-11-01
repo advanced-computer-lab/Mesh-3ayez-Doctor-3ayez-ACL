@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.set('debug', true);
+
 const FlightSchema= new mongoose.Schema({
     From:{type:String,
     required:true
@@ -21,5 +23,5 @@ const FlightSchema= new mongoose.Schema({
 });
 
 
-const Flight = mongoose.model('Flight',FlightSchema);
+const Flight = mongoose.model('Flight',FlightSchema, 'Flight');
 module.exports = Flight;
