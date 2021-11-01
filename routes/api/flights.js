@@ -32,7 +32,7 @@ router.post("/createFlight", (req, res) => {
                     .catch(err => console.log("not created"));
 
             } else {
-                console.log("Already existing");
+                res.status(400).json({msg:`Flight already exists`});
             }
             res.json(data);
         })
