@@ -11,7 +11,7 @@ const Flight = require('../../src/Models/Flight');
 router.get("/", (req, res) => {
     Flight.find({})
         .then(result => {
-            
+            res.header("Access-Control-Allow-Origin", "*");         
             res.json(result);
         })
         .catch(err => {
@@ -41,6 +41,7 @@ router.post("/", (req, res) => {
         }
         )
 });
+
 //Update Flight details
 router.put('/:id',function( req, res){
     let orgRec;
