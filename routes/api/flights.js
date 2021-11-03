@@ -87,4 +87,10 @@ router.put('/search', (req,res)=>{
 });
 
 
+// delete flight
+router.delete('/:_id',(req,res) => {
+    Flight.findByIdAndRemove(req.params._id,req.body).then(flight=>res.json({msg:'flight entry deleted successfully'}))
+    .catch(err=>res.status(404).json({error:'No such a flight'}))
+})
+
 module.exports = router
