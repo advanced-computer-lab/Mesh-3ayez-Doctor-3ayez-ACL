@@ -8,7 +8,7 @@ const Flight = require('../../src/Models/Flight');
 
 //Get all flights
 
-router.get("/getAllFlights", (req, res) => {
+router.get("/", (req, res) => {
     Flight.find({})
         .then(result => {
             
@@ -21,7 +21,7 @@ router.get("/getAllFlights", (req, res) => {
 
 //Create Flight
 
-router.post("/createFlight", (req, res) => {
+router.post("/", (req, res) => {
     const data = req.body;
     Flight.find(data)
         .then(result => {
@@ -79,6 +79,11 @@ router.put('/:id',function( req, res){
    
   
 
+});
+
+
+router.put('/search', (req,res)=>{
+    
 });
 
 
