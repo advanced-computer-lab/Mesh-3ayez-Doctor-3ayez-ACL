@@ -1,0 +1,158 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import axios from "axios";
+import { Alert } from "@mui/material";
+import { color } from "@mui/system";
+import reactDom from "react-dom";
+export default function FlightForm() {
+    const [flightNumber, setFlightNumber] = useState("")
+    const [from, setFrom] = useState("")
+    const [to, setTo] = useState("")
+    const [arrivalTime, setArrivalTime] = useState("")
+    const [departureTime, setDepartureTime] = useState("")
+    const [economySeats, setESeats] = useState("")
+    const [businessSeats, setBSeats] = useState("")
+    const [firstSeats, setFSeats] = useState("")
+
+    const onSubmit = function () {
+        const data = {
+            "flight_number": flightNumber,
+            "from": from,
+            "to": to,
+            "arrival_time": arrivalTime,
+            "departure_time": departureTime,
+            "economy_seats": economySeats,
+            "business_seats": businessSeats,
+            "first_seats": firstSeats
+        }
+        if (!flightNumber) {
+            reactDom.render(<Alert severity="error">This is an error alert — check it out!</Alert>, document.getElementById("from")
+            );
+        }
+        axios.post("http://localhost:8000/api/flights", data)
+            .then()
+            .catch(err => console.log(err));
+
+    }
+    return (
+        <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+            height="400px"
+            width="600px"
+        >
+            <div>
+                <div>
+                    <div style={{ float: "left" }}>
+                        <TextField
+                            required
+                            onChange={function (e) {
+                                setFlightNumber(e.target.value);
+                            }
+
+                            }
+                            id="outlined-required"
+                            label="Flight number"
+                        />
+                    </div>
+                    <div id="from" >
+                    </div>
+                </div>
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="From"
+                    onChange={function (e) {
+                        setFrom(e.target.value);
+                    }
+                    }
+
+                />
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="To"
+                    onChange={function (e) {
+                        setTo(e.target.value);
+                    }}
+                />
+                <TextField
+                    required
+                    onChange={function (e) {
+                        setArrivalTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Arrival Time"
+                    placeholder="yyyy-mm-dd"
+
+                />
+                <TextField
+                    required
+                    onChange={function (e) {
+                        setDepartureTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Departure time"
+                    placeholder="yyyy-mm-dd"
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Economy seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setESeats(e.target.value);
+                    }
+                    }
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Business seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setBSeats(e.target.value);
+                    }
+                    }
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="First seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setFSeats(e.target.value);
+                    }
+
+                    }
+                />
+
+                <br />
+                <Button variant="contained" onClick={onSubmit} >Submit </Button>
+
+
+            </div>
+
+        </Box>
+    );
+}
