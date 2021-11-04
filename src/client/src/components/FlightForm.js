@@ -58,7 +58,7 @@ export default function FlightForm() {
             setErrorFirst("This field is required");
 
         if(flightNumber&&from&&to&&arrivalTime&&departureTime&&economySeats&&businessSeats&&firstSeats)
-        axios.post("http://localhost:8000/api/flights", data)
+            axios.post("http://localhost:8000/api/flights", data)
             .then()
             .catch(err => console.log(err));
         
