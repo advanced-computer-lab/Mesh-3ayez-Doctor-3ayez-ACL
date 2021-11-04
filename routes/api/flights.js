@@ -1,5 +1,5 @@
 const express = require('express')
-
+const moment = require('moment')
 const router = express.Router()
 
 const Flight = require('../../src/Models/Flight');
@@ -82,8 +82,53 @@ router.put('/:id',function( req, res){
 });
 
 
-router.put('/search', (req,res)=>{
+router.get('/search', async (req,res)=>{
+    const body = req.body;
+    var query = {}
+    if(body.flight_number)
+        {
+            if(Number.isInteger(body.flight_number))
+                query['flight_number'] = body.flight_number;
+        }
+    if(body.from)
+    {
+        const regex = new RegExp(body.from, 'i')
+        query['from'] = {$regex: regex};
+    }
+    if(body.to)
+    {
+        const regex = new RegExp(body.to, 'i')
+        query['to'] = {$regex: regex};
+    }
+
+    if(body.departure_time)
+    {
+        
+        if(moment(body.departure_time, "YYYY-MM-DD", true) )
+            {
+                
+                
+                query['departure_time'] = new Date(body.departure_time);
+            }
+    }
+
     
+    if(body.arrival_time)
+    {
+        
+        if(moment(body.arrival_time, "YYYY-MM-DD", true) )
+            {
+                
+                
+                query['arrival_time'] = new Date(body.arrival_time);
+            }
+    }
+
+    
+
+    
+     const ans = await Flight.find(query);
+     res.json(ans)
 });
 
 
