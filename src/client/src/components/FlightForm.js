@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react"
+import { useState } from "react"
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -7,10 +7,6 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 import { color } from "@mui/system";
 import reactDom from "react-dom";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateTimePicker from '@mui/lab/DateTimePicker';
-import { set } from "mongoose";
 
 export default function FlightForm() {
     const [flightNumber, setFlightNumber] = useState("")
@@ -21,26 +17,19 @@ export default function FlightForm() {
     const [economySeats, setESeats] = useState("")
     const [businessSeats, setBSeats] = useState("")
     const [firstSeats, setFSeats] = useState("")
-    const [errorFlight, setErrorFlight] = useState("");
-    const [errorFrom, setErrorFrom] = useState("");
-    const [errorTo, setErrorTo] = useState("");
-    const [errorArrival, setErrorArrival] = useState("");
-    const [errorDepature, setErrorDeparture] = useState("");
-    const [errorEconomy, setErrorEconomy] = useState("");
-    const [errorBusiness, setErrorBusiness] = useState("");
-    const [errorFirst, setErrorFirst] = useState("");
-    
-    const [u,setU]=useState([])
-    useEffect(() => {
-        axios.get("http://localhost:8000/api/flights")
-        .then(res=>{
-            setU(res.data);
-        })
-       
-    }, [])
-    console.log(u)
-    const onSubmit = function (e) {
-        e.preventDefault()
+    const [errorFlight,setErrorFlight]=useState("");
+    const [errorFrom,setErrorFrom]=useState("");
+    const [errorTo,setErrorTo]=useState("");
+    const [errorArrival,setErrorArrival]=useState("");
+    const [errorDepature,setErrorDeparture]=useState("");
+    const [errorEconomy,setErrorEconomy]=useState("");
+    const [errorBusiness,setErrorBusiness]=useState("");
+    const [errorFirst,setErrorFirst]=useState("");
+
+
+    const bool=false;
+
+    const onSubmit = function () {
         const data = {
             "flight_number": flightNumber,
             "from": from,
@@ -51,208 +40,170 @@ export default function FlightForm() {
             "business_seats": businessSeats,
             "first_seats": firstSeats
         }
-        if (!flightNumber)
+        if(!flightNumber)
             setErrorFlight("This field is required");
-        if (!from)
+        if(!from)
             setErrorFrom("This field is required");
-        if (!to)
+        if(!to)
             setErrorTo("This field is required");
-        if (!arrivalTime)
+        if(!arrivalTime)
             setErrorArrival("This field is required");
-        if (!departureTime)
+        if(!departureTime)
             setErrorDeparture("This field is required");
-        if (!economySeats)
+        if(!economySeats)
             setErrorEconomy("This field is required");
-        if (!businessSeats)
+        if(!businessSeats)
             setErrorBusiness("This field is required");
-        if (!firstSeats)
+        if(!firstSeats)
             setErrorFirst("This field is required");
 
-        if (flightNumber && from && to && arrivalTime && departureTime && economySeats && businessSeats && firstSeats)
-            axios.post("http://localhost:8000/api/flights", data,{ 'Content-Type': 'application/json' })
-                .then()
-                .catch(err => console.log(err));
-
-    }        
+        if(flightNumber&&from&&to&&arrivalTime&&departureTime&&economySeats&&businessSeats&&firstSeats)
+            axios.post("http://localhost:8000/api/flights", data)
+            .then()
+            .catch(err => console.log(err));
+        
+    }
     return (
         <div className="main">
             <Box
-                component="form"
-                sx={{
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-                width="400px"
-                margin="auto"
-            >
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+            height="400px"
+            width="400px"
+        >
+            <div>
                 <div>
-                    <div>
-                        <div >
-                            <TextField
-                                required
-                                onChange={function (e) {
-                                    setFlightNumber(e.target.value);
-                                    setErrorFlight(e.target.value ? "" : "This field is required");
-                                }
-                                }
-                                id="outlined-required"
-                                label="Flight number"
-                                error={errorFlight?true:false}
-                                helperText={errorFlight}
-                            />
-                        </div>
-                        <div id="from" >
-                        </div>
-                    </div>
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="From"
-                        onChange={function (e) {
-                            setFrom(e.target.value);
-                            setErrorFrom(e.target.value ? "" : "This field is required");
-                        }
-                        }
-                        error={errorFrom?true:false}
-                        helperText={errorFrom}
-
-                    />
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="To"
-                        onChange={function (e) {
-                            setTo(e.target.value);
-                            setErrorTo(e.target.value? "" : "This field is required")
-                        }}
-                        error={errorTo?true:false}
-                        helperText={errorTo}
-                    />
-                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            required  
+                    <div >
+                        <TextField
+                            required
+                            onChange={function (e) {
+                                setFlightNumber(e.target.value);
+                                setErrorFlight(e.target.value?"":"This field is required");
+                            }
+                            }
                             id="outlined-required"
-                            label="Arrival time"
-                            value={arrivalTime}
-                            onChange={(newValue) => {
-                                setArrivalTime(newValue);
-                                setErrorArrival(newValue ? "" : "This field is required");
-
-                            }}
-                            error={errorArrival?true:false}
-                            helperText={errorArrival}
+                            label="Flight number"
+                            error={errorFlight}
+                            helperText={errorFlight}
                         />
-                    </LocalizationProvider> */}
-                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField required id="outlined-required"  error={errorDepature==null?true:false}
-                            helperText={errorDepature} {...props} />}
-                            clearable
-                            label="Departure time"
-                            value={departureTime}
-                            onChange={function (newValue) {
-                                console.log(newValue);
-                                setDepartureTime(newValue);
-                                setErrorDeparture(newValue!=null? "" : "This field is required");
-                            }
-
-                            }
-                        />
-                    </LocalizationProvider> */}
-                    <TextField
-                        required
-                        onChange={function (e) {
-                            setArrivalTime(e.target.value);
-                            setErrorArrival(e.target.value ? "" : "This field is required");
-                        }
-
-                        }
-                        id="outlined-required"
-                        label="Arrival Time"
-                        type="datetime-local"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        error={errorArrival}
-                        helperText={errorArrival}
-
-                    /> 
-                    <TextField
-                        required
-                        onChange={function (e) {
-                            setDepartureTime(e.target.value);
-                            setErrorDeparture(e.target.value ? "" : "This field is required");
-                        }
-
-                        }
-                        id="outlined-required"
-                        label="Departure time"
-                        type="datetime-local"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        error={errorDepature}
-                        helperText={errorDepature}
-                    />
-                    <TextField
-                        required
-                        id="outlined-number"
-                        label="Economy seats"
-                        type="number"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={function (e) {
-                            setESeats(e.target.value);
-                            setErrorEconomy(e.target.value ? "" : "This field is required");
-                        }
-                        }
-                        error={errorEconomy?true:false}
-                        helperText={errorEconomy}
-
-                    />
-                    <TextField
-                        required
-                        id="outlined-number"
-                        label="Business seats"
-                        type="number"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={function (e) {
-                            setBSeats(e.target.value);
-                            setErrorBusiness(e.target.value ? "" : "This field is required");
-                        }
-                        }
-                        error={errorBusiness?true:false}
-                        helperText={errorBusiness}
-                    />
-                    <TextField
-                        required
-                        id="outlined-number"
-                        label="First seats"
-                        type="number"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={function (e) {
-                            setFSeats(e.target.value);
-                            setErrorFirst(e.target.value ? "" : "This field is required");
-                        }
-
-                        }
-                        error={errorFirst?true:false}
-                        helperText={errorFirst}
-                    />
-                    <br />
-                    <Button variant="contained" onClick={onSubmit} >Submit </Button>
-
-
+                    </div>
+                    <div id="from" >
+                    </div>
                 </div>
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="From"
+                    onChange={function (e) {
+                        setFrom(e.target.value);
+                        setErrorFrom(e.target.value?"":"This field is required");
+                    }
+                    }
+                    error={errorFrom}
+                    helperText={errorFrom}
 
-            </Box>
+                />
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="To"
+                    onChange={function (e) {
+                        setTo(e.target.value);
+                        setErrorTo(e.target.value?"":"This field is required")
+                    }}
+                    error={errorTo}
+                    helperText={errorTo}
+                />
+                <TextField
+                    required
+                    onChange={function (e) {
+                        setArrivalTime(e.target.value);
+                        setErrorArrival(e.target.value?"":"This field is required");
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Arrival Time"
+                    placeholder="yyyy-mm-dd"
+                    error={errorArrival}
+                    helperText={errorArrival}
+
+                />
+                <TextField
+                    required
+                    onChange={function (e) {
+                        setDepartureTime(e.target.value);
+                        setErrorDeparture(e.target.value?"":"This field is required");
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Departure time"
+                    placeholder="yyyy-mm-dd"
+                    error={errorDepature}
+                    helperText={errorDepature}
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Economy seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setESeats(e.target.value);
+                        setErrorEconomy(e.target.value?"":"This field is required");
+                    }
+                    }
+                    error={errorEconomy}
+                    helperText={errorEconomy}
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Business seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setBSeats(e.target.value);
+                        setErrorBusiness(e.target.value?"":"This field is required");
+                    }
+                    }
+                    error={errorBusiness}
+                    helperText={errorBusiness}
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="First seats"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setFSeats(e.target.value);
+                        setErrorFirst(e.target.value?"":"This field is required");
+                    }
+
+                    }
+                    error={errorFirst}
+                    helperText={errorFirst}
+                />
+                <br />
+                <Button variant="contained" onClick={onSubmit} >Submit </Button>
+
+
+            </div>
+
+        </Box>
         </div>
     );
 }
