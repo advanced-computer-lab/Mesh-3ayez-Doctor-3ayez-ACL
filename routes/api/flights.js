@@ -106,9 +106,11 @@ router.get('/search', async (req,res)=>{
         
         if(moment(body.departure_time, "YYYY-MM-DD", true) )
             {
-                
-                
-                query['departure_time'] = new Date(body.departure_time);
+                const d1 = new Date(body.departure_time);
+                const d2 = new Date(body.departure_time);
+                d2.setDate(d2.getDate()+1);
+             
+                query['departure_time'] = {$gte: d1 , $lt: d2};
             }
     }
 
@@ -118,9 +120,11 @@ router.get('/search', async (req,res)=>{
         
         if(moment(body.arrival_time, "YYYY-MM-DD", true) )
             {
+                const d1 = new Date(body.arrival_time);
+                const d2 = new Date(body.arrival_time);
+                d2.setDate(d2.getDate()+1);
                 
-                
-                query['arrival_time'] = new Date(body.arrival_time);
+                query['arrival_time'] = {$gte: d1 , $lt: d2};
             }
     }
 
