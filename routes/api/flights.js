@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
                 const newFlight = new Flight(data);
                 newFlight.save()
                     .then(console.log("created successfully"))
-                    .catch(err => console.log("not created"));
+                    .catch(res.status(400).json({msg:`Flight is not created`}));
 
             } else {
                 res.status(400).json({msg:`Flight already exists`});
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
             res.json(data);
         })
         .catch(err => {
-            res.status(400).json({msg:`Flight already exists`});
+           console.log(err);
         }
         )
 });
