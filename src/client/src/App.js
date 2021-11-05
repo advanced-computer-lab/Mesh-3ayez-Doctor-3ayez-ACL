@@ -1,11 +1,11 @@
 import './App.css';
-import Dashboard from './components/Dashboard';
 import FlightForm from './components/FlightForm';
-
+import SearchFlights from './components/SearchFlights';
 function App() {
   return (
     <div className="App">
-      {/* <FlightForm /> */}
+      <SearchFlights />
+       <FlightForm /> 
     </div>
   );
 }
