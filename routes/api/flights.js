@@ -3,6 +3,7 @@ const moment = require('moment')
 const router = express.Router()
 
 const Flight = require('../../src/Models/Flight');
+const User = require('../../src/Models/User');
 
 // APIs here
 
@@ -82,8 +83,9 @@ router.put('/:id',function( req, res){
 });
 
 
-router.get('/search', async (req,res)=>{
+router.post('/search', async (req,res)=>{
     const body = req.body;
+    console.log(req.body)
     var query = {}
     if(body.flight_number)
         {
