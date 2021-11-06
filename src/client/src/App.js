@@ -1,26 +1,16 @@
 import './App.css';
-import Dashboard from './components/Dashboard_components/Dashboard';
-import Navbar from './components/Navbar';
 import FlightForm from './components/FlightForm';
-import Grid from '@mui/material/Grid';
-import SearchFlights from './components/SearchFlights';
-
-
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+// import { Routes } from 'react-router';
+import AdminHome from './components/AdminHome';
 function App() {
   return (
-    <div className="App">
-      {/* <FlightForm /> */}
-      <Navbar />
-      <Grid container spacing={0}>         
+    <Router>
+      
+      <Route exact path="/" component={AdminHome} />
+      <Route path="/createFlight" component={FlightForm} />
 
-        <Grid item xs={9}> 
-        <Dashboard />
-        </Grid>
-        <Grid item xs={3}>
-          <SearchFlights/>
-        </Grid>
-      </Grid>
-    </div>
+    </Router>
   );
 
 

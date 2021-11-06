@@ -4,10 +4,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from "axios";
-import { Alert } from "@mui/material";
-import { color } from "@mui/system";
-import reactDom from "react-dom";
-import e from "cors";
+// import BasicAlert from "./BasicAlert";
 
 export default function FlightForm() {
     const [flightNumber, setFlightNumber] = useState("")
@@ -26,6 +23,7 @@ export default function FlightForm() {
     const [errorEconomy,setErrorEconomy]=useState("");
     const [errorBusiness,setErrorBusiness]=useState("");
     const [errorFirst,setErrorFirst]=useState("");
+    const [alert,setAlert]=useState(false);
 
 
     const bool=false;
@@ -61,8 +59,10 @@ export default function FlightForm() {
 
         if(flightNumber&&from&&to&&arrivalTime&&departureTime&&economySeats&&businessSeats&&firstSeats)
             axios.post("http://localhost:8000/api/flights", data,{"Content-Type":"application/json"})
-            .then()
-            .catch(err => console.log(err));
+            .then(
+                //res=>setAlert(res.data.message)
+                )
+            .catch(err=>console.log(err));
         
     }
     return (
@@ -210,7 +210,8 @@ export default function FlightForm() {
                 />
                 <br />
                 <Button variant="contained" onClick={onSubmit} >Submit </Button>
-
+                <br/>
+                {/* {alert&&<BasicAlert severity={"error"}/>} */}
 
             </div>
 

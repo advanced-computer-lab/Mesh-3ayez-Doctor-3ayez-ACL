@@ -23,10 +23,10 @@ code {
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 75%;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 20px rgb(212, 236, 221,0.1)
 }
 .styled-table thead tr {
-  background-color: #345B63;
+  background-color: #5885AF;
   color: #ffffff;
 }
 
@@ -35,19 +35,19 @@ code {
   padding: 12px 15px;
 }
 .styled-table tbody tr {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ffffff;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+  background-color: #D9E4EC ;
 }
 
 .styled-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+  border-bottom: 2px solid #B7CFDC;
 }
 .styled-table tbody tr.active-row {
   font-weight: bold;
-  color: #009879;
+  color: #B7CFDC;
 }
 
 .btn
@@ -63,7 +63,9 @@ font-size: 16px;
 .dlt{
   background-color:tomato;
   color: white;
+  
 }
+
 .edt{
   background-color:cornflowerblue;
   color: white;

@@ -6,9 +6,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+// import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import axios from 'axios';
 import { Box } from '@mui/system';
+import { Typography } from '@mui/material';
 
 export default function SearchFlights() {
     const [open, setOpen] = React.useState(true);
@@ -35,7 +36,7 @@ export default function SearchFlights() {
         "arrival_time": arrival_time,
         "departure_time": departure_time
     }
-    axios.get('localhost:8000/api/flights/search', data);
+    axios.post('http://localhost:8000/api/flights/search', data,{"Content-Type":"application/json"});
     setOpen(false);
   }
 
@@ -50,11 +51,14 @@ export default function SearchFlights() {
             }}
             noValidate
             autoComplete="off"
-            style={{background:"#D4ECDD"}}
-            height="100%"
+            style={{background:"#D9E4EC"}}
             width="100%"
             margin="auto"
         >
+          <br/>
+          <Typography variant="h5" gutterBottom component="div" color="#274472">
+            Find your flight!
+            </Typography>
           <TextField
             autoFocus
             margin="dense"
@@ -118,7 +122,8 @@ export default function SearchFlights() {
         
           {/* <Button onClick={handleClose}>Cancel</Button> */}
           <br/>
-          <Button onClick={handleSearch}>Search</Button>
+          <Button variant="contained" onClick={handleSearch}>Search</Button>
+          <br/>
         </Box>
     </div>
   );
