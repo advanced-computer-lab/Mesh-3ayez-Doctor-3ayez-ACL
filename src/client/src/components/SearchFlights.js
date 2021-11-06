@@ -36,7 +36,10 @@ export default function SearchFlights() {
         "arrival_time": arrival_time,
         "departure_time": departure_time
     }
-    axios.post('http://localhost:8000/api/flights/search', data,{"Content-Type":"application/json"});
+    console.log(data)
+    axios.post("http://localhost:8000/api/flights/search", data,{"Content-Type":"application/json"})
+            .then(result => console.log(result))
+            .catch(err => console.log(err));
     setOpen(false);
   }
 
