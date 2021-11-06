@@ -8,9 +8,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import axios from 'axios';
+import { Box } from '@mui/system';
 
 export default function SearchFlights() {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const [flight_no, setFlightNo] = React.useState('');
     const [from, setFrom] = React.useState('');
     const [to, setTo] = React.useState('');
@@ -42,15 +43,18 @@ export default function SearchFlights() {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Search</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter your search criteria:
-          </DialogContentText>
+      <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+            style={{background:"#D4ECDD"}}
+            height="100%"
+            width="100%"
+            margin="auto"
+        >
           <TextField
             autoFocus
             margin="dense"
@@ -111,12 +115,11 @@ export default function SearchFlights() {
             fullWidth
             variant="standard"
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+        
+          {/* <Button onClick={handleClose}>Cancel</Button> */}
+          <br/>
           <Button onClick={handleSearch}>Search</Button>
-        </DialogActions>
-      </Dialog>
+        </Box>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 import { color } from "@mui/system";
 import reactDom from "react-dom";
+import e from "cors";
 
 export default function FlightForm() {
     const [flightNumber, setFlightNumber] = useState("")
@@ -29,7 +30,8 @@ export default function FlightForm() {
 
     const bool=false;
 
-    const onSubmit = function () {
+    const onSubmit = function (e) {
+        e.preventDefault()
         const data = {
             "flight_number": flightNumber,
             "from": from,
@@ -73,7 +75,7 @@ export default function FlightForm() {
             noValidate
             autoComplete="off"
             width="400px"
-            style={{background:"cyan"}}
+            style={{background:"#D4ECDD"}}
             margin="auto"
         >
             <div>
