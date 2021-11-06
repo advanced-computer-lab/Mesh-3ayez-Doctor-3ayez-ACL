@@ -58,7 +58,7 @@ export default function FlightForm() {
             setErrorFirst("This field is required");
 
         if(flightNumber&&from&&to&&arrivalTime&&departureTime&&economySeats&&businessSeats&&firstSeats)
-            axios.post("http://localhost:8000/api/flights", data)
+            axios.post("http://localhost:8000/api/flights", data,{"Content-Type":"application/json"})
             .then()
             .catch(err => console.log(err));
         
@@ -72,8 +72,9 @@ export default function FlightForm() {
             }}
             noValidate
             autoComplete="off"
-            height="400px"
             width="400px"
+            style={{background:"cyan"}}
+            margin="auto"
         >
             <div>
                 <div>
@@ -128,6 +129,10 @@ export default function FlightForm() {
                     }
                     id="outlined-required"
                     label="Arrival Time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                     placeholder="yyyy-mm-dd"
                     error={errorArrival}
                     helperText={errorArrival}
@@ -143,6 +148,10 @@ export default function FlightForm() {
                     }
                     id="outlined-required"
                     label="Departure time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                     placeholder="yyyy-mm-dd"
                     error={errorDepature}
                     helperText={errorDepature}

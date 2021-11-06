@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+
 function TableRow(probs) {
   const id = probs.id;
   const row = (useState({
@@ -12,12 +14,7 @@ function TableRow(probs) {
     departure_time: probs.departure_time,
     arrival_time: probs.arrival_time
   }))[0];
-  
-
-  console.log(row)
-  // function deleteFlight() {
-  // }
-
+ 
 
   return (
     <tr id={id}>
@@ -30,9 +27,9 @@ function TableRow(probs) {
       <td>{row.departure_time}</td>
       <td>{row.arrival_time}</td>
       <td><button className="btn edt"> Edit</button></td>
-      <td><button onClick={()=>{
-        probs.delete_callback(id)
-      }} className="btn dlt">Delete</button></td>
+      <td><button onClick={()=>probs.delete_callback(id)}
+      className="btn dlt">Delete</button></td>
+     
     </tr>
   )
 }
