@@ -1,5 +1,12 @@
 import { useState } from "react";
-
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import axios from 'axios'
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 function TableRow(probs) {
   const id = probs.id;
@@ -14,22 +21,233 @@ function TableRow(probs) {
     departure_time: probs.departure_time,
     arrival_time: probs.arrival_time
   }))[0];
+  const [flight_no, setFlightNo] = useState(row.flight_number);
+  const [from, setFrom] = useState(row.from);
+  const [to, setTo] = useState(row.to);
+  const [economySeats, setESeats] = useState(row.economy_seats)
+  const [businessSeats, setBSeats] =useState(row.business_seats)
+  const [firstSeats, setFSeats] = useState(row.first_seats)
+  const [arrival_time, setArrivalTime] = useState(row.arrival_time);
+  const [departure_time, setDepartureTime] = useState(row.departure_time);
+  const [open2, setOpen2] = useState(false);
+
+
+
+
+
+  function handleClickOpen2 (){
+    setOpen2(true);
+    setFlightNo(flight_no);
+    setFrom(from);
+    setTo(to);
+    setArrivalTime(arrival_time);
+    setDepartureTime(departure_time);
+    setESeats(economySeats);
+    setBSeats(businessSeats);
+    setFSeats(firstSeats);
+};
+
+function handleCloseDone (){
+  setOpen2(false);
+};
+function handleClose2 (){
+  setFlightNo(row.flight_number);
+  setFrom(row.from);
+  setTo(row.to);
+  setArrivalTime(row.arrival_time);
+  setDepartureTime(row.departure_time);
+  setESeats(row.economy_seats);
+  setBSeats(row.business_seats);
+  setFSeats(row.first_seats);
+  setOpen2(false);
+};
+
+function foo2() {
+  const data = {
+      "flight_number": flight_no,
+      "from": from,
+      "to": to,
+      "arrival_time": arrival_time,
+      "departure_time": departure_time,
+      "economy_seats": economySeats,
+      "business_seats": businessSeats,
+      "first_seats": firstSeats
+  }
+  axios.put("http://localhost:8000/api/flights/" +id, data, { "Content-Type": "application/json" })
+      .then(result => {console.log(result);
+      handleCloseDone();
+    }
+      )
+      .catch(err => console.log(err));
+}
+
  
 
   return (
     <tr id={id}>
-      <td>{row.flight_number}</td>
-      <td>{row.from}</td>
-      <td>{row.to}</td>
-      <td>{row.economy_seats}</td>
-      <td>{row.business_seats}</td>
-      <td>{row.first_seats}</td>
-      <td>{row.departure_time}</td>
-      <td>{row.arrival_time}</td>
-      <td><button onClick={()=>probs.edit_callback(row)}className="btn edt"> Edit</button></td>
+      <td>{flight_no}</td>
+      <td>{from}</td>
+      <td>{to}</td>
+      <td>{economySeats}</td>
+      <td>{businessSeats}</td>
+      <td>{firstSeats}</td>
+      <td>{departure_time}</td>
+      <td>{arrival_time}</td>
+      <td><button onClick={handleClickOpen2}className="btn edt"> Edit</button></td>
       <td><button onClick={()=>probs.delete_callback(id)}
       className="btn dlt">Delete</button></td>
-     
+     <Dialog
+                open={open2}
+                onClose={handleClose2}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title" >
+                    {"Edit flight details!"}
+                </DialogTitle>
+                <DialogContent>
+                    <div>
+                        <div >
+                            <TextField
+                                onChange={function (e) {
+                                        setFlightNo(e.target.value);
+                                }}
+                                value={flight_no}
+                                id="outlined-number"
+                                label="Flight number"
+                            />
+                        </div>
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+                            id="outlined-number"
+                            label="From"
+                            value={from}
+                            onChange={function (e) {
+                                    setFrom(e.target.value);
+                            }
+                            }
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+                            id="outlined-number"
+                            label="To"
+                            value={to}
+                            onChange={function (e) {
+                                    setTo(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+                            onChange={function (e) {
+                                    setArrivalTime(e.target.value);
+                            }
+
+                            }
+                            id="outlined-number"
+                            label="Arrival Time"
+                            type="datetime-local"
+                            value={arrival_time}
+
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            placeholder="yyyy-mm-dd"
+
+
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+                            onChange={function (e) {
+                                if (e.target.value !== "")
+                                    setDepartureTime(e.target.value);
+                            }
+
+                            }
+                            id="outlined-number"
+                            label="Departure time"
+                            type="datetime-local"
+                            value={departure_time}
+
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            placeholder="yyyy-mm-dd"
+
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+
+                            id="outlined-number"
+                            label="Economy seats"
+                            type="number"
+                            value={economySeats}
+
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function (e) {
+                                    setESeats(e.target.value);
+                            }
+                            }
+
+
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+
+                            id="outlined-number"
+                            label="Business seats"
+                            type="number"
+                            value={businessSeats}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function (e) {
+                                    setBSeats(e.target.value);
+                            }
+                            }
+
+                        />
+                    </div>
+                    <br></br>
+                    <div>
+                        <TextField
+                            id="outlined-number"
+                            label="First seats"
+                            type="number"
+                            value={firstSeats}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function (e) {
+                                    setFSeats(e.target.value);
+                            }
+
+                            }
+
+                        />
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" onClick={() => foo2()} autoFocus>
+                        Done
+                    </Button>
+                    <Button variant="outlined" onClick={handleClose2}>Cancel</Button>
+
+                </DialogActions>
+            </Dialog>
     </tr>
   )
 }
