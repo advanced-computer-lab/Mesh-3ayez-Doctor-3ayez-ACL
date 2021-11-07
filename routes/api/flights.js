@@ -28,66 +28,73 @@ router.post("/", (req, res) => {
             if (result.length == 0) {
                 const newFlight = new Flight(data);
                 newFlight.save()
-                    .then(console.log("created successfully"))
-                    .catch(()=>{
+                    .then(() => {
                         res.setHeader("Content-Type", "application/json")
-                        res.status(400).json({msg:`Flight is not created`})
-                });
+
+                        res.status(200).json({ success: true, msg: `Flight created` })
+
+                    })
+                    .catch(() => {
+                        res.setHeader("Content-Type", "application/json")
+                        res.json({ success: false, msg: `Flight is not created` })
+                    });
 
             } else {
                 res.setHeader("Content-Type", "application/json")
-                res.json({msg:`Flight already exists`});
+                res.json({ success: false, msg: `Flight already exists` });
             }
-            res.json(data);
+            // res.json(result);
         })
         .catch(err => {
-           console.log(err);
+            console.log(err);
         }
         )
 });
 
 //Update Flight details
-router.put('/:id',function( req, res){
+router.put('/:id', function (req, res) {
     let orgRec;
-    Flight.find({"_id":req.params.id},function(err,response){
-            if(!err)
+    Flight.find({ "_id": req.params.id }, function (err, response) {
+        if (!err) {
+            orgRec = JSON.parse(JSON.stringify(response[0]));
+            const updatedRec = req.body;
+
+
+            const rec = {
+                "From": updatedRec.From ? updatedRec.From : orgRec.From,
+                "To": updatedRec.To ? updatedRec.To : orgRec.To,
+                "Flight_Date": updatedRec.Flight_Date ? updatedRec.Flight_Date : orgRec['Flight Date'],
+                "Cabin": updatedRec.Cabin ? updatedRec.Cabin : orgRec.Cabin,
+                "Available_Seats": updatedRec.Available_Seats ? updatedRec.Available_Seats : orgRec['Seats Available on Flight']
+            };
+            res.json(rec);
+            Flight.update({ _id: req.params.id },
                 {
-                    orgRec=JSON.parse(JSON.stringify(response[0]));
-                    const updatedRec = req.body;
-                 
-                    
-                    const rec={
-                        "From":updatedRec.From?updatedRec.From:orgRec.From,
-                        "To":updatedRec.To?updatedRec.To:orgRec.To,
-                        "Flight_Date":updatedRec.Flight_Date?updatedRec.Flight_Date:orgRec['Flight Date'],
-                        "Cabin":updatedRec.Cabin?updatedRec.Cabin:orgRec.Cabin,
-                        "Available_Seats":updatedRec.Available_Seats?updatedRec.Available_Seats:orgRec['Seats Available on Flight']
-                    };
-                    res.json(rec);
-                    Flight.update({_id:req.params.id},
-                        {$set:{From:rec.From,
-                               To:rec.To,
-                               "Flight Date":rec.Flight_Date,
-                               Cabin:rec.Cabin,
-                               'Seats Available on Flight':rec.Available_Seats
-                        }},
-                        function(err,N){
-                        if(!err)
-                            console.log(N);
-                    });
-                    
-                }
-            else
-                console.log(err);    
+                    $set: {
+                        From: rec.From,
+                        To: rec.To,
+                        "Flight Date": rec.Flight_Date,
+                        Cabin: rec.Cabin,
+                        'Seats Available on Flight': rec.Available_Seats
+                    }
+                },
+                function (err, N) {
+                    if (!err)
+                        console.log(N);
+                });
+
+        }
+        else
+            console.log(err);
     });
 
-   
-  
+
+
 
 });
 
 
-router.post('/search', async (req,res)=>{
+router.post('/search', async (req, res) => {
     const body = req.body;
     var query = {}
     if(body.flight_number)
@@ -101,12 +108,11 @@ router.post('/search', async (req,res)=>{
     if(body.from)
     {
         const regex = new RegExp(body.from, 'i')
-        query['from'] = {$regex: regex};
+        query['from'] = { $regex: regex };
     }
-    if(body.to)
-    {
+    if (body.to) {
         const regex = new RegExp(body.to, 'i')
-        query['to'] = {$regex: regex};
+        query['to'] = { $regex: regex };
     }
 
     if(body.departure_time)
@@ -141,18 +147,18 @@ router.post('/search', async (req,res)=>{
             }
     }
 
-    
 
-    
-     const ans = await Flight.find(query);
-     res.json(ans)
+
+
+    const ans = await Flight.find(query);
+    res.json(ans)
 });
 
 
 // delete flight
-router.delete('/:_id',(req,res) => {
-    Flight.findByIdAndRemove(req.params._id,req.body).then(flight=>res.json({msg:'flight entry deleted successfully'}))
-    .catch(err=>res.status(404).json({error:'No such a flight'}))
+router.delete('/:_id', (req, res) => {
+    Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
+        .catch(err => res.status(404).json({ error: 'No such a flight' }))
 })
 
 module.exports = router

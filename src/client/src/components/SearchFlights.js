@@ -133,7 +133,7 @@ export default function SearchFlights(probs) {
                 />
           {/* <Button onClick={handleClose}>Cancel</Button> */}
           <br/>
-          <Button variant="contained" onClick={handleSearch}>Search</Button>
+          <Button variant="contained" onClick={handleSearch}>Fliter flights</Button>
           <br/>
         </Box>
     </div>
