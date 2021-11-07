@@ -11,7 +11,7 @@ import axios from 'axios';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
-export default function SearchFlights() {
+export default function SearchFlights(probs) {
     const [open, setOpen] = React.useState(true);
     const [flight_no, setFlightNo] = React.useState('');
     const [from, setFrom] = React.useState('');
@@ -38,7 +38,7 @@ export default function SearchFlights() {
     }
     console.log(data)
     axios.post("http://localhost:8000/api/flights/search", data,{"Content-Type":"application/json"})
-            .then(result => console.log(result))
+            .then(result => probs.setRows(result.data))
             .catch(err => console.log(err));
     setOpen(false);
   }
@@ -99,33 +99,41 @@ export default function SearchFlights() {
             variant="standard"
           />
           <TextField
-            autoFocus
-            margin="dense"
-            id="arrivaltime"
-            label="Arrival Time"
-            type="text"
-            onChange = {function(e){
-                setArrivalTime(e.target.value)
-            }}
-            fullWidth
-            variant="standard"
-          />
+                    required
+                    onChange={function (e) {
+                        setArrivalTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Arrival Time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    placeholder="yyyy-mm-dd"
+                  
+
+                />
           <TextField
-            autoFocus
-            margin="dense"
-            id="departuretime"
-            label="Departure Time"
-            type="text"
-            onChange = {function(e){
-                setDepartureTime(e.target.value)
-            }}
-            fullWidth
-            variant="standard"
-          />
-        
+                    required
+                    onChange={function (e) {
+                        setDepartureTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Departure time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    placeholder="yyyy-mm-dd"
+                    
+                />
           {/* <Button onClick={handleClose}>Cancel</Button> */}
           <br/>
-          <Button variant="contained" onClick={handleSearch}>Search</Button>
+          <Button variant="contained" onClick={handleSearch}>Fliter flights</Button>
           <br/>
         </Box>
     </div>

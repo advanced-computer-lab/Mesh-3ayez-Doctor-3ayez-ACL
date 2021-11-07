@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from "axios";
-// import BasicAlert from "./BasicAlert";
+import BasicAlert from "./BasicAlert";
+import Stack from '@mui/material/Stack';
 
 export default function FlightForm() {
     const [flightNumber, setFlightNumber] = useState("")
@@ -15,18 +16,21 @@ export default function FlightForm() {
     const [economySeats, setESeats] = useState("")
     const [businessSeats, setBSeats] = useState("")
     const [firstSeats, setFSeats] = useState("")
-    const [errorFlight,setErrorFlight]=useState("");
-    const [errorFrom,setErrorFrom]=useState("");
-    const [errorTo,setErrorTo]=useState("");
-    const [errorArrival,setErrorArrival]=useState("");
-    const [errorDepature,setErrorDeparture]=useState("");
-    const [errorEconomy,setErrorEconomy]=useState("");
-    const [errorBusiness,setErrorBusiness]=useState("");
-    const [errorFirst,setErrorFirst]=useState("");
-    const [alert,setAlert]=useState(false);
+    const [errorFlight, setErrorFlight] = useState("");
+    const [errorFrom, setErrorFrom] = useState("");
+    const [errorTo, setErrorTo] = useState("");
+    const [errorArrival, setErrorArrival] = useState("");
+    const [errorDepature, setErrorDeparture] = useState("");
+    const [errorEconomy, setErrorEconomy] = useState("");
+    const [errorBusiness, setErrorBusiness] = useState("");
+    const [errorFirst, setErrorFirst] = useState("");
+    const [alert, setAlert] = useState(false);
+    const [succ, setSucc] = useState(false);
+    const [msg, setMsg] = useState("");
 
 
-    const bool=false;
+
+    const bool = false;
 
     const onSubmit = function (e) {
         e.preventDefault()
@@ -40,62 +44,70 @@ export default function FlightForm() {
             "business_seats": businessSeats,
             "first_seats": firstSeats
         }
-        if(!flightNumber)
+        if (!flightNumber)
             setErrorFlight("This field is required");
-        if(!from)
+        if (!from)
             setErrorFrom("This field is required");
-        if(!to)
+        if (!to)
             setErrorTo("This field is required");
-        if(!arrivalTime)
+        if (!arrivalTime)
             setErrorArrival("This field is required");
-        if(!departureTime)
+        if (!departureTime)
             setErrorDeparture("This field is required");
-        if(!economySeats)
+        if (!economySeats)
             setErrorEconomy("This field is required");
-        if(!businessSeats)
+        if (!businessSeats)
             setErrorBusiness("This field is required");
-        if(!firstSeats)
+        if (!firstSeats)
             setErrorFirst("This field is required");
 
-        if(flightNumber&&from&&to&&arrivalTime&&departureTime&&economySeats&&businessSeats&&firstSeats)
-            axios.post("http://localhost:8000/api/flights", data,{"Content-Type":"application/json"})
-            .then(
-                //res=>setAlert(res.data.message)
+        if (flightNumber && from && to && arrivalTime && departureTime && economySeats && businessSeats && firstSeats) {
+            axios.post("http://localhost:8000/api/flights", data, { "Content-Type": "application/json" })
+                .then(
+                    result => {
+                        setSucc(result.data.success);
+                        setMsg(result.data.msg)
+                        setAlert(true);
+
+                    }
+
                 )
-            .catch(err=>console.log(err));
-        
+                .catch(err => console.log(err));
+        }
+        setAlert(false);
+
     }
     return (
-        <div className="main">
+        <div style={{ background: "#D9E4EC" }}>
             <Box
-            component="form"
-            sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
-            }}
-            noValidate
-            autoComplete="off"
-            width="400px"
-            style={{background:"#D4ECDD"}}
-            margin="auto"
-        >
-            <div>
+                component="form"
+                sx={{
+                    '& .MuiTextField-root': { m: 1, width: '25ch' },
+                }}
+                noValidate
+                autoComplete="off"
+                width="400px"
+                height="100%"
+                style={{ background: "#D9E4EC" }}
+                margin="auto"
+            >
                 <div>
                     <div >
                         <TextField
                             required
                             onChange={function (e) {
                                 setFlightNumber(e.target.value);
-                                setErrorFlight(e.target.value?"":"This field is required");
+                                setErrorFlight(e.target.value ? "" : "This field is required");
                             }
                             }
                             id="outlined-required"
                             label="Flight number"
-                            error={errorFlight}
+                            type="number"
+                            error={errorFlight ? true : false}
                             helperText={errorFlight}
                         />
                     </div>
-                    <div id="from" >
-                    </div>
+
                 </div>
                 <TextField
                     required
@@ -103,10 +115,10 @@ export default function FlightForm() {
                     label="From"
                     onChange={function (e) {
                         setFrom(e.target.value);
-                        setErrorFrom(e.target.value?"":"This field is required");
+                        setErrorFrom(e.target.value ? "" : "This field is required");
                     }
                     }
-                    error={errorFrom}
+                    error={errorFrom ? true : false}
                     helperText={errorFrom}
 
                 />
@@ -116,16 +128,16 @@ export default function FlightForm() {
                     label="To"
                     onChange={function (e) {
                         setTo(e.target.value);
-                        setErrorTo(e.target.value?"":"This field is required")
+                        setErrorTo(e.target.value ? "" : "This field is required")
                     }}
-                    error={errorTo}
+                    error={errorTo ? true : false}
                     helperText={errorTo}
                 />
                 <TextField
                     required
                     onChange={function (e) {
                         setArrivalTime(e.target.value);
-                        setErrorArrival(e.target.value?"":"This field is required");
+                        setErrorArrival(e.target.value ? "" : "This field is required");
                     }
 
                     }
@@ -136,7 +148,7 @@ export default function FlightForm() {
                         shrink: true,
                     }}
                     placeholder="yyyy-mm-dd"
-                    error={errorArrival}
+                    error={errorArrival ? true : false}
                     helperText={errorArrival}
 
                 />
@@ -144,7 +156,7 @@ export default function FlightForm() {
                     required
                     onChange={function (e) {
                         setDepartureTime(e.target.value);
-                        setErrorDeparture(e.target.value?"":"This field is required");
+                        setErrorDeparture(e.target.value ? "" : "This field is required");
                     }
 
                     }
@@ -155,7 +167,7 @@ export default function FlightForm() {
                         shrink: true,
                     }}
                     placeholder="yyyy-mm-dd"
-                    error={errorDepature}
+                    error={errorDepature ? true : false}
                     helperText={errorDepature}
                 />
                 <TextField
@@ -168,10 +180,10 @@ export default function FlightForm() {
                     }}
                     onChange={function (e) {
                         setESeats(e.target.value);
-                        setErrorEconomy(e.target.value?"":"This field is required");
+                        setErrorEconomy(e.target.value ? "" : "This field is required");
                     }
                     }
-                    error={errorEconomy}
+                    error={errorEconomy ? true : false}
                     helperText={errorEconomy}
 
                 />
@@ -185,10 +197,10 @@ export default function FlightForm() {
                     }}
                     onChange={function (e) {
                         setBSeats(e.target.value);
-                        setErrorBusiness(e.target.value?"":"This field is required");
+                        setErrorBusiness(e.target.value ? "" : "This field is required");
                     }
                     }
-                    error={errorBusiness}
+                    error={errorBusiness ? true : false}
                     helperText={errorBusiness}
                 />
                 <TextField
@@ -201,21 +213,23 @@ export default function FlightForm() {
                     }}
                     onChange={function (e) {
                         setFSeats(e.target.value);
-                        setErrorFirst(e.target.value?"":"This field is required");
+                        setErrorFirst(e.target.value ? "" : "This field is required");
                     }
 
                     }
-                    error={errorFirst}
+                    error={errorFirst ? true : false}
                     helperText={errorFirst}
                 />
                 <br />
-                <Button variant="contained" onClick={onSubmit} >Submit </Button>
-                <br/>
-                {/* {alert&&<BasicAlert severity={"error"}/>} */}
+                <Stack direction="row" spacing={1} >
+                    <Button style={{textAlign:"center",marginLeft:"auto"}} variant="contained" onClick={onSubmit} href="/createFlight">Submit </Button>
+                    <Button style={{margin:"auto"}} variant="outlined" href="/">Back </Button>
+                </Stack>
+                <br />
 
-            </div>
+                {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
 
-        </Box>
+            </Box>
         </div>
     );
 }

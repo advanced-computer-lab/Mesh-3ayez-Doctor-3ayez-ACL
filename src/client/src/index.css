@@ -63,12 +63,16 @@ font-size: 16px;
 .dlt{
   background-color:tomato;
   color: white;
+  cursor: pointer;
+
   
 }
 
 .edt{
   background-color:cornflowerblue;
   color: white;
+  cursor: pointer;
+
 }
 .cd-popup {
   opacity: 0;
