@@ -89,7 +89,6 @@ router.put('/:id',function( req, res){
 
 router.post('/search', async (req,res)=>{
     const body = req.body;
-    console.log(req.body)
     var query = {}
     if(body.flight_number)
         {
@@ -113,11 +112,13 @@ router.post('/search', async (req,res)=>{
     if(body.departure_time)
     {
         
-        if(moment(body.departure_time, "YYYY-MM-DD", true) )
+        if(moment(body.departure_time, "YYYY-MM-DDTHH-MM", true) )
             {
                 const d1 = new Date(body.departure_time);
+                d1.setHours(d1.getHours()+2);
                 const d2 = new Date(body.departure_time);
-                d2.setDate(d2.getDate()+1);
+                d2.setHours(d2.getHours()+2);
+                d2.setMinutes(d2.getMinutes()+1);
              
                 query['departure_time'] = {$gte: d1 , $lt: d2};
             }
@@ -130,8 +131,11 @@ router.post('/search', async (req,res)=>{
         if(moment(body.arrival_time, "YYYY-MM-DD", true) )
             {
                 const d1 = new Date(body.arrival_time);
+                d1.setHours(d1.getHours()+2);
                 const d2 = new Date(body.arrival_time);
-                d2.setDate(d2.getDate()+1);
+                d2.setHours(d2.getHours()+2);
+                d2.setMinutes(d2.getMinutes()+1);
+             
                 
                 query['arrival_time'] = {$gte: d1 , $lt: d2};
             }

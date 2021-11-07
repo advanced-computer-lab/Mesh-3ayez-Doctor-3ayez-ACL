@@ -99,30 +99,38 @@ export default function SearchFlights(probs) {
             variant="standard"
           />
           <TextField
-            autoFocus
-            margin="dense"
-            id="arrivaltime"
-            label="Arrival Time"
-            type="text"
-            onChange = {function(e){
-                setArrivalTime(e.target.value)
-            }}
-            fullWidth
-            variant="standard"
-          />
+                    required
+                    onChange={function (e) {
+                        setArrivalTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Arrival Time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    placeholder="yyyy-mm-dd"
+                  
+
+                />
           <TextField
-            autoFocus
-            margin="dense"
-            id="departuretime"
-            label="Departure Time"
-            type="text"
-            onChange = {function(e){
-                setDepartureTime(e.target.value)
-            }}
-            fullWidth
-            variant="standard"
-          />
-        
+                    required
+                    onChange={function (e) {
+                        setDepartureTime(e.target.value);
+                    }
+
+                    }
+                    id="outlined-required"
+                    label="Departure time"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    placeholder="yyyy-mm-dd"
+                    
+                />
           {/* <Button onClick={handleClose}>Cancel</Button> */}
           <br/>
           <Button variant="contained" onClick={handleSearch}>Search</Button>
