@@ -53,7 +53,7 @@ router.post("/", (req, res) => {
 
 //Update Flight details
 
-router.put('/:_id',function( req, res){
+router.put('/:_id',async (req, res) =>{
  
     console.log(req.body);
     const body = req.body;
@@ -108,12 +108,38 @@ router.put('/:_id',function( req, res){
             }
     }
 
-    
+    if(body.economy_seats)
+    {
+        if(!isNaN(body.economy_seats))
+               {
+                    query['economy_seats'] = body.economy_seats;
+               } 
+    }
 
+
+    if(body.business_seats)
+    {
+        if(!isNaN(body.business_seats))
+               {
+                    query['business_seats'] = body.business_seats;
+               } 
+    }
+    
+    if(body.first_seats)
+    {
+        if(!isNaN(body.first_seats))
+               {
+                    query['first_seats'] = body.first_seats;
+               } 
+    }
         
     
         
-        Flight.findByIdAndUpdate(req.params._id, query).then((result)=>(res.json({msg:"Updated Successfully"})))
+        Flight.findByIdAndUpdate(req.params._id, query).then(async (result)=>{
+            const row = await Flight.find({'_id': req.params._id});
+            res.json(row);
+            
+        })
         .catch((err)=>(res.json({msg:"Not Found"})));
 
 
