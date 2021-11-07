@@ -10,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 function TableRow(probs) {
   const id = probs.id;
-  const row = (useState({
+  const [row,setRow] = useState({
     id: probs.id,
     flight_number: probs.flight_number,
     from: probs.from,
@@ -20,7 +20,7 @@ function TableRow(probs) {
     first_seats: probs.first_seats,
     departure_time: probs.departure_time,
     arrival_time: probs.arrival_time
-  }))[0];
+  });
   const [flight_no, setFlightNo] = useState(row.flight_number);
   const [from, setFrom] = useState(row.from);
   const [to, setTo] = useState(row.to);
@@ -48,6 +48,15 @@ function TableRow(probs) {
 };
 
 function handleCloseDone (){
+  setFlightNo(flight_no?flight_no:row.flight_number);
+  setFrom(from?from:row.from);
+  setTo(to? to: row.to);
+  setArrivalTime(arrival_time? arrival_time: row.arrival_time);
+  setDepartureTime(departure_time? departure_time: row.departure_time);
+  setESeats(economySeats? economySeats: row.economy_seats);
+  setBSeats(businessSeats? businessSeats: row.business_seats);
+  setFSeats(firstSeats? firstSeats: row.first_seats);
+
   setOpen2(false);
 };
 function handleClose2 (){
@@ -75,6 +84,7 @@ function foo2() {
   }
   axios.put("http://localhost:8000/api/flights/" +id, data, { "Content-Type": "application/json" })
       .then(result => {console.log(result);
+        setRow(result.data[0]);
       handleCloseDone();
     }
       )
