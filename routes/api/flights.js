@@ -52,6 +52,7 @@ router.post("/", (req, res) => {
 });
 
 //Update Flight details
+<<<<<<< Updated upstream
 router.put('/:id', function (req, res) {
     let orgRec;
     Flight.find({ "_id": req.params.id }, function (err, response) {
@@ -90,6 +91,70 @@ router.put('/:id', function (req, res) {
 
 
 
+=======
+router.put('/:_id',function( req, res){
+ 
+    console.log(req.body);
+    const body = req.body;
+    var query = {}
+    if(body.flight_number)
+        {
+            if(!isNaN(body.flight_number))
+               {
+                    console.log("here");    
+                    query['flight_number'] = body.flight_number;
+               } 
+        }
+    if(body.from)
+    {
+        query['from'] = body.from;
+    }
+    if(body.to)
+    {
+        query['to'] = body.to;
+    }
+
+    if(body.departure_time)
+    {
+        
+        if(moment(body.departure_time, "YYYY-MM-DDTHH:MM", true) )
+            {
+                const d1 = new Date(body.departure_time);
+                d1.setHours(d1.getHours()+2);
+                
+             
+                query['departure_time'] = d1;
+            }
+    }
+
+    
+    if(body.arrival_time)
+    {
+
+        console.log("here");
+        
+        if(moment(body.arrival_time, "YYYY-MM-DDTHH:MM", true) )
+            {
+
+                
+                const d1 = new Date(body.arrival_time);
+
+                d1.setHours(d1.getHours()+2);
+                console.log(d1);
+             
+                
+                query['arrival_time'] = d1;
+            }
+    }
+
+    
+
+        
+    
+        
+        Flight.findByIdAndUpdate(req.params._id, query).then((result)=>(res.json({msg:"Updated Successfully"})))
+        .catch((err)=>(res.json({msg:"Not Found"})));
+>>>>>>> Stashed changes
 
 });
 
