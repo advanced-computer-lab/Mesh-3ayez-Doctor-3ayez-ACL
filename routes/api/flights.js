@@ -52,46 +52,7 @@ router.post("/", (req, res) => {
 });
 
 //Update Flight details
-<<<<<<< Updated upstream
-router.put('/:id', function (req, res) {
-    let orgRec;
-    Flight.find({ "_id": req.params.id }, function (err, response) {
-        if (!err) {
-            orgRec = JSON.parse(JSON.stringify(response[0]));
-            const updatedRec = req.body;
 
-
-            const rec = {
-                "From": updatedRec.From ? updatedRec.From : orgRec.From,
-                "To": updatedRec.To ? updatedRec.To : orgRec.To,
-                "Flight_Date": updatedRec.Flight_Date ? updatedRec.Flight_Date : orgRec['Flight Date'],
-                "Cabin": updatedRec.Cabin ? updatedRec.Cabin : orgRec.Cabin,
-                "Available_Seats": updatedRec.Available_Seats ? updatedRec.Available_Seats : orgRec['Seats Available on Flight']
-            };
-            res.json(rec);
-            Flight.update({ _id: req.params.id },
-                {
-                    $set: {
-                        From: rec.From,
-                        To: rec.To,
-                        "Flight Date": rec.Flight_Date,
-                        Cabin: rec.Cabin,
-                        'Seats Available on Flight': rec.Available_Seats
-                    }
-                },
-                function (err, N) {
-                    if (!err)
-                        console.log(N);
-                });
-
-        }
-        else
-            console.log(err);
-    });
-
-
-
-=======
 router.put('/:_id',function( req, res){
  
     console.log(req.body);
@@ -154,7 +115,7 @@ router.put('/:_id',function( req, res){
         
         Flight.findByIdAndUpdate(req.params._id, query).then((result)=>(res.json({msg:"Updated Successfully"})))
         .catch((err)=>(res.json({msg:"Not Found"})));
->>>>>>> Stashed changes
+
 
 });
 
