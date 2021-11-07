@@ -52,7 +52,7 @@ function Dashboard(probs) {
         setFlightNo(row.flight_number);
         setFrom(row.from);
         setTo(row.to);
-        setArrivalTime(new Date(row.arrival_time));
+        setArrivalTime(row.arrival_time);
         console.log(row.arrival_time)
         setDepartureTime(row.departure_time);
         setESeats(row.economy_seats);
@@ -80,7 +80,10 @@ function Dashboard(probs) {
             .then(result => console.log(result))
             .catch(err => console.log(err));
             updateRows(rows);
+            window.location.reload();
         handleClose2();
+        window.location.reload();
+
     }
     return (
         <div>
@@ -201,7 +204,6 @@ function Dashboard(probs) {
                     <div>
                         <TextField
                             onChange={function (e) {
-                                if (e.target.value !== "")
                                     setDepartureTime(e.target.value);
                             }
 
