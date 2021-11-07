@@ -108,8 +108,30 @@ router.put('/:_id',function( req, res){
             }
     }
 
-    
+    if(body.economy_seats)
+    {
+        if(!isNaN(body.economy_seats))
+               {
+                    query['economy_seats'] = body.economy_seats;
+               } 
+    }
 
+
+    if(body.business_seats)
+    {
+        if(!isNaN(body.business_seats))
+               {
+                    query['business_seats'] = body.business_seats;
+               } 
+    }
+    
+    if(body.first_seats)
+    {
+        if(!isNaN(body.first_seats))
+               {
+                    query['first_seats'] = body.businesfirst_seats;
+               } 
+    }
         
     
         
