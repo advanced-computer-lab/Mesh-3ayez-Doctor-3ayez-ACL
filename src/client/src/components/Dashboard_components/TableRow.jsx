@@ -26,7 +26,7 @@ function TableRow(probs) {
       <td>{row.first_seats}</td>
       <td>{row.departure_time}</td>
       <td>{row.arrival_time}</td>
-      <td><button className="btn edt"> Edit</button></td>
+      <td><button onClick={()=>probs.edit_callback(row)}className="btn edt"> Edit</button></td>
       <td><button onClick={()=>probs.delete_callback(id)}
       className="btn dlt">Delete</button></td>
      
