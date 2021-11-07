@@ -129,7 +129,7 @@ router.put('/:_id',function( req, res){
     {
         if(!isNaN(body.first_seats))
                {
-                    query['first_seats'] = body.businesfirst_seats;
+                    query['first_seats'] = body.first_seats;
                } 
     }
         
