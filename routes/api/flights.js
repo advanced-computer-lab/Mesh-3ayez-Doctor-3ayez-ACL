@@ -128,7 +128,7 @@ router.post('/search', async (req,res)=>{
     if(body.arrival_time)
     {
         
-        if(moment(body.arrival_time, "YYYY-MM-DD", true) )
+        if(moment(body.arrival_time, "YYYY-MM-DDTHH-MM", true) )
             {
                 const d1 = new Date(body.arrival_time);
                 d1.setHours(d1.getHours()+2);
