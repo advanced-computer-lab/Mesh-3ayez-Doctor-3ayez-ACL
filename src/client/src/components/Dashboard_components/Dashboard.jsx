@@ -9,19 +9,16 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function Dashboard() {
+function Dashboard(probs) {
+
     const [open, setOpen] = React.useState(false);
     const [fid, setfid] = React.useState("");
-    const [rows, updateRows] = useState([]);
+    const [rows, updateRows] = useState(probs.getRows);
     useEffect(() => {
-        axios.get("http://localhost:8000/api/flights/")
-            .then(res => {
+        
+        updateRows(probs.getRows);
 
-                updateRows(res.data);
-                //   console.log(res.data);
-            })
-
-    }, []);
+    }, [probs.getRows]);
      
     const handleClickOpen = (id) => {
         setOpen(true);
@@ -37,6 +34,7 @@ function Dashboard() {
         axios.delete("http://localhost:8000/api/flights/" + id);
         handleClose();
     }
+    console.log(rows);
     return (
         <div>
             <table className="styled-table">

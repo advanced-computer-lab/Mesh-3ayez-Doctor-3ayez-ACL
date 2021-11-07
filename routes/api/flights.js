@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
 
             } else {
                 res.setHeader("Content-Type", "application/json")
-                res.status(400).json({msg:`Flight already exists`});
+                res.json({msg:`Flight already exists`});
             }
             res.json(data);
         })
@@ -93,8 +93,11 @@ router.post('/search', async (req,res)=>{
     var query = {}
     if(body.flight_number)
         {
-            if(Number.isInteger(body.flight_number))
-                query['flight_number'] = body.flight_number;
+            if(!isNaN(body.flight_number))
+               {
+                    console.log("here");    
+                    query['flight_number'] = body.flight_number;
+               } 
         }
     if(body.from)
     {

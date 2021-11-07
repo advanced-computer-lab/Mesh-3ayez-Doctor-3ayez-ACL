@@ -11,7 +11,7 @@ import axios from 'axios';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
-export default function SearchFlights() {
+export default function SearchFlights(probs) {
     const [open, setOpen] = React.useState(true);
     const [flight_no, setFlightNo] = React.useState('');
     const [from, setFrom] = React.useState('');
@@ -38,7 +38,7 @@ export default function SearchFlights() {
     }
     console.log(data)
     axios.post("http://localhost:8000/api/flights/search", data,{"Content-Type":"application/json"})
-            .then(result => console.log(result))
+            .then(result => probs.setRows(result.data))
             .catch(err => console.log(err));
     setOpen(false);
   }
