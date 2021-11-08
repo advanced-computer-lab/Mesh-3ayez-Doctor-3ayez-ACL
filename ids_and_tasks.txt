@@ -1,0 +1,25 @@
+Youssed Ziad 46-13158
+Nesma Harraz 46-8464
+Abdallah Elsayed 46-17899
+Omar Gamal 46-17144
+Nada Abdo 46-18492
+
+Tasks:
+
+Backend:
+
+Get All Flights: Youssef
+Update Flights: Omar
+Create Flights: Nada
+Delete Flights: Nesma
+Search Flights: Abdullah
+
+Frontend:
+
+Create Flight: Nada
+Get All Flights: Omar Gamal
+Search Flights: Youssef & Abdullah
+Delete Flights: Omar & Nada
+Update Flights: Nesma & Nada
+
+Database: Team Task
