@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TableHead from './TableHead';
+import TextField from '@mui/material/TextField';
 import TableRow from "./TableRow";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -12,7 +13,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 function Dashboard(probs) {
 
     const [open, setOpen] = React.useState(false);
+
     const [fid, setfid] = React.useState("");
+    const [uid, setU] = React.useState({});
+
     const [rows, updateRows] = useState(probs.getRows);
     useEffect(() => {
         
@@ -34,7 +38,8 @@ function Dashboard(probs) {
         axios.delete("http://localhost:8000/api/flights/" + id);
         handleClose();
     }
-    console.log(rows);
+
+   
     return (
         <div>
             <table className="styled-table">
@@ -76,14 +81,12 @@ function Dashboard(probs) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" onClick={()=>foo(fid)} autoFocus>
+                    <Button variant="contained" onClick={() => foo(fid)} autoFocus>
                         Delete
                     </Button>
                     <Button variant="outlined" onClick={handleClose}>Cancel</Button>
-
                 </DialogActions>
             </Dialog>
-
 
         </div>
     );

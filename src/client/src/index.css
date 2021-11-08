@@ -63,12 +63,16 @@ font-size: 16px;
 .dlt{
   background-color:tomato;
   color: white;
+  cursor: pointer;
+
   
 }
 
 .edt{
   background-color:cornflowerblue;
   color: white;
+  cursor: pointer;
+
 }
 .cd-popup {
   opacity: 0;
@@ -90,4 +94,9 @@ font-size: 16px;
 
 .is-visible .cd-popup-container {
   transform: translateY(0);
+}
+
+.css-w4z10b-MuiStack-root{
+  margin: auto;
+  width: 50%;
 }

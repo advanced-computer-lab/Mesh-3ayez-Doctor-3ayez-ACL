@@ -9,7 +9,8 @@ const User = require('../../src/Models/User');
 
 //Get all flights
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+    if(await checkAdmin()){
     Flight.find({})
         .then(result => {
             res.json(result);
@@ -17,11 +18,18 @@ router.get("/", (req, res) => {
         .catch(err => {
             console.log(err);
         });
+    }
+
+    else
+    {
+        res.json({msg: 'you are not authorized to view this content'})
+    }
 })
 
 //Create Flight
 
-router.post("/", (req, res) => {
+router.post("/", async(req, res) => {
+    if(await checkAdmin()){
     const data = req.body;
     Flight.find(data)
         .then(result => {
@@ -49,52 +57,114 @@ router.post("/", (req, res) => {
             console.log(err);
         }
         )
+    }
+    else
+    {
+        res.json({msg: "you are not authorized to add a new flight"});
+    }
 });
 
 //Update Flight details
-router.put('/:id', function (req, res) {
-    let orgRec;
-    Flight.find({ "_id": req.params.id }, function (err, response) {
-        if (!err) {
-            orgRec = JSON.parse(JSON.stringify(response[0]));
-            const updatedRec = req.body;
 
-
-            const rec = {
-                "From": updatedRec.From ? updatedRec.From : orgRec.From,
-                "To": updatedRec.To ? updatedRec.To : orgRec.To,
-                "Flight_Date": updatedRec.Flight_Date ? updatedRec.Flight_Date : orgRec['Flight Date'],
-                "Cabin": updatedRec.Cabin ? updatedRec.Cabin : orgRec.Cabin,
-                "Available_Seats": updatedRec.Available_Seats ? updatedRec.Available_Seats : orgRec['Seats Available on Flight']
-            };
-            res.json(rec);
-            Flight.update({ _id: req.params.id },
-                {
-                    $set: {
-                        From: rec.From,
-                        To: rec.To,
-                        "Flight Date": rec.Flight_Date,
-                        Cabin: rec.Cabin,
-                        'Seats Available on Flight': rec.Available_Seats
-                    }
-                },
-                function (err, N) {
-                    if (!err)
-                        console.log(N);
-                });
-
+router.put('/:_id',async (req, res) =>{
+ 
+    if(await checkAdmin()){
+    const body = req.body;
+    var query = {}
+    if(body.flight_number)
+        {
+            if(!isNaN(body.flight_number))
+               {
+                    query['flight_number'] = body.flight_number;
+               } 
         }
-        else
-            console.log(err);
-    });
+    if(body.from)
+    {
+        query['from'] = body.from;
+    }
+    if(body.to)
+    {
+        query['to'] = body.to;
+    }
+
+    if(body.departure_time)
+    {
+        
+        if(moment(body.departure_time, "YYYY-MM-DDTHH:MM", true) )
+            {
+                const d1 = new Date(body.departure_time);
+                d1.setHours(d1.getHours()+2);
+                
+             
+                query['departure_time'] = d1;
+            }
+    }
+
+    
+    if(body.arrival_time)
+    {
+
+        console.log("here");
+        
+        if(moment(body.arrival_time, "YYYY-MM-DDTHH:MM", true) )
+            {
+
+                
+                const d1 = new Date(body.arrival_time);
+
+                d1.setHours(d1.getHours()+2);
+                console.log(d1);
+             
+                
+                query['arrival_time'] = d1;
+            }
+    }
+
+    if(body.economy_seats)
+    {
+        if(!isNaN(body.economy_seats))
+               {
+                    query['economy_seats'] = body.economy_seats;
+               } 
+    }
 
 
-
+    if(body.business_seats)
+    {
+        if(!isNaN(body.business_seats))
+               {
+                    query['business_seats'] = body.business_seats;
+               } 
+    }
+    
+    if(body.first_seats)
+    {
+        if(!isNaN(body.first_seats))
+               {
+                    query['first_seats'] = body.first_seats;
+               } 
+    }
+        
+    
+        
+        Flight.findByIdAndUpdate(req.params._id, query).then(async (result)=>{
+            const row = await Flight.find({'_id': req.params._id});
+            res.json(row);
+            
+        })
+        .catch((err)=>(res.json({msg:"Not Found"})));
+    }
+    else
+    {
+        res.json({msg:'you are not authorized to update any flights'});
+    }
 
 });
 
 
 router.post('/search', async (req, res) => {
+
+    if(await checkAdmin()){
     const body = req.body;
     var query = {}
     if(body.flight_number)
@@ -152,13 +222,29 @@ router.post('/search', async (req, res) => {
 
     const ans = await Flight.find(query);
     res.json(ans)
+}
+else{
+    res.json({msg: 'you are not authorized to search for flights'});
+}
 });
 
 
 // delete flight
-router.delete('/:_id', (req, res) => {
+router.delete('/:_id', async(req, res) => {
+    if(await checkAdmin()){
     Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
         .catch(err => res.status(404).json({ error: 'No such a flight' }))
+}
+else{
+    res.json({msg: 'you are not authorized to delete any flights'});
+}
 })
+
+
+async function checkAdmin(){
+    const res = await User.find({type:'admin'});
+    
+    return res.length>0;
+}
 
 module.exports = router
