@@ -1,0 +1,102 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+#root{
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+.styled-table {
+  border-collapse: collapse;
+  margin: auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 75%;
+  box-shadow: 0 0 20px rgb(212, 236, 221,0.1)
+}
+.styled-table thead tr {
+  background-color: #5885AF;
+  color: #ffffff;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #ffffff;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #D9E4EC ;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #B7CFDC;
+}
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #B7CFDC;
+}
+
+.btn
+{
+border: none;
+border-radius: 4px;
+padding: 5px 10px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+}
+.dlt{
+  background-color:tomato;
+  color: white;
+  cursor: pointer;
+
+  
+}
+
+.edt{
+  background-color:cornflowerblue;
+  color: white;
+  cursor: pointer;
+
+}
+.cd-popup {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s 0s, visibility 0s 0.3s;
+}
+
+.cd-popup.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s 0s, visibility 0s 0s;
+}
+
+.cd-popup-container {
+  transform: translateY(-40px);
+  transition-property: transform;
+  transition-duration: 0.3s;
+}
+
+.is-visible .cd-popup-container {
+  transform: translateY(0);
+}
+
+.css-w4z10b-MuiStack-root{
+  margin: auto;
+  width: 50%;
+}
