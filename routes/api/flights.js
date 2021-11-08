@@ -9,7 +9,8 @@ const User = require('../../src/Models/User');
 
 //Get all flights
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+    if(await checkAdmin()){
     Flight.find({})
         .then(result => {
             res.json(result);
@@ -17,11 +18,18 @@ router.get("/", (req, res) => {
         .catch(err => {
             console.log(err);
         });
+    }
+
+    else
+    {
+        res.json({msg: 'you are not authorized to view this content'})
+    }
 })
 
 //Create Flight
 
-router.post("/", (req, res) => {
+router.post("/", async(req, res) => {
+    if(await checkAdmin()){
     const data = req.body;
     Flight.find(data)
         .then(result => {
@@ -49,20 +57,24 @@ router.post("/", (req, res) => {
             console.log(err);
         }
         )
+    }
+    else
+    {
+        res.json({msg: "you are not authorized to add a new flight"});
+    }
 });
 
 //Update Flight details
 
 router.put('/:_id',async (req, res) =>{
  
-    console.log(req.body);
+    if(await checkAdmin()){
     const body = req.body;
     var query = {}
     if(body.flight_number)
         {
             if(!isNaN(body.flight_number))
                {
-                    console.log("here");    
                     query['flight_number'] = body.flight_number;
                } 
         }
@@ -141,12 +153,18 @@ router.put('/:_id',async (req, res) =>{
             
         })
         .catch((err)=>(res.json({msg:"Not Found"})));
-
+    }
+    else
+    {
+        res.json({msg:'you are not authorized to update any flights'});
+    }
 
 });
 
 
 router.post('/search', async (req, res) => {
+
+    if(await checkAdmin()){
     const body = req.body;
     var query = {}
     if(body.flight_number)
@@ -204,13 +222,29 @@ router.post('/search', async (req, res) => {
 
     const ans = await Flight.find(query);
     res.json(ans)
+}
+else{
+    res.json({msg: 'you are not authorized to search for flights'});
+}
 });
 
 
 // delete flight
-router.delete('/:_id', (req, res) => {
+router.delete('/:_id', async(req, res) => {
+    if(await checkAdmin()){
     Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
         .catch(err => res.status(404).json({ error: 'No such a flight' }))
+}
+else{
+    res.json({msg: 'you are not authorized to delete any flights'});
+}
 })
+
+
+async function checkAdmin(){
+    const res = await User.find({type:'admin'});
+    
+    return res.length>0;
+}
 
 module.exports = router
