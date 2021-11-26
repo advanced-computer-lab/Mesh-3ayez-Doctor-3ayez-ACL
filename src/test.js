@@ -6,9 +6,9 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => console.log("MongoDB is now connected"))
     .catch(err => console.log(err));
 const FlightSeat = require('./Models/FlightSeat');
-const seat=new FlightSeat({"flight_id":"6187afbe02f9745a7b0111bf","seat_id":"6187afbe02f9745a7b0111bf","reservation_id":"6187afbe02f9745a7b0111bf","seat_type":"Economy","price":"123.55","baggage_allowance":"32.5"});
+const seat=new FlightSeat({"flight_id":"6187afbe02f9745a7b0111bf","seat_id":"6187afbe02f9745a7b0111be","seat_type":"Economy","price":"123.55","baggage_allowance":"32.5"});
 seat.save().then(
-        console.log("saved")
+        ()=>console.log("saved")
 ).catch(
     (err)=>{
         console.log(err);

@@ -14,6 +14,7 @@ const FlightSeatSchema= new mongoose.Schema({
     },
     reservation_id:{
         type:mongoose.ObjectId,
+        default:null
     },
     seat_type:{
         type:String,
