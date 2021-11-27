@@ -1,8 +1,12 @@
 const express = require('express')
-const moment = require('moment')
+const moment = require('moment');
+const { Query } = require('mongoose');
+const mongoose = require('mongoose');
 const router = express.Router()
 
 const Flight = require('../../src/Models/Flight');
+const Reservation = require('../../src/Models/Reservation');
+const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 
 // APIs here
@@ -246,5 +250,31 @@ async function checkAdmin(){
     
     return res.length>0;
 }
+
+//Get All Reserved Flights by a user
+
+router.get("/user/:id", async (req, res) => {
+    var rsvids = []
+    await Reservation.find({'user_id': req.params.id}).exec().then(function(stuff){
+        stuff.forEach(function(stuffling){
+                rsvids.push(mongoose.Types.ObjectId(stuffling._id))
+        })
+    })
+    var flightids = []
+    await FlightSeat.find().where('reservation_id').in(rsvids).exec().then(function(stuff){
+        stuff.forEach(function(stuffling){
+                flightids.push(mongoose.Types.ObjectId(stuffling.flight_id))
+        })
+    }).catch(err =>{console.log(err)})
+    Flight.find().where('_id').in(flightids).exec()
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    
+})
 
 module.exports = router
