@@ -6,12 +6,15 @@ import Button from '@mui/material/Button';
 import axios from "axios";
 import BasicAlert from "./BasicAlert";
 import Stack from '@mui/material/Stack';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopTimePicker from '@mui/lab/DesktopTimePicker';
 
 export default function FlightForm() {
     const [flightNumber, setFlightNumber] = useState("")
     const [from, setFrom] = useState("")
     const [to, setTo] = useState("")
-    const [arrivalTime, setArrivalTime] = useState("")
+    const [arrivalTime, setArrivalTime] = useState(null);
     const [departureTime, setDepartureTime] = useState("")
     const [economySeats, setESeats] = useState("")
     const [businessSeats, setBSeats] = useState("")
@@ -133,7 +136,7 @@ export default function FlightForm() {
                     error={errorTo ? true : false}
                     helperText={errorTo}
                 />
-                <TextField
+                {/* <TextField
                     required
                     onChange={function (e) {
                         setArrivalTime(e.target.value);
@@ -151,7 +154,23 @@ export default function FlightForm() {
                     error={errorArrival ? true : false}
                     helperText={errorArrival}
 
-                />
+                /> */}    <LocalizationProvider dateAdapter={AdapterDateFns}>
+
+                <DesktopTimePicker
+          label="Arrival time"
+          value={arrivalTime}
+          onChange={(newValue) => {
+            setArrivalTime(newValue);
+            setErrorArrival(newValue ? "" : "This field is required");
+            console.log(newValue);
+
+          }}
+          renderInput={(params) => <TextField InputLabelProps={{
+            shrink: true,
+        }} error={errorArrival==null ? true : false}
+          helperText={errorArrival} {...params} />}
+        />
+        </LocalizationProvider>
                 <TextField
                     required
                     onChange={function (e) {
