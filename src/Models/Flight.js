@@ -9,8 +9,17 @@ const FlightSchema= new mongoose.Schema({
     from:{type:String,
     required:true
     },
+
+    departure_terminal:{
+        type:Number,
+        required:true
+    },
     to:{type:String,
     required:true
+    },
+    arrival_terminal:{
+        type:Number,
+        required:true
     },
     
     economy_seats:{

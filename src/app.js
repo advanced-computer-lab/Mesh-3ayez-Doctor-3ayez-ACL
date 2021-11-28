@@ -20,6 +20,9 @@ app.use(cors());
 // defining the path for all APIs regarding flights
 app.use('/api/flights', require('../routes/api/flights'))
 
+// defining the path for all APIs regarding users
+app.use('/api/users', require('../routes/api/users'))
+
 
 
 // const dummyRec ={
