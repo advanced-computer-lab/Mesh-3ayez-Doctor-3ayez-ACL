@@ -449,6 +449,78 @@ async function checkAdmin(){
     return res.length>0;
 }
 
+// a user search for departure and return flights
+
+router.post('/user_search_flights', async(req,res)=>{
+
+    const body = req.body;
+    var departure_query = {};
+    var return_query = {};
+
+    if(body.from)
+    {
+        departure_query['from'] = body.from;
+        return_query['to'] = body.from
+    }
+    else
+    {
+        res.status(400).json({msg: 'you need to specify the origin airport'});
+        return;
+    }
+    if(body.to)
+    {
+        departure_query['to'] = body.to;
+        return_query['from'] = body.to;
+    }
+    else
+    {
+        res.status(400).json({msg: 'you need to specify the destination airport'});
+        return;
+    }
+
+    if(body.departure_date)
+    {
+        const d1 = new Date(body.departure_date);
+        if(isNaN(d1))
+        {
+            res.status(400).json({msg: 'the departure date is not a valid date'});
+            return;
+        }
+        const d2 = new Date(body.departure_date);
+        d2.setDate(d2.getDate()+1);
+        departure_query['departure_time']= {$gte:d1, $lt:d2};
+    }
+    else
+    {
+        res.status(400).json({msg: 'you need to specify the date of your departure'});
+        return;
+    }
+
+    if(body.return_date )
+    {
+        const d1 = new Date(body.return_date);
+        if(isNaN(d1))
+        {
+            res.status(400).json({msg: 'the return date is not a valid date'});
+            return;
+        }
+        const d2 = new Date(body.return_date);
+        d2.setDate(d2.getDate()+1);
+        return_query['departure_time']= {$gte:d1, $lt:d2};
+    }
+    else
+    {
+        res.status(400).json({msg: 'you need to specify the date of your return'});
+        return;
+    }
+
+    const depart_flights = await Flight.find(departure_query);
+    const return_flights = await Flight.find(return_query);
+    res.json({'departure_flights' : depart_flights, 'return_flights':return_flights});
+
+});
+
+
 //Get All Reserved Flights by a user
 
 module.exports = router
