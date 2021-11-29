@@ -36,12 +36,8 @@ router.post("/", async(req,res)=>{
     {
         var query = {};
         const body = req.body;
-        if(!body.flight_number)
-        {
-            res.status(400).json({msg:'flight number is a required field'});
-            return;
-        }
-        else if(isNaN(body.flight_number))
+        
+        if(isNaN(body.flight_number))
         {
             res.status(400).json({msg:'flight number must be an integer'});
             return;
@@ -57,12 +53,8 @@ router.post("/", async(req,res)=>{
         else
             query['from'] = body.from;
 
-        if(!body.departure_terminal)
-        {
-            res.status(400).json({msg:'the origin airport terminal is a required field'});
-            return;
-        }
-        else if(isNaN(body.departure_terminal))
+        
+        if(isNaN(body.departure_terminal))
         {
             res.status(400).json({msg:'the origin airport terminal is not valid'});
             return;
@@ -78,12 +70,8 @@ router.post("/", async(req,res)=>{
         else
             query['to'] = body.to;
 
-        if(!body.arrival_terminal)
-        {
-            res.status(400).json({msg:'the destination airport terminal is a required field'});
-            return;
-        }
-        else if(isNaN(body.arrival_terminal))
+       
+        if(isNaN(body.arrival_terminal))
         {
             res.status(400).json({msg:'the destination airport terminal is not valid'});
             return;
@@ -91,12 +79,8 @@ router.post("/", async(req,res)=>{
         else
             query['arrival_terminal'] = body.arrival_terminal;
 
-        if(!body.economy_seats)
-        {
-            res.status(400).json({msg:'the number of economy seats is a required field'});
-            return;
-        }
-        else if(isNaN(body.economy_seats))
+        
+        if(isNaN(body.economy_seats))
         {
             res.status(400).json({msg:'the number of economy seats must be an integer'});
             return;
@@ -104,12 +88,8 @@ router.post("/", async(req,res)=>{
         else
             query['economy_seats'] = body.economy_seats
 
-        if(!body.business_seats)
-        {
-            res.status(400).json({msg:'the number of business seats is a required field'});
-            return;
-        }
-        else if(isNaN(body.business_seats))
+        
+        if(isNaN(body.business_seats))
         {
             res.status(400).json({msg:'the number of business seats must be an integer'});
             return;
@@ -117,12 +97,8 @@ router.post("/", async(req,res)=>{
         else
             query['business_seats'] = body.business_seats
 
-        if(!body.first_seats)
-        {
-            res.status(400).json({msg:'the number of first class seats is a required field'});
-            return;
-        }
-        else if(isNaN(body.first_seats))
+        
+        if(isNaN(body.first_seats))
         {
             res.status(400).json({msg:'the number of first class seats must be an integer'});
             return;
@@ -196,48 +172,44 @@ router.put('/:_id',async (req, res) =>{
     if(await checkAdmin()){
     const body = req.body;
     var query = {}
-    if(body.flight_number)
+    
+    if(!isNaN(body.flight_number) && body.flight_number>0)
         {
-            if(!isNaN(body.flight_number))
-               {
-                    query['flight_number'] = body.flight_number;
-               } 
-            else{
-                res.status(400).json({msg:'the flight number should be an integer'});
-                return;
-            }
-        }
+            query['flight_number'] = body.flight_number;
+        } 
+    else{
+        res.status(400).json({msg:'the flight number should be an integer'});
+        return;
+    }
+        
     if(body.from)
     {
         query['from'] = body.from;
     }
 
-    if(body.departure_terminal)
+    
+    if(!isNaN(body.departure_terminal) && body.departure_terminal>0)
+        query['departure_terminal'] = body.departure_terminal
+    else
     {
-        if(!isNaN(body.departure_terminal))
-            query['departure_terminal'] = body.departure_terminal
-        else
-            {
-                res.status(400).json({msg:'invalid terminal number'})
-                return;
-            }
+        res.status(400).json({msg:'invalid terminal number'})
+        return;
     }
+    
 
     if(body.to)
     {
         query['to'] = body.to;
     }
 
-    if(body.arrival_terminal)
+    if(!isNaN(body.arrival_terminal) && body.arrival_terminal>0)
+        query['arrival_terminal'] = body.arrival_terminal
+    else
     {
-        if(!isNaN(body.arrival_terminal))
-            query['arrival_terminal'] = body.arrival_terminal
-        else
-            {
-                res.status(400).json({msg:'invalid terminal number'})
-                return;
-            }
+        res.status(400).json({msg:'invalid terminal number'})
+        return;
     }
+    
 
     if(body.departure_time)
     {
@@ -277,42 +249,38 @@ router.put('/:_id',async (req, res) =>{
         }
     }
 
-    if(body.economy_seats)
+    if(!isNaN(body.economy_seats) && body.economy_seats>0)
     {
-        if(!isNaN(body.economy_seats))
-        {
-            query['economy_seats'] = body.economy_seats;
-        } 
-        else{
-            res.status(400).json({msg:'the number of economy seats should be an integer'});
-            return;
-        }
-    }
-
-
-    if(body.business_seats)
-    {
-        if(!isNaN(body.business_seats))
-        {
-            query['business_seats'] = body.business_seats;
-        } 
-        else{
-            res.status(400).json({msg:'the number of business seats should be an integer'});
-            return;
-        }
+        query['economy_seats'] = body.economy_seats;
+    } 
+    else{
+        res.status(400).json({msg:'the number of economy seats should be an integer'});
+        return;
     }
     
-    if(body.first_seats)
+
+
+    
+    if(!isNaN(body.business_seats) && body.business_seats>0)
     {
-        if(!isNaN(body.first_seats))
-        {
-            query['first_seats'] = body.first_seats;
-        } 
-        else{
-            res.status(400).json({msg:'the number of first class seats should be an integer'});
-            return;
-        }
+        query['business_seats'] = body.business_seats;
+    } 
+    else{
+        res.status(400).json({msg:'the number of business seats should be an integer'});
+        return;
     }
+    
+    
+    
+    if(!isNaN(body.first_seats) && body.first_seats>0)
+    {
+        query['first_seats'] = body.first_seats;
+    } 
+    else{
+        res.status(400).json({msg:'the number of first class seats should be an integer'});
+        return;
+    }
+    
         
     
         
@@ -336,50 +304,47 @@ router.post('/search', async (req, res) => {
     if(await checkAdmin()){
     const body = req.body;
     var query = {}
-    if(body.flight_number)
-        {
-            if(!isNaN(body.flight_number))
-               {
-                    query['flight_number'] = body.flight_number;
-               }
-            else
-            {
-                res.status(400).json({msg:'the flight number should be an integer'});
-                return;
-            }
-        }
+    
+    if(!isNaN(body.flight_number))
+    {
+        query['flight_number'] = body.flight_number;
+    }
+    else
+    {
+        res.status(400).json({msg:'the flight number should be an integer'});
+        return;
+    }
+        
     if(body.from)
     {
         const regex = new RegExp(body.from, 'i')
         query['from'] = { $regex: regex };
     }
 
-    if(body.departure_terminal)
+
+    if(!isNaN(body.departure_terminal))
+        query['departure_terminal'] = body.departure_terminal
+    else
     {
-        if(!isNaN(body.departure_terminal))
-            query['departure_terminal'] = body.departure_terminal
-        else
-            {
-                res.status(400).json({msg:'invalid terminal number'})
-                return;
-            }
+        res.status(400).json({msg:'invalid terminal number'})
+        return;
     }
+
 
     if (body.to) {
         const regex = new RegExp(body.to, 'i')
         query['to'] = { $regex: regex };
     }
 
-    if(body.arrival_terminal)
+    
+    if(!isNaN(body.arrival_terminal))
+        query['arrival_terminal'] = body.arrival_terminal
+    else
     {
-        if(!isNaN(body.arrival_terminal))
-            query['arrival_terminal'] = body.arrival_terminal
-        else
-            {
-                res.status(400).json({msg:'invalid terminal number'})
-                return;
-            }
+        res.status(400).json({msg:'invalid terminal number'})
+        return;
     }
+
 
     if(body.departure_time)
     {
@@ -512,6 +477,46 @@ router.post('/user_search_flights', async(req,res)=>{
     {
         res.status(400).json({msg: 'you need to specify the date of your return'});
         return;
+    }
+
+    if(!body.cabin_type)
+    {
+        res.status(400).json({msg: 'you need to specify the cabin type'});
+        return;
+    }
+    else if(isNaN(body.number_of_passengers))
+    {
+        res.status(400).json({msg: 'you need to specify the number of passengers'});
+        return;
+    }
+    else if(body.number_of_passengers<=0)
+    {
+        res.status(400).json({msg: 'the number of passengers must be a valid integer'});
+        return;
+    }
+    else
+    {
+        
+        if(body.cabin_type == 'economy')
+        {
+            departure_query['economy_seats'] = {$gte : body.number_of_passengers};
+            return_query['economy_seats'] = {$gte : body.number_of_passengers};
+        }
+        else if(body.cabin_type == 'business')
+        {
+            departure_query['business_seats'] = {$gte : body.number_of_passenegrs};
+            return_query['business_seats'] = {$gte : body.number_of_passenegrs};
+        }
+        else if(body.cabin_type == 'first')
+        {
+            departure_query['first_seats'] = {$gte : body.number_of_passenegrs};
+            return_query['first_seats'] = {$gte : body.number_of_passenegrs};
+        }
+        else
+        {
+            res.status(400).json({msg: 'the cabin type is not valid please choose between (economy, business, first)'});
+            return;
+        }
     }
 
     const depart_flights = await Flight.find(departure_query);
