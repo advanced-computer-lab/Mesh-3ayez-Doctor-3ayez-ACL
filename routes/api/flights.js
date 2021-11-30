@@ -251,6 +251,7 @@ async function checkAdmin(){
     return res.length>0;
 }
 
+
 //Get All Reserved Flights by a user
 
 router.get("/user/:id", async (req, res) => {
