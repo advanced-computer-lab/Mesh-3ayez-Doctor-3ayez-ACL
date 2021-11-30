@@ -661,13 +661,13 @@ router.post('/user_search_flights', async(req,res)=>{
         }
         else if(body.cabin_type == 'business')
         {
-            departure_query['business_seats.available'] = {$gte : body.number_of_passenegrs};
-            return_query['business_seats.available'] = {$gte : body.number_of_passenegrs};
+            departure_query['business_seats.available'] = {$gte : body.number_of_passengers};
+            return_query['business_seats.available'] = {$gte : body.number_of_passengers};
         }
         else if(body.cabin_type == 'first')
         {
-            departure_query['first_seats.available'] = {$gte : body.number_of_passenegrs};
-            return_query['first_seats.available'] = {$gte : body.number_of_passenegrs};
+            departure_query['first_seats.available'] = {$gte : body.number_of_passengers};
+            return_query['first_seats.available'] = {$gte : body.number_of_passengers};
         }
         else
         {
