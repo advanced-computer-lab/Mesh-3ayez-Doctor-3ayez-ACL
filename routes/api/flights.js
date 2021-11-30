@@ -6,6 +6,7 @@ const router = express.Router()
 
 const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
+const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 
 // APIs here
@@ -80,31 +81,102 @@ router.post("/", async(req,res)=>{
             query['arrival_terminal'] = body.arrival_terminal;
 
         
-        if(isNaN(body.economy_seats))
+
+        // economy seats
+        if(isNaN(body.economy_seats.max_seats) || body.economy_seats.max_seats<0)
         {
             res.status(400).json({msg:'the number of economy seats must be an integer'});
             return;
         }
         else
-            query['economy_seats'] = body.economy_seats
+        {
+            query['economy_seats.max_seats'] = body.economy_seats.max_seats;
+            query['economy_seats.available'] = body.economy_seats.max_seats;
+        }
 
         
-        if(isNaN(body.business_seats))
+        if(isNaN(body.economy_seats.price) || body.economy_seats.price<0)
+        {
+            res.status(400).json({msg:'the price of economy seats must be a valid decimal'});
+            return;
+        }
+        else
+            query['economy_seats.price'] = body.economy_seats.price
+        
+        if(isNaN(body.economy_seats.baggage_allowance) || body.economy_seats.baggage_allowance<0)
+        {
+            res.status(400).json({msg:'the ammount of baggage allowed for economy class must be a valid decimal'});
+            return;
+        }
+        else
+            query['economy_seats.baggage_allowance'] = body.economy_seats.baggage_allowance;
+
+
+        
+
+        // business class seats
+        if(isNaN(body.business_seats.max_seats) || body.business_seats.max_seats<0)
         {
             res.status(400).json({msg:'the number of business seats must be an integer'});
             return;
         }
         else
-            query['business_seats'] = body.business_seats
+        {
+            query['business_seats.max_seats'] = body.business_seats.max_seats;
+            query['business_seats.available'] = body.business_seats.max_seats;
+        }
 
+        if(isNaN(body.business_seats.price) || body.business_seats.price<0)
+        {
+            res.status(400).json({msg:'the price of business seats must be a valid decimal'});
+            return;
+        }
+        else
+            query['business_seats.price'] = body.business_seats.price;
         
-        if(isNaN(body.first_seats))
+        if(isNaN(body.business_seats.baggage_allowance) || body.business_seats.baggage_allowance<0)
+        {
+            res.status(400).json({msg:'the ammount of baggage allowed for business class must be a valid decimal'});
+            return;
+        }
+        else
+            query['business_seats.baggage_allowance'] = body.business_seats.baggage_allowance;
+
+
+
+        // first class seats
+        
+        if(isNaN(body.first_seats.max_seats) || body.first_seats.max_seats<0)
         {
             res.status(400).json({msg:'the number of first class seats must be an integer'});
             return;
         }
         else
-            query['first_seats'] = body.first_seats
+        {
+            query['first_seats.max_seats'] = body.first_seats.max_seats
+            query['first_seats.available'] = body.first_seats.max_seats
+        }
+
+        if(isNaN(body.first_seats.price) || body.first_seats.price<0)
+        {
+            res.status(400).json({msg:'the price of first class seats must be a valid decimal'});
+            return;
+        }
+        else
+            query['first_seats.price'] = body.first_seats.price;
+
+        
+        if(isNaN(body.first_seats.baggage_allowance) || body.first_seats.baggage_allowance<0)
+        {
+            res.status(400).json({msg:'the ammount of baggage allowed for first class must be a valid decimal'});
+            return;
+        }
+        else
+            query['first_seats.baggage_allowance'] = body.first_seats.baggage_allowance;
+
+
+
+        //departure time
 
         if(!body.departure_time)
         {
@@ -123,6 +195,8 @@ router.post("/", async(req,res)=>{
                 query['departure_time'] = d1;
         }
 
+        // arrival time
+
         if(!body.arrival_time)
         {
             res.status(400).json({msg:'the arrival date and time is a required field'});
@@ -140,6 +214,8 @@ router.post("/", async(req,res)=>{
                 query['arrival_time'] = d1;
         }
 
+
+        //checking if there is an already created flight with the same attributes
         const flights = await Flight.find(query, 'flight_number');
         if(flights.length>0)
         {
@@ -147,10 +223,16 @@ router.post("/", async(req,res)=>{
         }
         else
         {
+            //creating a new flight
             const newFlight = new Flight(query);
-            newFlight.save().then(()=>{
+            newFlight.save().then((flight)=>{
                 res.status(201).json({msg : 'flight created successfully'});
+                // initializing all seats for that flight
+                create_seats(flight._id, 'economy', body.economy_seats.price, body.economy_seats.baggage_allowance, body.economy_seats.max_seats);
+                create_seats(flight._id, 'business', body.business_seats.price, body.business_seats.baggage_allowance, body.business_seats.max_seats);
+                create_seats(flight._id, 'first', body.first_seats.price, body.first_seats.baggage_allowance,body.first_seats.max_seats);
             }).catch(err=>{
+                console.log(err)
                 res.status(500).json('the server has encountered an internal error sorry for disturbance');
             })
             
@@ -162,6 +244,23 @@ router.post("/", async(req,res)=>{
         res.status(403).json({msg: "you are not authorized to add a new flight"});
     }
 });
+
+function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance, max_seats)
+{
+    var query = {}
+    query['flight_id'] = flight_id;
+    query['reseration_id'] = null;
+    query['seat_type'] = cabin_type;
+    query['price'] = seat_price;
+    query['baggage_allowance'] = seat_baggage_allowance;
+    for(var i=0;i<max_seats;i++)
+        {
+            const new_seat = new FlightSeat(query);
+            new_seat.save().catch(err=>{
+                console.log(err)
+            })
+        }
+}
 
 
 
@@ -249,35 +348,93 @@ router.put('/:_id',async (req, res) =>{
         }
     }
 
-    if(!isNaN(body.economy_seats) && body.economy_seats>0)
+
+    //economy seats
+    if(!isNaN(body.economy_seats.max_seats) && body.economy_seats.max_seats>0)
     {
-        query['economy_seats'] = body.economy_seats;
+        query['economy_seats.max_seats'] = body.economy_seats.max_seats;
     } 
     else{
         res.status(400).json({msg:'the number of economy seats should be an integer'});
         return;
     }
-    
 
-
-    
-    if(!isNaN(body.business_seats) && body.business_seats>0)
+    if(!isNaN(body.economy_seats.price) && body.economy_seats.price>0)
     {
-        query['business_seats'] = body.business_seats;
+        query['economy_seats.price'] = body.economy_seats.price;
+    } 
+    else{
+        res.status(400).json({msg:'the price of economy class seats should be a valid double'});
+        return;
+    }
+
+    if(!isNaN(body.economy_seats.baggage_allowance) && body.economy_seats.baggage_allowance>0)
+    {
+        query['economy_seats.baggage_allowance'] = body.economy_seats.baggage_allowance;
+    } 
+    else{
+        res.status(400).json({msg:'the allowed baggage of economy class seats should be a valid double'});
+        return;
+    }
+    
+    
+
+    //business seats
+    
+    if(!isNaN(body.business_seats.max_seats) && body.business_seats.max_seats>0)
+    {
+        query['business_seats.max_seats'] = body.business_seats.max_seats;
     } 
     else{
         res.status(400).json({msg:'the number of business seats should be an integer'});
         return;
     }
-    
-    
-    
-    if(!isNaN(body.first_seats) && body.first_seats>0)
+
+    if(!isNaN(body.business_seats.price) && body.business_seats.price>0)
     {
-        query['first_seats'] = body.first_seats;
+        query['business_seats.price'] = body.business_seats.price;
+    } 
+    else{
+        res.status(400).json({msg:'the price of business class seats should be an integer'});
+        return;
+    }
+
+    if(!isNaN(body.business_seats.baggage_allowance) && body.business_seats.baggage_allowance>0)
+    {
+        query['business_seats.baggage_allowance'] = body.business_seats.baggage_allowance;
+    } 
+    else{
+        res.status(400).json({msg:'the allowed baggage of business class seats should be a valid double'});
+        return;
+    }
+    
+    
+    
+    //first seats
+    if(!isNaN(body.first_seats.max_seats) && body.first_seats.max_seats>0)
+    {
+        query['first_seats.max_seats'] = body.first_seats.max_seats;
     } 
     else{
         res.status(400).json({msg:'the number of first class seats should be an integer'});
+        return;
+    }
+
+    if(!isNaN(body.first_seats.price) && body.first_seats.price>0)
+    {
+        query['first_seats.price'] = body.first_seats.price;
+    } 
+    else{
+        res.status(400).json({msg:'the price of first class seats should be a valid double'});
+        return;
+    }
+
+    if(!isNaN(body.first_seats.baggage_allowance) && body.first_seats.baggage_allowance>0)
+    {
+        query['first_seats.baggage_allowance'] = body.first_seats.baggage_allowance;
+    } 
+    else{
+        res.status(400).json({msg:'the allowed baggage of first class seats should be a valid double'});
         return;
     }
     
@@ -499,18 +656,18 @@ router.post('/user_search_flights', async(req,res)=>{
         
         if(body.cabin_type == 'economy')
         {
-            departure_query['economy_seats'] = {$gte : body.number_of_passengers};
-            return_query['economy_seats'] = {$gte : body.number_of_passengers};
+            departure_query['economy_seats.available'] = {$gte : body.number_of_passengers};
+            return_query['economy_seats.available'] = {$gte : body.number_of_passengers};
         }
         else if(body.cabin_type == 'business')
         {
-            departure_query['business_seats'] = {$gte : body.number_of_passenegrs};
-            return_query['business_seats'] = {$gte : body.number_of_passenegrs};
+            departure_query['business_seats.available'] = {$gte : body.number_of_passenegrs};
+            return_query['business_seats.available'] = {$gte : body.number_of_passenegrs};
         }
         else if(body.cabin_type == 'first')
         {
-            departure_query['first_seats'] = {$gte : body.number_of_passenegrs};
-            return_query['first_seats'] = {$gte : body.number_of_passenegrs};
+            departure_query['first_seats.available'] = {$gte : body.number_of_passenegrs};
+            return_query['first_seats.available'] = {$gte : body.number_of_passenegrs};
         }
         else
         {

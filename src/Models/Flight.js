@@ -23,17 +23,59 @@ const FlightSchema= new mongoose.Schema({
     },
     
     economy_seats:{
+        max_seats:{
         type:Number,
         required:true
+        },
+        available:{
+            type:Number,
+            required:true
+        },
+        price:{
+            type:mongoose.Decimal128,
+            required:true
+        },
+        baggage_allowance:{
+            type:mongoose.Decimal128,
+            required:true
+        },
     },
     business_seats:{
-        type:Number,
-        required:true
+        max_seats:{
+            type:Number,
+            required:true
+            },
+            available:{
+                type:Number,
+                required:true
+            },
+            price:{
+                type:mongoose.Decimal128,
+                required:true
+            },
+            baggage_allowance:{
+                type:mongoose.Decimal128,
+                required:true
+            },
     },
     
     first_seats:{
-        type:Number,
-        required:true
+        max_seats:{
+            type:Number,
+            required:true
+            },
+            available:{
+                type:Number,
+                required:true
+            },
+            price:{
+                type:mongoose.Decimal128,
+                required:true
+            },
+            baggage_allowance:{
+                type:mongoose.Decimal128,
+                required:true
+            },
     },
     departure_time:{
         type:Date,

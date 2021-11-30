@@ -4,11 +4,6 @@ mongoose.set('debug', true);
 const FlightSeatSchema= new mongoose.Schema({
     flight_id:{
         type: mongoose.ObjectId,
-        ref: 'Flight',
-        unique:false
-    },
-    seat_id:{
-        type:mongoose.ObjectId,
         required:true,
         unique:false
     },
