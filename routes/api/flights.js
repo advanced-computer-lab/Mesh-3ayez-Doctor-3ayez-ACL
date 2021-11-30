@@ -571,6 +571,32 @@ async function checkAdmin(){
     return res.length>0;
 }
 
+//Get All Reserved Flights by a user
+
+router.get("/user/:id", async (req, res) => {
+    var rsvids = []
+    await Reservation.find({'user_id': req.params.id}).exec().then(function(stuff){
+        stuff.forEach(function(stuffling){
+                rsvids.push(mongoose.Types.ObjectId(stuffling._id))
+        })
+    })
+    var flightids = []
+    await FlightSeat.find().where('reservation_id').in(rsvids).exec().then(function(stuff){
+        stuff.forEach(function(stuffling){
+                flightids.push(mongoose.Types.ObjectId(stuffling.flight_id))
+        })
+    }).catch(err =>{console.log(err)})
+    Flight.find().where('_id').in(flightids).exec()
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    
+})
+
 // a user search for departure and return flights
 
 router.post('/user_search_flights', async(req,res)=>{
