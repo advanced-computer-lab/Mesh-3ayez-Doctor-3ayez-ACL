@@ -19,6 +19,19 @@ export default function FlightForm() {
     const [economySeats, setESeats] = useState("")
     const [businessSeats, setBSeats] = useState("")
     const [firstSeats, setFSeats] = useState("")
+
+    const [arrivalTerminal, setATerminal] = useState("")
+    const [departureTerminal, setDTerminal] = useState("")
+
+    const [ecoPrice, setEcoPrice] = useState("")
+    const [ecoBaggageAllowance, setEcoBag] = useState("")
+
+    const [busPrice, setBusPrice] = useState("")
+    const [busBaggageAllowance, setBusBag] = useState("")
+
+    const [firPrice, setFirPrice] = useState("")
+    const [firBaggageAllowance, setFirBag] = useState("")
+
     const [errorFlight, setErrorFlight] = useState("");
     const [errorFrom, setErrorFrom] = useState("");
     const [errorTo, setErrorTo] = useState("");
@@ -27,6 +40,19 @@ export default function FlightForm() {
     const [errorEconomy, setErrorEconomy] = useState("");
     const [errorBusiness, setErrorBusiness] = useState("");
     const [errorFirst, setErrorFirst] = useState("");
+
+    const [errorAt,setErrorAt]=useState("");
+    const [errorDt,setErrorDt]=useState("");
+
+    const [errorEcoP,setErrorEcoP]=useState("");
+    const [errorBusP,setErrorBusP]=useState("");
+
+    const [errorFirP,setErrorFirP]=useState("");
+    const [errorEbag,setErrorEbag]=useState("");
+
+    const [errorBbag,setErrorBbag]=useState("");
+    const [errorFbag,setErrorFbag]=useState("");
+
     const [alert, setAlert] = useState(false);
     const [succ, setSucc] = useState(false);
     const [msg, setMsg] = useState("");
@@ -40,13 +66,30 @@ export default function FlightForm() {
         const data = {
             "flight_number": flightNumber,
             "from": from,
+            "departure_terminal":departureTerminal,
             "to": to,
+            "arrival_terminal":arrivalTerminal,
             "arrival_time": arrivalTime,
             "departure_time": departureTime,
-            "economy_seats": economySeats,
-            "business_seats": businessSeats,
-            "first_seats": firstSeats
+            "economy_seats": {"max_seats":economySeats,
+            "available":economySeats,
+            "price":ecoPrice,
+            "baggage_allowance":ecoBaggageAllowance
+            },
+            "business_seats": {"max_seats":businessSeats,
+            "available":businessSeats,
+            "price":busPrice,
+            "baggage_allowance":busBaggageAllowance
+            },
+            "first_seats": {"max_seats":firstSeats,
+            "available":firstSeats,
+            "price":firPrice,
+            "baggage_allowance":firBaggageAllowance
+            }
+            
+
         }
+
         if (!flightNumber)
             setErrorFlight("This field is required");
         if (!from)
@@ -63,8 +106,24 @@ export default function FlightForm() {
             setErrorBusiness("This field is required");
         if (!firstSeats)
             setErrorFirst("This field is required");
+        if(!arrivalTerminal)
+            setErrorAt("This field is required");
+        if(!departureTerminal)
+            setErrorDt("This field is required");
+        if(!ecoPrice)
+            setErrorEcoP("This field is required");
+        if(!busPrice)
+            setErrorBusP("This field is required");
+        if(!firPrice)
+            setErrorFirP("This field is required");
+        if(!ecoBaggageAllowance)
+            setErrorEbag("This field is required");
+        if(!busBaggageAllowance)
+            setErrorBbag("This field is required");
+        if(!firBaggageAllowance)
+            setErrorFbag("This field is required");
 
-        if (flightNumber && from && to && arrivalTime && departureTime && economySeats && businessSeats && firstSeats) {
+        if (flightNumber && from && to && arrivalTime && departureTime && economySeats && businessSeats && firstSeats && arrivalTerminal &&departureTerminal &&ecoBaggageAllowance&&ecoPrice&&busBaggageAllowance&&busPrice&&firBaggageAllowance&firPrice) {
             axios.post("http://localhost:8000/api/flights", data, { "Content-Type": "application/json" })
                 .then(
                     result => {
@@ -81,7 +140,11 @@ export default function FlightForm() {
 
     }
     return (
-        <div style={{ background: "#D9E4EC" }}>
+
+        <div style={{margin:"auto", marginTop:"100px", height:"500px" }}>   
+            <div style={{margin:"auto",backgroundColor:"#142F43",width:"640px",height:"80px",textAlign:"center",boxShadow:"px #999999"}}>
+                <h1 style={{color:"whitesmoke",padding:"20px"}}>Create New Flight</h1>
+            </div> 
             <Box
                 component="form"
                 sx={{
@@ -89,13 +152,12 @@ export default function FlightForm() {
                 }}
                 noValidate
                 autoComplete="off"
-                width="400px"
-                height="100%"
-                style={{ background: "#D9E4EC" }}
-                margin="auto"
+                width="600px"
+                padding="20px"
+                style={{ background: "#F7F7F7" ,borderRaduis:"10%",boxShadow:"2px auto #999999"}}
+                display="inline-block"
+                
             >
-                <div>
-                    <div >
                         <TextField
                             required
                             onChange={function (e) {
@@ -109,9 +171,7 @@ export default function FlightForm() {
                             error={errorFlight ? true : false}
                             helperText={errorFlight}
                         />
-                    </div>
 
-                </div>
                 <TextField
                     required
                     id="outlined-required"
@@ -128,6 +188,19 @@ export default function FlightForm() {
                 <TextField
                     required
                     id="outlined-required"
+                    label="Departure Terminal"
+                    onChange={function (e) {
+                        setDTerminal(e.target.value);
+                        setErrorDt(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorDt ? true : false}
+                    helperText={errorDt}
+
+                />
+                <TextField
+                    required
+                    id="outlined-required"
                     label="To"
                     onChange={function (e) {
                         setTo(e.target.value);
@@ -135,6 +208,17 @@ export default function FlightForm() {
                     }}
                     error={errorTo ? true : false}
                     helperText={errorTo}
+                />
+                 <TextField
+                    required
+                    id="outlined-required"
+                    label="Arrival Terminal"
+                    onChange={function (e) {
+                        setATerminal(e.target.value);
+                        setErrorAt(e.target.value ? "" : "This field is required")
+                    }}
+                    error={errorAt ? true : false}
+                    helperText={errorAt}
                 />
                 {/* <TextField
                     required
@@ -207,6 +291,40 @@ export default function FlightForm() {
                 <TextField
                     required
                     id="outlined-number"
+                    label="Economy class Seat Price"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setEcoPrice(e.target.value);
+                        setErrorEcoP(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorEcoP ? true : false}
+                    helperText={errorEcoP}
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Economy class Baggage Allowance"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setEcoBag(e.target.value);
+                        setErrorEbag(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorEbag ? true : false}
+                    helperText={errorEbag}
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
                     label="Business seats"
                     type="number"
                     InputLabelProps={{
@@ -219,6 +337,40 @@ export default function FlightForm() {
                     }
                     error={errorBusiness ? true : false}
                     helperText={errorBusiness}
+                />
+                 <TextField
+                    required
+                    id="outlined-number"
+                    label="Business class Seat Price"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setBusPrice(e.target.value);
+                        setErrorBusP(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorBusP ? true : false}
+                    helperText={errorBusP}
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="Business class Baggage Allowance"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setBusBag(e.target.value);
+                        setErrorBbag(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorBbag ? true : false}
+                    helperText={errorBbag}
+
                 />
                 <TextField
                     required
@@ -237,6 +389,41 @@ export default function FlightForm() {
                     error={errorFirst ? true : false}
                     helperText={errorFirst}
                 />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="First class Seat Price"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setFirPrice(e.target.value);
+                        setErrorFirP(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorFirP ? true : false}
+                    helperText={errorFirP}
+
+                />
+                <TextField
+                    required
+                    id="outlined-number"
+                    label="First class Baggage Allowance"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={function (e) {
+                        setFirBag(e.target.value);
+                        setErrorFbag(e.target.value ? "" : "This field is required");
+                    }
+                    }
+                    error={errorFbag ? true : false}
+                    helperText={errorFbag}
+
+                />
+                
                 <br />
                 <Stack direction="row" spacing={1} >
                     <Button style={{textAlign:"center",marginLeft:"auto"}} variant="contained" onClick={onSubmit} href="/createFlight">Submit </Button>
