@@ -10,7 +10,6 @@ const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 
 router.get(`/:id`,(req,res)=>{
-    console.log("gego");
     console.log(req.params.id);
     FlightSeat.find({"flight_id":req.params.id}).then(
          (result)=>{
