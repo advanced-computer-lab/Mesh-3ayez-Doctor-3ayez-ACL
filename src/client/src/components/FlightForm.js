@@ -142,7 +142,6 @@ export default function FlightForm() {
                         setArrivalTime(e.target.value);
                         setErrorArrival(e.target.value ? "" : "This field is required");
                     }
-
                     }
                     id="outlined-required"
                     label="Arrival Time"
@@ -153,7 +152,6 @@ export default function FlightForm() {
                     placeholder="yyyy-mm-dd"
                     error={errorArrival ? true : false}
                     helperText={errorArrival}
-
                 /> */}    <LocalizationProvider dateAdapter={AdapterDateFns}>
 
                 <DesktopTimePicker
@@ -252,4 +250,3 @@ export default function FlightForm() {
         </div>
     );
 }
-
