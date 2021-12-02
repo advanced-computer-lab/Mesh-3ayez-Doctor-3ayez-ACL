@@ -29,6 +29,7 @@ export default function SearchFlights(probs) {
   };
 
   const handleSearch = () => {
+  
     const data = {
         "flight_number": flight_no,
         "from": from,
