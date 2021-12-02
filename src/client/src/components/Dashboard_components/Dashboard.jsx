@@ -18,6 +18,7 @@ function Dashboard(probs) {
     const [uid, setU] = React.useState({});
 
     const [rows, updateRows] = useState(probs.getRows);
+
     useEffect(() => {
         
         updateRows(probs.getRows);
@@ -38,8 +39,6 @@ function Dashboard(probs) {
         axios.delete("http://localhost:8000/api/flights/" + id);
         handleClose();
     }
-
-   
     return (
         <div>
             <table className="styled-table">
@@ -52,13 +51,26 @@ function Dashboard(probs) {
                                 id={flight._id}
                                 flight_number={flight.flight_number}
                                 from={flight.from}
+                                departure_terminal={flight.departure_terminal}
                                 to={flight.to}
-                                economy_seats={flight.economy_seats}
-                                business_seats={flight.business_seats}
-                                first_seats={flight.first_seats}
+                                arrival_terminal={flight.arrival_terminal}
+                                economy_seats={flight.economy_seats.available}
+                                business_seats={flight.business_seats.available}
+                                first_seats={flight.first_seats.available}
                                 departure_time={flight.departure_time}
                                 arrival_time={flight.arrival_time}
                                 delete_callback={handleClickOpen}
+                                eco_max_seats={flight.economy_seats.max_seats}
+                                eco_price={flight.economy_seats.price}
+                                eco_bag={flight.economy_seats.baggage_allowance}
+
+                                bus_max_seats={flight.business_seats.max_seats}
+                                bus_price={flight.business_seats.price}
+                                bus_bag={flight.business_seats.baggage_allowance}
+
+                                fir_max_seats={flight.first_seats.max_seats}
+                                fir_price={flight.first_seats.price}
+                                fir_bag={flight.first_seats.baggage_allowance}
                             />
                         })
                     }
