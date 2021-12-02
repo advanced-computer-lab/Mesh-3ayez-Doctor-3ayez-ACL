@@ -433,8 +433,9 @@ router.post('/search', async (req, res) => {
     const body = req.body;
     var query = {}
     
-    if(body.flight_number || body.flight_number==0)
+    if(body.flight_number || body.flight_number===0)
     {
+        console.log(body.flight_number.length);
         if(!isNaN(body.flight_number)){
         console.log("here");
         console.log(body.flight_number)
