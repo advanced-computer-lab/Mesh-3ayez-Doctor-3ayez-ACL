@@ -708,6 +708,19 @@ router.post('/user_search_flights', async(req,res)=>{
 
 });
 
+// get the details of a flight with its id
+router.get('/:flight_id', async(req,res)=>{
+    const flight = await Flight.findOne({'_id':req.params.flight_id});
+    if(flight)
+    {
+        res.json(flight);
+    }
+    else
+    {
+        res.status(404).json({msg:'flight with this id not found'});
+    }
+})
+
 
 //Get All Reserved Flights by a user
 
