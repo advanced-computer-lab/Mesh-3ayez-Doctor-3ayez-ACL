@@ -3,9 +3,10 @@ const moment = require('moment');
 const { Query } = require('mongoose');
 const mongoose = require('mongoose');
 const Flight = require('../../src/Models/Flight');
-const User = require('../../src/Models/User');
+const Admin = require('../../src/Models/Admin');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
+const User = require('../../src/Models/User');
 
 const router = express.Router()
 
@@ -80,6 +81,67 @@ router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
         res.status(404).json({msg:'no such reservation for this specific user'});
     }
 });
+
+// edit user info
+router.put('/:user_id',async(req,res)=>{
+    const body = req.body;
+    const user_id = req.params.user_id;
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the id you have sent is not a valid id'});
+        return;
+    }
+    const user = User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg : 'no such user'});
+        return;
+    }
+
+    var query = {};
+    if(body.first_name)
+    {
+        query['first_name'] = body.first_name;
+    }
+    if(body.last_name)
+        query['last_name'] = body.last_name;
+    if(body.passport)
+    {
+        if(!isNaN(body.passport))
+            query['passport'] = body.passport;
+        else
+        {
+            res.status(400).json({msg : 'the passport you have entered is not valid'});
+            return;
+        }
+    }
+    if(body.email)
+    {
+        if(validateEmail(body.email))
+            query['email'] = body.email;
+        else
+        {
+            res.status(400).json({msg : 'the email you have entered is not valid'});
+            return;
+        }
+    }
+
+    User.findByIdAndUpdate(user_id,query).then(async result =>{
+        const new_user = await User.findById(user_id);
+        res.json(new_user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json('the server has encountered an error sorry for disturbance');
+    })
+});
+
+function validateEmail (email){
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
 
 

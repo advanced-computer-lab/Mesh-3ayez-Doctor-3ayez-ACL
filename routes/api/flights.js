@@ -7,7 +7,7 @@ const router = express.Router()
 const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
 const FlightSeat = require('../../src/Models/FlightSeat');
-const User = require('../../src/Models/User');
+const User = require('../../src/Models/Admin');
 
 // APIs here
 
