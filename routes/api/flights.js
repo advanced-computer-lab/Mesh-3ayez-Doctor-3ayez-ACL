@@ -226,11 +226,11 @@ router.post("/", async(req,res)=>{
             //creating a new flight
             const newFlight = new Flight(query);
             newFlight.save().then((flight)=>{
-                res.status(201).json({msg : 'flight created successfully'});
                 // initializing all seats for that flight
-                create_seats(flight._id, 'economy', body.economy_seats.price, body.economy_seats.baggage_allowance, body.economy_seats.max_seats);
-                create_seats(flight._id, 'business', body.business_seats.price, body.business_seats.baggage_allowance, body.business_seats.max_seats);
-                create_seats(flight._id, 'first', body.first_seats.price, body.first_seats.baggage_allowance,body.first_seats.max_seats);
+                create_seats(flight._id, 'economy', body.economy_seats.max_seats);
+                create_seats(flight._id, 'business', body.business_seats.max_seats);
+                create_seats(flight._id, 'first', body.first_seats.max_seats);
+                res.status(201).json({msg : 'flight created successfully'});
             }).catch(err=>{
                 console.log(err)
                 res.status(500).json('the server has encountered an internal error sorry for disturbance');
@@ -245,23 +245,23 @@ router.post("/", async(req,res)=>{
     }
 });
 
-function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance, max_seats)
+function create_seats(flight_id, cabin_type, max_seats)
 {
     var query = {}
     query['flight_id'] = flight_id;
     query['reservation_id'] = null;
     query['seat_type'] = cabin_type;
-    query['price'] = seat_price;
-    query['baggage_allowance'] = seat_baggage_allowance;
+ 
     for(var i=1;i<=max_seats;i++)
         {
-            query['seat_number'] = i;
+            
+            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+i;
             const new_seat = new FlightSeat(query);
             new_seat.save().catch(err=>{
                 console.log(err)
             })
-            var n = parseInt(query.seat_name.substring(1))+1;
-            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+n;
+            
+            
         }
 }
 

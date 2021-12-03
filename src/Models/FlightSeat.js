@@ -15,8 +15,8 @@ const FlightSeatSchema= new mongoose.Schema({
         type:String,
         required:true
     },
-    seat_number:{
-        type:Number,
+    seat_name:{
+        type:String,
         required:true
     }
     
