@@ -20,6 +20,7 @@ code {
 .styled-table {
   border-collapse: collapse;
   margin: auto;
+  margin-top: 2px;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 75%;
@@ -46,6 +47,40 @@ code {
   border-bottom: 2px solid #B7CFDC;
 }
 .styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #B7CFDC;
+}
+
+.styled-table2 {
+  border-collapse: collapse;
+  margin: auto;
+  margin-top: 2px;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 75%;
+  box-shadow: 0 0 20px rgb(212, 236, 221,0.1)
+}
+.styled-table2 thead tr {
+  background-color: #bd8071;
+  color: #ffffff;
+}
+
+.styled-table2 th,
+.styled-table2 td {
+  padding: 12px 15px;
+}
+.styled-table2 tbody tr {
+  border-bottom: 1px solid #ffffff;
+}
+
+.styled-table2 tbody tr:nth-of-type(even) {
+  background-color: #D9E4EC ;
+}
+
+.styled-table2 tbody tr:last-of-type {
+  border-bottom: 2px solid #c45252;
+}
+.styled-table2 tbody tr.active-row {
   font-weight: bold;
   color: #B7CFDC;
 }

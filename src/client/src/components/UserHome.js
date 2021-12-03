@@ -7,16 +7,19 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Icon from '@mui/material/Icon';
 import PersistentDrawerRight from './PersistentDrawerRight';
+import Ticket from './Ticket_components/Ticket';
+
+//This is a prototype page just to test ticket display, most functionalities are not implemented yet --youssef
 
 
-function AdminHome() {
+function UserHome() {
   const [rows, updateRows] = useState([]);
   const [width,setWidth]=useState("0");
   const [marginLeft,setMarginLeft]=useState("0");
-  const [paddingLeft,setPaddingLeft] = useState("3px");
-  const [paddingRight,setPaddingRight] = useState("3px");
+  const [paddingLeft,setPaddingLeft] = useState("100px");
+  const [paddingRight,setPaddingRight] = useState("100px");
   useEffect(() => {
-    axios.get("http://localhost:8000/api/flights/")
+    axios.get("http://localhost:8000/api/flights/61a9d8d4caa402557f581ae0/61a9d8d4caa402557f581af7")
       .then(res => {
 
         updateRows(res.data);
@@ -27,20 +30,7 @@ function AdminHome() {
 
   }, []);
 
-  function openNav() {
-    setMarginLeft("250px");
-    setWidth("250px");
-    setPaddingLeft("8px");
-    setPaddingRight("3px");
-
-}
-
-function closeNav() {
-  setMarginLeft("0");
-  setWidth("0");
-  setPaddingLeft("3px");
-  setPaddingRight("3px");
-}
+  
   return (
     <div >
       {/* <FlightForm /> */}
@@ -49,15 +39,8 @@ function closeNav() {
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
       />
       <div>
-        <div id="mySidenav" className="sidenav" style={{width:width}}>
-            <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
-            <Grid height="100%">
-          <SearchFlights setRows={updateRows} />
-        </Grid>
-        </div>
         <div id="main" style={{marginLeft:marginLeft,paddingLeft:paddingLeft,paddingRight:paddingRight}}>
-            <Navbar openCallBack={openNav}/>
-          <Dashboard getRows={rows} />
+          <Ticket getRows={rows} />
         </div>
     </div>
       
@@ -67,4 +50,4 @@ function closeNav() {
 
 }
 
-export default AdminHome;
+export default UserHome;
