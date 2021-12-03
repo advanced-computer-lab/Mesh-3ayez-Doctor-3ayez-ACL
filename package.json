@@ -20,13 +20,11 @@
   },
   "homepage": "https://github.com/advanced-computer-lab/Mesh-3ayez-Doctor-3ayez-ACL#readme",
   "dependencies": {
-    "@mui/icons-material": "^5.1.0",
     "concurrently": "^6.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "moment": "^2.29.1",
     "mongoose": "^6.0.12",
-    "node": "^17.1.0",
     "nodemon": "^2.0.14",
     "react": "^17.0.2",
     "react-router-dom": "^5.3.0"
