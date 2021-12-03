@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import AdminHome from './components/AdminHome';
 import UserHome from './components/UserHome';
 import UserProfile from './components/UserProfile';
+import vanta from './components/vanta';
 
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
     <Router>
       
       <Route exact path="/" component={UserProfile} />
-    <Route path="/createFlight" component={FlightForm} />
+  {/* <Route path="/createFlight" component={FlightForm} /> */}
 
     </Router>
   );

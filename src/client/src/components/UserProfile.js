@@ -1,21 +1,44 @@
-import { useState } from "react"
-import * as React from 'react';
+import FOG from 'vanta/dist/vanta.fog.min'
+import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react'
+import * as THREE from "three";
+import * as React2 from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import axios from "axios";
 import BasicAlert from "./BasicAlert";
 import Stack from '@mui/material/Stack';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopTimePicker from '@mui/lab/DesktopTimePicker';
 
-export default function UserProfile() {
-    const [username, setUsername] = useState("")
-    const [FirstName, setFirstName] = useState("")
-    const [LastName, setLastName] = useState("")
-    const [email, setEmail] = useState(null);
-    const [Passport, setPassport] = useState("")
+export default function UserProfile(probs) {
+    const id=probs.id;
+    const [vantaEffect, setVantaEffect] = useState(0)
+  const myRef = useRef(null)
+  useEffect(() => {
+    if (!vantaEffect) {
+        setVantaEffect(FOG({
+          el: myRef.current,
+        THREE: THREE,
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        marginTop: 0,
+        minHeight: 630.00,
+        minWidth: 200.00,
+        highlightColor: 0xb57a65,
+        midtoneColor: 0x4100ff,
+        lowlightColor: 0xb2ade2,
+        baseColor: 0xc7aeae
+        }))
+      }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy()
+    }
+  }, [vantaEffect])
+    const [username, setUsername] = useState(probs.username)
+    const [FirstName, setFirstName] = useState(probs.FirstName)
+    const [LastName, setLastName] = useState(probs.LastName)
+    const [email, setEmail] = useState(probs.email);
+    const [Passport, setPassport] = useState(probs.Passport)
     
     const [errorusername, setErrorusername] = useState("");
     const [errorFirstName, setErrorFirstName] = useState("");
@@ -26,10 +49,6 @@ export default function UserProfile() {
     const [alert, setAlert] = useState(false);
     const [succ, setSucc] = useState(false);
     const [msg, setMsg] = useState("");
-
-
-
-    const bool = false;
 
     const onSubmit = function (e) {
         e.preventDefault()
@@ -53,13 +72,16 @@ export default function UserProfile() {
             setErrorPassport("This field is required");
         
         if (username && FirstName && LastName && email && Passport) {
-            
-            // result => {
-            //     setSucc(result.data.success);
-            //     setMsg(result.data.msg)
-            //     setAlert(true);
+            axios.put("http://localhost:8000/api/users/" +id, data, { "Content-Type": "application/json" })
+            .then(result => {
+                setSucc(result.data.success);
+                setMsg(result.data.msg)
+                setAlert(true);
 
-            // }
+            }
+      )
+      .catch(err => console.log(err));
+            
 
         }
         setAlert(false);
@@ -68,13 +90,12 @@ export default function UserProfile() {
 
     }
     return (
-
-        <div style={{margin:"auto", marginTop:"100px", height:"500px" }}>   
+        <div ref={myRef}  >
+        <div >   
+      
             
-            <div style={{margin:"auto",backgroundColor:"#142F43",width:"640px",height:"80px",textAlign:"center",boxShadow:"px #999999"}}>
-                <h1 style={{color:"whitesmoke",padding:"20px"}}>Edit Profile</h1>
-            </div> 
             <Box
+                 marginTop="100px"
                 component="form"
                 sx={{
                     '& .MuiTextField-root': { m: 1, width: '25ch' },
@@ -82,18 +103,21 @@ export default function UserProfile() {
                 noValidate
                 autoComplete="off"
                 width="600px"
-                padding="20px"
+                // padding="20px"
                 style={{ background: "#F7F7F7" ,borderRaduis:"10%",boxShadow:"2px auto #999999"}}
                 display="inline-block"
                 
             >
+                <div >
+                <h1 style={{color:"DarkSlateBlue"}}>Edit Profile</h1>
+            </div> 
                         <TextField
                             required
                             onChange={function (e) {
                                 setUsername(e.target.value);
                                 setErrorusername(e.target.value ? "" : "This field is required");
-                            }
-                            }
+                            }}
+                            value={username}
                             id="outlined-required"
                             label="Username"
                             type="String"
@@ -110,6 +134,7 @@ export default function UserProfile() {
                         setErrorFirstName(e.target.value ? "" : "This field is required");
                     }
                     }
+                    value={FirstName}
                     type="String"
                     error={errorFirstName ? true : false}
                     helperText={errorFirstName}
@@ -120,10 +145,11 @@ export default function UserProfile() {
                     id="outlined-required"
                     label="Last Name"
                     onChange={function (e) {
-                        setErrorLastName(e.target.value);
+                        setLastName(e.target.value);
                         setErrorLastName(e.target.value ? "" : "This field is required");
                     }
                     }
+                    value={LastName}
                     type="String"
                     error={errorLastName ? true : false}
                     helperText={errorLastName}
@@ -134,9 +160,10 @@ export default function UserProfile() {
                     id="outlined-required"
                     label="Email"
                     onChange={function (e) {
-                        setErroremail(e.target.value);
+                        setEmail(e.target.value);
                         setErroremail(e.target.value ? "" : "This field is required")
                     }}
+                    value={email}
                     type="String"
                     error={erroremail ? true : false}
                     helperText={erroremail}
@@ -149,6 +176,7 @@ export default function UserProfile() {
                         setPassport(e.target.value);
                         setErrorPassport(e.target.value ? "" : "This field is required")
                     }}
+                    value={Passport}
                     type="Number"
                     error={errorPassport ? true : false}
                     helperText={errorPassport}
@@ -157,7 +185,7 @@ export default function UserProfile() {
                                
                 <br />
                 <Stack direction="row" spacing={1} >
-                    <Button style={{textAlign:"center",marginLeft:"auto"}} variant="contained" onClick={onSubmit} href="/createFlight">Submit </Button>
+                    <Button style={{textAlign:"center",marginLeft:"auto"}} variant="contained" onClick={onSubmit} href="/">Submit </Button>
                     <Button style={{margin:"auto"}} variant="outlined" href="/">Back </Button>
                 </Stack>
                 <br />
@@ -165,6 +193,7 @@ export default function UserProfile() {
                 {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
 
             </Box>
+        </div>
         </div>
     );
 }
