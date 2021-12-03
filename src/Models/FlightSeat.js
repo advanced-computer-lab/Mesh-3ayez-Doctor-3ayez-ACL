@@ -24,6 +24,11 @@ const FlightSeatSchema= new mongoose.Schema({
         type:mongoose.Decimal128,
         required:true
     },
+
+    seat_name:{
+        type:String,
+
+    },
     
     
 });

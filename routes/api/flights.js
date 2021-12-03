@@ -249,16 +249,19 @@ function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance,
 {
     var query = {}
     query['flight_id'] = flight_id;
-    query['reseration_id'] = null;
+    query['reservation_id'] = null;
     query['seat_type'] = cabin_type;
     query['price'] = seat_price;
     query['baggage_allowance'] = seat_baggage_allowance;
+    query['seat_name'] = (cabin_type == 'first'?'A1':(cabin_type == 'business'?'B1':'C1'));
     for(var i=0;i<max_seats;i++)
         {
             const new_seat = new FlightSeat(query);
             new_seat.save().catch(err=>{
                 console.log(err)
             })
+            var n = parseInt(query.seat_name.substring(1))+1;
+            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+n;
         }
 }
 
