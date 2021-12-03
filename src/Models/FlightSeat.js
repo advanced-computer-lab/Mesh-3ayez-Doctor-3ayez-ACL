@@ -15,24 +15,13 @@ const FlightSeatSchema= new mongoose.Schema({
         type:String,
         required:true
     },
-    price:{
-        type:mongoose.Decimal128,
+    seat_number:{
+        type:Number,
         required:true
-    },
-    
-    baggage_allowance:{
-        type:mongoose.Decimal128,
-        required:true
-    },
-
-    seat_name:{
-        type:String,
-
-    },
+    }
     
     
 });
-FlightSeatSchema.index({ flight_id: 1, seat_id: 1}, { unique: true });
 
 
 const FlightSeat = mongoose.model('FlightSeat',FlightSeatSchema, 'FlightSeat');

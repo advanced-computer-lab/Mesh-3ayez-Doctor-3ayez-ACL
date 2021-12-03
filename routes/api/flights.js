@@ -253,9 +253,9 @@ function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance,
     query['seat_type'] = cabin_type;
     query['price'] = seat_price;
     query['baggage_allowance'] = seat_baggage_allowance;
-    query['seat_name'] = (cabin_type == 'first'?'A1':(cabin_type == 'business'?'B1':'C1'));
-    for(var i=0;i<max_seats;i++)
+    for(var i=1;i<=max_seats;i++)
         {
+            query['seat_number'] = i;
             const new_seat = new FlightSeat(query);
             new_seat.save().catch(err=>{
                 console.log(err)
@@ -714,6 +714,6 @@ router.get('/:flight_id/:seat', async(req,res)=>{
 })
 
 
-//Get All Reserved Flights by a user
+
 
 module.exports = router
