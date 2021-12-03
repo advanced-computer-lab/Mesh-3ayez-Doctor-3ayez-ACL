@@ -5,9 +5,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-export default function Navbar(props) {
+export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{background:"#274472"}} >
@@ -18,15 +17,12 @@ export default function Navbar(props) {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={()=>props.openCallBack()}
           >
-          {/* <span style={{cursor:"pointer"}} onClick={()=>props.openCallBack()} ></span> */}
-          <SearchOutlinedIcon />
+          {/* <MenuIcon /> */}
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 3 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Admin home
           </Typography>
-          
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>

@@ -29,7 +29,6 @@ export default function SearchFlights(probs) {
   };
 
   const handleSearch = () => {
-  
     const data = {
         "flight_number": flight_no,
         "from": from,
@@ -55,6 +54,7 @@ export default function SearchFlights(probs) {
             }}
             noValidate
             autoComplete="off"
+            style={{background:"#D9E4EC"}}
             width="100%"
             margin="auto"
         >
