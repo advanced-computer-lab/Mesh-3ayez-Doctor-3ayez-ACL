@@ -101,3 +101,47 @@ font-size: 16px;
   margin: auto;
   width: 50%;
 }
+.searchBack{
+  height: 300px;
+  position: relative;
+  text-align: center;
+
+}
+
+.box {
+  width:80%;
+  height:30%;
+  position: absolute;
+  bottom: 25px;
+  left: 10%;
+  margin:Auto;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 3px;
+
+}
+
+.seat {
+  background-color: green;
+}
+
+.seat--reserved {
+  background-color: gray;
+}
+
+.seat--selected {
+  background-color: blue;
+}
+
+.seat-picker {
+  margin: auto;
+}
+
+.seat-picker__row {
+}
+
+.seat-picker__row__number {
+}
+
+
+
