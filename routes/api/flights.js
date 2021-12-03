@@ -7,7 +7,7 @@ const router = express.Router()
 const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
 const FlightSeat = require('../../src/Models/FlightSeat');
-const User = require('../../src/Models/User');
+const User = require('../../src/Models/Admin');
 
 // APIs here
 
@@ -226,11 +226,11 @@ router.post("/", async(req,res)=>{
             //creating a new flight
             const newFlight = new Flight(query);
             newFlight.save().then((flight)=>{
-                res.status(201).json({msg : 'flight created successfully'});
                 // initializing all seats for that flight
-                create_seats(flight._id, 'economy', body.economy_seats.price, body.economy_seats.baggage_allowance, body.economy_seats.max_seats);
-                create_seats(flight._id, 'business', body.business_seats.price, body.business_seats.baggage_allowance, body.business_seats.max_seats);
-                create_seats(flight._id, 'first', body.first_seats.price, body.first_seats.baggage_allowance,body.first_seats.max_seats);
+                create_seats(flight._id, 'economy', body.economy_seats.max_seats);
+                create_seats(flight._id, 'business', body.business_seats.max_seats);
+                create_seats(flight._id, 'first', body.first_seats.max_seats);
+                res.status(201).json({msg : 'flight created successfully'});
             }).catch(err=>{
                 console.log(err)
                 res.status(500).json('the server has encountered an internal error sorry for disturbance');
@@ -245,23 +245,23 @@ router.post("/", async(req,res)=>{
     }
 });
 
-function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance, max_seats)
+function create_seats(flight_id, cabin_type, max_seats)
 {
     var query = {}
     query['flight_id'] = flight_id;
     query['reservation_id'] = null;
     query['seat_type'] = cabin_type;
-    query['price'] = seat_price;
-    query['baggage_allowance'] = seat_baggage_allowance;
-    query['seat_name'] = (cabin_type == 'first'?'A1':(cabin_type == 'business'?'B1':'C1'));
-    for(var i=0;i<max_seats;i++)
+ 
+    for(var i=1;i<=max_seats;i++)
         {
+            
+            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+i;
             const new_seat = new FlightSeat(query);
             new_seat.save().catch(err=>{
                 console.log(err)
             })
-            var n = parseInt(query.seat_name.substring(1))+1;
-            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+n;
+            
+            
         }
 }
 
@@ -690,30 +690,20 @@ router.get('/:flight_id', async(req,res)=>{
     }
 })
 
-// get the details of a flight with its id + seat
-router.get('/:flight_id/:seat', async(req,res)=>{
-    const flight = await FlightSeat.aggregate([
-        {$match:{
-            _id: mongoose.Types.ObjectId(req.params.seat)
-        }},
-        {$lookup: {
-            from: "Flight",
-            localField: "flight_id",
-            foreignField: "_id",
-            as: "flight_details"
-        }
-    }])
-    if(flight)
-    {
-        res.json(flight);
-    }
+
+
+// getting all seats of a specific flight
+router.get('/all_seats/:flight_id', async (req,res)=>{
+    const flight_id = req.params.flight_id;
+    console.log(flight_id);
+    const seats = await FlightSeat.find({'flight_id':flight_id});
+    if(seats.length>0)
+        res.json({res : seats});
     else
-    {
-        res.status(404).json({msg:'flight with this id not found'});
-    }
+        res.status(404).json({msg : "no such flight"});
 })
 
 
-//Get All Reserved Flights by a user
+
 
 module.exports = router
