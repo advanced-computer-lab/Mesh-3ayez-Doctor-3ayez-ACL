@@ -146,7 +146,7 @@ router.post('/', async(req,res)=>{
                 res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the return flight'});
                 return;
             }
-            query['price'] = (departure_flight.business_seats.price["$numberDecimal"]+ return_flight.buiness_seats.price["$numberDecimal"]) * 2;
+            query['price'] = departure_flight.business_seats.price *body.number_of_passengers+ return_flight.business_seats.price*body.number_of_passengers;
         }
 
         else if(body.cabin_type === 'first')
@@ -162,7 +162,7 @@ router.post('/', async(req,res)=>{
                 res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the return flight'});
                 return;
             }
-            query['price'] = (departure_flight.first_seats.price["$numberDecimal"]+ return_flight.first_seats.price["$numberDecimal"]) * 2;
+            query['price'] = departure_flight.first_seats.price *body.number_of_passengers+ return_flight.first_seats.price*body.number_of_passengers;
         }
 
         else
