@@ -10,6 +10,7 @@ import PersistentDrawerRight from './PersistentDrawerRight';
 
 
 function AdminHome() {
+  const colors= require("../colors");
   const [rows, updateRows] = useState([]);
   const [width,setWidth]=useState("0");
   const [marginLeft,setMarginLeft]=useState("0");

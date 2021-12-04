@@ -10,7 +10,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 export default function Navbar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{background:"#274472"}} >
+      <AppBar position="static" sx={{background:props.color}} >
         <Toolbar >
           <IconButton
             size="large"
