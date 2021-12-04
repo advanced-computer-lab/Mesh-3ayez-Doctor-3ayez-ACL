@@ -710,6 +710,29 @@ router.get('/all_seats/:flight_id', async (req,res)=>{
         res.status(404).json({msg : "no such flight"});
 })
 
+// get the details of a flight with its id + seat
+router.get('/:flight_id/:seat', async(req,res)=>{
+    const flight = await FlightSeat.aggregate([
+        {$match:{
+            _id: mongoose.Types.ObjectId(req.params.seat)
+        }},
+        {$lookup: {
+            from: "Flight",
+            localField: "flight_id",
+            foreignField: "_id",
+            as: "flight_details"
+        }
+    }])
+    if(flight)
+    {
+        res.json(flight);
+    }
+    else
+    {
+        res.status(404).json({msg:'flight with this id not found'});
+    }
+})
+
 
 function construct_date(date)
 {
