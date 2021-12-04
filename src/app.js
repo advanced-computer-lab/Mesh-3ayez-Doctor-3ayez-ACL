@@ -26,6 +26,10 @@ app.use('/api/flight_seats', require('../routes/api/flightSeats'))
 app.use('/api/users', require('../routes/api/users'))
 
 
+// defining the path for all APIs regarding reservations
+app.use('/api/reservations', require('../routes/api/reservations'))
+
+
 
 // const dummyRec ={
 // From:"oo",
