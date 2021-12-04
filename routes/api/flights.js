@@ -597,13 +597,16 @@ router.post('/user_search_flights', async(req,res)=>{
 
     if(body.departure_date)
     {
-        const d1 = new Date(body.departure_date);
+        const departure_date = body.departure_date;
+        const d1 = new Date(construct_date(departure_date));
         if(isNaN(d1))
         {
             res.status(400).json({msg: 'the departure date is not a valid date'});
             return;
         }
-        const d2 = new Date(body.departure_date);
+        console.log(departure_date);
+        const d2 = new Date(construct_date(departure_date));
+        
         d2.setDate(d2.getDate()+1);
         departure_query['departure_time']= {$gte:d1, $lt:d2};
     }
@@ -613,15 +616,17 @@ router.post('/user_search_flights', async(req,res)=>{
         return;
     }
 
-    if(body.return_date )
+    if(body.return_date)
     {
-        const d1 = new Date(body.return_date);
+        const return_date = body.return_date;
+        const d1 = new Date(construct_date(return_date));
+        
         if(isNaN(d1))
         {
             res.status(400).json({msg: 'the return date is not a valid date'});
             return;
         }
-        const d2 = new Date(body.return_date);
+        const d2 = new Date(construct_date(return_date));
         d2.setDate(d2.getDate()+1);
         return_query['departure_time']= {$gte:d1, $lt:d2};
     }
@@ -671,6 +676,8 @@ router.post('/user_search_flights', async(req,res)=>{
         }
     }
 
+    console.log(departure_query['departure_time']);
+    console.log(return_query['departure_time']);
     const depart_flights = await Flight.find(departure_query);
     const return_flights = await Flight.find(return_query);
     res.json({'departure_flights' : depart_flights, 'return_flights':return_flights});
@@ -702,6 +709,18 @@ router.get('/all_seats/:flight_id', async (req,res)=>{
     else
         res.status(404).json({msg : "no such flight"});
 })
+
+
+function construct_date(date)
+{
+    var day = date.day + "";
+    if(date.day<10)
+            day = 0+""+date.day;
+    var month = date.month + "";
+    if(date.month<10)
+        month = 0+""+date.month
+    return new Date(date.year + "-" + month + "-" + day + "T00:00:00.000Z");
+}
 
 
 
