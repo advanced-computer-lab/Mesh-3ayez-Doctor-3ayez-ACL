@@ -19,10 +19,9 @@ import DatePicker from '@mui/lab/DatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import UserSearchResults from './UserSearchResults.js';
-import { useSelector,useDispatch } from 'react-redux';
-import {setFlights} from '../redux/flightSearchSlice'
+// import {setFlights} from '../redux/flightSearchSlice'
 import { Redirect } from 'react-router';
 const colors = require("../colors.js");
 
@@ -60,16 +59,18 @@ const useStyles = makeStyles({
 });
 const flights = {};
 function UserSearch(props) {
+    const location = useLocation();
+    const [from, setFrom] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["from"]:'');
+    const [to, setTo] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["to"]:'');
+    const date = location.state&&location.state.searchInputs?location.state.searchInputs["return_date"]: new Date();
+    const [arrival_date, setArrivalTime] = React.useState(date);
+    const date2 = location.state&&location.state.searchInputs?location.state.searchInputs["departure_date"]: new Date();
+    const [departure_date, setDepartureTime] = React.useState(date2);
+    const [number_of_passengers, setPassengers] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["number_of_passengers"]:'');
+    const [cabin_type, setCabin] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["cabin_type"]:'');
+    const classes = useStyles()
+    const history = useHistory();
 
-    const [from, setFrom] = React.useState('');
-    const [to, setTo] = React.useState('');
-    const [arrival_date, setArrivalTime] = React.useState(new Date());
-    const [departure_date, setDepartureTime] = React.useState(new Date());
-    const [number_of_passengers, setPassengers] = React.useState('');
-    const [cabin_type, setCabin] = React.useState('');
-    const [searched, setSearched ] = React.useState(props.searched);
-    const classes= useStyles()
-    const dispatch = useDispatch();
     const handleSearch = () => {
 
         const data = {
@@ -80,18 +81,27 @@ function UserSearch(props) {
             "cabin_type": cabin_type,
             "number_of_passengers": number_of_passengers
         }
-        console.log(data)
+ 
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
-                dispatch(setFlights(result.data));
+                // dispatch(setFlights(result.data));
                 console.log(result.data);
-                setSearched(true);
+                history.push({
+                    pathname: '/user/searchResults', state:
+                    {
+                        flights: result.data,
+                        cabin_type: cabin_type,
+                        number_of_passengers: number_of_passengers,
+                        searchInputs: data
+                    }
+                });
+
             })
             .catch(err => console.log(err));
     }
     return (
         <div>
-            {!searched&& <Box className="box" sx={{ '& > :not(style)': { m: 1, width: "18ch", marginTop: "20px", textAlign: "center" } }}>
+            {<Box style={{ position: props.position }} className="box" sx={{ '& > :not(style)': { m: 1, width: "18ch", marginTop: "20px", textAlign: "center" } }}>
                 <TextField
                     id="input-with-icon-textfield"
                     label="From"
@@ -129,9 +139,10 @@ function UserSearch(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Departure date"
-                        value={departure_date}
+                        value={new Date(departure_date.year, departure_date.month-1, departure_date.day)}
                         onChange={(newValue) => {
-                            setDepartureTime(newValue);
+                            console.log(newValue.getDate()+" "+(newValue.getMonth()+1)+" "+newValue.getFullYear())
+                            setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth()+1, day: newValue.getDate() });
                         }}
 
                         renderInput={(params) => <TextField {...params} className={classes.root}
@@ -140,11 +151,11 @@ function UserSearch(props) {
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                        label="Arrival date"
-                        value={arrival_date}
+                        label="Return date"
+                        value={new Date(arrival_date.year, arrival_date.month-1, arrival_date.day)}
 
                         onChange={(newValue) => {
-                            setArrivalTime(newValue);
+                            setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth()+1, day: newValue.getDate() });
                         }}
                         renderInput={(params) => <TextField {...params} className={classes.root}
                             InputLabelProps={{ shrink: true, }} />}
@@ -200,7 +211,6 @@ function UserSearch(props) {
                     marginTop: "25px",
                 }} variant="contained" endIcon={<SearchIcon />} onClick={handleSearch}  >Search</Button>
             </Box>}
-            {searched&&<Redirect to='/searchResults'/>}
         </div>
     )
 }

@@ -7,18 +7,22 @@ import Seats from "./Seats";
 import axios from "axios";
 import Ticket from '../Ticket_components/Ticket';
 import Button from '@mui/material/Button';
+import { useLocation } from "react-router";
 export function SeatPick() {
 
+    const location= useLocation();
+    const departure= location.state.departure;
+    const ret= location.state.return;
 
     let depSeats;
-    let depCabinType;
-    axios.get("http://localhost:8000/api/flights/all_seats/" + id + "/" + depCabinType)
+    let depCabinType=departure.cabin_type;
+    axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
         .then(res => {
             depSeats = res.data;
         });
     let retSeats;
-    let retCabinType;
-    axios.get("http://localhost:8000/api/flights/all_seats/" + id + "/" + retCabinType)
+    let retCabinType= ret.cabin_type;
+    axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType)
         .then(res => {
             retSeats = res.data;
         });
@@ -27,12 +31,14 @@ export function SeatPick() {
         ...theme.typography.body2,
         padding: theme.spacing(1),
         textAlign: 'center',
-    }));
+    }));   
+
+    
+    // handle price
     const [priceDep, setPriceDep] = useState(0);
     const [priceRet, setPriceRet] = useState(0);
     const [departureSeats, setDepartureSeats] = useState([]);
     const [returnSeats, setReturnSeats] = useState([]);
-
     function addDepS(x) {
         departureSeats.push(x);
         setDepartureSeats(departureSeats);
@@ -95,7 +101,7 @@ export function SeatPick() {
                     <Grid item xs={4}>
 
                         <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                            <Seats addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={rows2} maxReservableSeats={3} visible />
+                            <Seats addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={rows2} maxReservableSeats={departure.number_of_passengers} visible />
                         </div>
                     </Grid>
                 </Grid>
@@ -106,7 +112,7 @@ export function SeatPick() {
                     <Grid item xs={4}>
 
                         <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                            <Seats addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={rows} maxReservableSeats={3} visible />
+                            <Seats addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={rows} maxReservableSeats={ret.number_of_passengers} visible />
                         </div>
                     </Grid>
                 </Grid>

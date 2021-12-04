@@ -5,8 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SeatPick } from './components/SeatReservation/SeatPick';
 ReactDOM.render(
-  <SeatPick />
-  ,
+  
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
