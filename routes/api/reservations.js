@@ -3,9 +3,10 @@ const express = require('express')
 const moment = require('moment')
 const router = express.Router()
 const mongoose =require("mongoose")
-const Reservation = require('../../src/Models/FlightSeat');
+const Reservation = require('../../src/Models/Reservation');
 const User = require('../../src/Models/User');
 const Flight = require('../../src/Models/Flight');
+const FlightSeat = require('../../src/Models/FlightSeat');
 
 // create a new reservation
 router.post('/', async(req,res)=>{
@@ -13,7 +14,7 @@ router.post('/', async(req,res)=>{
     var query = {};
 
     var departure_flight;
-    var rerturn_flight;
+    var return_flight;
     var number_of_passengers;
     var cabin_type;
 
@@ -49,8 +50,8 @@ router.post('/', async(req,res)=>{
     {
         if(mongoose.isValidObjectId(body.departure_flight))
         {
-            const departure_flight = await Flight.findById(body.departure_flight);
-            if(flight)
+            departure_flight = await Flight.findById(body.departure_flight);
+            if(departure_flight)
                 query['departure_flight'] = body.departure_flight;
             else
             {
@@ -76,8 +77,8 @@ router.post('/', async(req,res)=>{
     {
         if(mongoose.isValidObjectId(body.return_flight))
         {
-            const return_flight = await Flight.findById(body.return_flight);
-            if(flight)
+            return_flight = await Flight.findById(body.return_flight);
+            if(return_flight)
                 query['return_flight'] = body.return_flight;
             else
             {
@@ -117,17 +118,164 @@ router.post('/', async(req,res)=>{
     {
         if(body.cabin_type === 'economy')
         {
+            if(departure_flight.economy_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the departure flight'});
+                return;
+            }
+
+            if(return_flight.economy_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the return flight'});
+                return;
+            }
             
+            query['price'] = departure_flight.economy_seats.price *body.number_of_passengers+ return_flight.economy_seats.price*body.number_of_passengers;
+
         }
+        else if(body.cabin_type === 'business')
+        {
+            if(departure_flight.business_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the departure flight'});
+                return;
+            }
+
+            if(return_flight.business_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the return flight'});
+                return;
+            }
+            query['price'] = (departure_flight.business_seats.price["$numberDecimal"]+ return_flight.buiness_seats.price["$numberDecimal"]) * 2;
+        }
+
+        else if(body.cabin_type === 'first')
+        {
+            if(departure_flight.first_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the departure flight'});
+                return;
+            }
+
+            if(return_flight.first_seats.available < body.number_of_passengers)
+            {
+                res.status(400).json({msg : 'the number of passengers must be less than the available seats in the chosen cabin in the return flight'});
+                return;
+            }
+            query['price'] = (departure_flight.first_seats.price["$numberDecimal"]+ return_flight.first_seats.price["$numberDecimal"]) * 2;
+        }
+
+        else
+        {
+            res.status(400).json({msg : 'the cabin type is incorrect. please choose between economy, business, and first'});
+            return;
+        }
+        query['cabin_type'] = body.cabin_type
+
+
     }
     else
     {
         res.status(400).json({msg : 'you need to specify the cabin type'});
     }
+
+    // departure seats
+    if(body.departure_seats)
+    {
+        if(body.departure_seats.length!==body.number_of_passengers)
+        {
+            res.status(400).json({msg : 'the number of chosen seats in the departure flight should be equal to the number of passengers'});
+            return;
+        }
+        
+        for(var i=0;i<body.departure_seats.length;i++)
+        {
+            if(!mongoose.isValidObjectId(body.departure_seats[i]))
+            {
+                res.status(400).json({msg : `${body.departure_seats[i]} is not a valid id`});
+                return;
+            }
+            const seat = await FlightSeat.findOne({'_id':body.departure_seats[i], 'flight_id' : body.departure_flight});
+            if(!seat)
+            {
+                res.status(400).json({msg : `the seat with id ${body.departure_seats[i]} does not exist in the departure flight`});
+                return;
+            }
+            if(seat.reservation_id)
+            {
+                res.status(400).json({msg : `the seat with id ${body.departure_seats[i]} is already reserved`});
+                return;
+            }
+        }
+
+       
+    }
+    else
+    {
+        res.status(400).json({msg : 'you should specify the departure flight seats'});
+        return;
+    }
+
+    // return flight seats
+
+    if(body.return_seats)
+    {
+        if(body.return_seats.length!==body.number_of_passengers)
+        {
+            res.status(400).json({msg : 'the number of chosen seats in the return flight should be equal to the number of passengers'});
+            return;
+        }
+        
+        for(var i=0;i<body.return_seats.length;i++)
+        {
+            if(!mongoose.isValidObjectId(body.return_seats[i]))
+            {
+                res.status(400).json({msg : `${body.return_seats[i]} is not a valid id`});
+                return;
+            }
+            const seat = await FlightSeat.findOne({'_id':body.return_seats[i], 'flight_id' : body.return_flight});
+            if(!seat)
+            {
+                res.status(400).json({msg : `the seat with id ${body.return_seats[i]} does not exist in the return flight`});
+                return;
+            }
+            if(seat.reservation_id)
+            {
+                res.status(400).json({msg : `the seat with id ${body.return_seats[i]} is already reserved`});
+                return;
+            }
+        }
+    }
+    else
+    {
+        res.status(400).json({msg : 'you should specify the return flight seats'});
+        return;
+    }
+
     
 
+    const new_reservation = new Reservation(query);
+    
+    new_reservation.save().then(async(reservation) =>{
+        
+        var seat_update = {'reservation_id' : reservation._id};
+        
+        body.departure_seats.map(async seat_id => {
 
+            await FlightSeat.findByIdAndUpdate(seat_id, seat_update);
+        })
+
+        body.return_seats.map(async seat_id => {
+             await FlightSeat.findByIdAndUpdate(seat_id, seat_update);
+        })
+        res.json({msg : 'reservation created successfully'});
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg : 'the server has encountered a problem. sorry for disturbance'});
+    })
+    
 
 });
+
 
 module.exports = router;
