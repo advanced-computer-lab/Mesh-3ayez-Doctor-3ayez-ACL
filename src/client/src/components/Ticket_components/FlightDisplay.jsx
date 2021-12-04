@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TicketHead from './TicketHead';
+import FlightDisplayHead from './FlightDisplayHead';
 import TextField from '@mui/material/TextField';
-import TicketBody from "./TicketBody";
+import FlightDisplayBody from "./FlightDisplayBody";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function Ticket(probs) {
+function FlightDisplay(probs) {
 
     const [open, setOpen] = React.useState(false);
 
@@ -40,27 +40,23 @@ function Ticket(probs) {
     return (
         <div>
             <table className="styled-table2">
-                <TicketHead />
+                <FlightDisplayHead />
                 <tbody>
                     {
                         rows.map((sf) => {
-                            return <TicketBody
-                               
+                            return <FlightDisplayBody
                                 key={sf._id}
                                 _id={sf._id}
-                                flight_id = {sf.flight_id}
-                                reservation_id = {sf.reservation_id}
-                                seat_type = {sf.seat_type}
-                                seat_name = {sf.seat_name}
-                                price = {sf.flight_details[0].seat_type == 'economy'?sf.flight_details[0].economy_seats.price.$numberDecimal:(
-                                    sf.flight_details[0].seat_type == 'first'?sf.flight_details[0].first_seats.price.$numberDecimal:
-                                    sf.flight_details[0].business_seats.price.$numberDecimal
-                                )}
-                                baggage_allowance = {sf.flight_details[0].seat_type == 'economy'?sf.flight_details[0].economy_seats.baggage_allowance.$numberDecimal:(
-                                    sf.flight_details[0].seat_type == 'first'?sf.flight_details[0].first_seats.baggage_allowance.$numberDecimal:
-                                    sf.flight_details[0].business_seats.baggage_allowance.$numberDecimal)}
-                                flight_details = {sf.flight_details}
-                                
+                                flight_number={sf.flight_number}
+                                from={sf.from}
+                                departure_terminal={sf.departure_terminal}
+                                to={sf.to}
+                                arrival_terminal={sf.arrival_terminal}
+                                departure_time={sf.departure_time}
+                                arrival_time={sf.arrival_time}
+                                economy_seats = {sf.economy_seats}
+                                business_seats = {sf.business_seats}
+                                first_seats = {sf.first_seats}
                             />
                         })
                     }
@@ -93,4 +89,4 @@ function Ticket(probs) {
         </div>
     );
 }
-export default Ticket;
+export default FlightDisplay;
