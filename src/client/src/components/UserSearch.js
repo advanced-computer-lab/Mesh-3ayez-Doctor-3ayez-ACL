@@ -21,7 +21,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router-dom";
 import UserSearchResults from './UserSearchResults.js';
-// import {setFlights} from '../redux/flightSearchSlice'
 import { Redirect } from 'react-router';
 const colors = require("../colors.js");
 
@@ -84,7 +83,6 @@ function UserSearch(props) {
  
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
-                // dispatch(setFlights(result.data));
                 console.log(result.data);
                 history.push({
                     pathname: '/user/searchResults', state:
