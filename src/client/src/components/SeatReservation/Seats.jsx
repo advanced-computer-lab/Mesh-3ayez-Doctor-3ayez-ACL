@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
  
-import SeatPicker from './react-seat-picker'
+import SeatPicker from './react-seat-picker/distt'
  
+
 export default class Seats extends Component {
 
     
