@@ -745,6 +745,21 @@ function construct_date(date)
     return new Date(date.year + "-" + month + "-" + day + "T00:00:00.000Z");
 }
 
+// get all seats from a flight with the cabin
+
+router.get("/all_seats/:id/:cabin",(req,res)=>{
+    console.log(req.params.id);
+    FlightSeat.find({"flight_id":req.params.id,"seat_type":req.params.cabin}).then(
+         (result)=>{
+             res.json(result);
+         }
+     ).catch(
+         (err)=>{
+            console.log(err);
+         }
+     )
+});
+
 
 
 
