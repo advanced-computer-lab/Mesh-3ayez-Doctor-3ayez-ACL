@@ -3,9 +3,146 @@ const moment = require('moment');
 const { Query } = require('mongoose');
 const mongoose = require('mongoose');
 const Flight = require('../../src/Models/Flight');
+const Admin = require('../../src/Models/Admin');
+const Reservation = require('../../src/Models/Reservation')
+const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 
 const router = express.Router()
+
+// user cancel a reservation
+
+router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
+    
+    const user_id = req.params.user_id;
+    const reservation_id = req.params.reservation_id
+    const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id':user_id});
+    if(reservation)
+    {
+        
+        var update_departure = {};
+        var update_return = {};
+        const departure_flight = await Flight.findOne({'_id' : reservation.departure_flight});
+        const return_flight = await Flight.findOne({'_id':reservation.return_flight});
+        if(reservation.cabin_type=='economy')
+        {
+            update_departure['economy_seats.available'] = reservation.number_of_passengers + departure_flight.economy_seats.available;
+            update_return['economy_seats.available'] = reservation.number_of_passengers + return_flight.economy_seats.available;
+        }
+        else if(reservation.cabin_type == 'business')   
+        {
+            update_departure['business_seats.available'] = reservation.number_of_passengers + departure_flight.business_seats.available;
+            update_return['business_seats.available'] = reservation.number_of_passengers + return_flight.business_seats.available;   
+        }
+        else   
+        {
+            update_departure['first_seats.available'] = reservation.number_of_passengers + departure_flight.first_seats.available;
+            update_return['first_seats.available'] = reservation.number_of_passengers + return_flight.first_seats.available;
+        }
+        await Flight.findByIdAndUpdate(reservation.departure_flight, update_departure);
+        await Flight.findByIdAndUpdate(reservation.return_flight, update_return);
+        await FlightSeat.updateMany({'reservation_id' : reservation_id}, {'reservation_id':null});
+        await Reservation.findByIdAndDelete(reservation_id);
+        res.json({msg:"deleted successfully"});
+
+    }
+    else
+        res.status(404).json({msg: 'no such reservations for this specific user'});
+    
+});
+
+// get itinerary of a reservation
+
+router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
+    const user_id = req.params.user_id;
+    const reservation_id = req.params.reservation_id;
+    const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id' : user_id});
+    if(reservation)
+    {
+        var response = {};
+        const departure_flight = await Flight.findById(reservation.departure_flight,
+            'flight_number from to departure_terminal arrival_terminal departure_time');
+        const return_flight = await Flight.findById(reservation.return_flight,
+            'flight_number from to departure_terminal arrival_terminal departure_time');
+        const departure_seats = await FlightSeat.find({'flight_id':reservation.departure_flight, 'reservation_id':reservation_id}, 'seat_number');
+        const return_seats = await FlightSeat.find({'flight_id':reservation.return_flight, 'reservation_id':reservation_id}, 'seat_number');
+        response['departure_flight'] = departure_flight;
+        response['return_flight'] = return_flight;
+        response['reservation_number'] = reservation_id;
+        response['departure_seats'] = departure_seats;
+        response['return_seats'] = return_seats;
+        response['cabin_type'] = reservation.cabin_type;
+        response['total_price'] = reservation.price;
+        response['amount_paid'] = reservation.paid;
+        res.json(response);
+    }
+    else
+    {
+        res.status(404).json({msg:'no such reservation for this specific user'});
+    }
+});
+
+// edit user info
+router.put('/:user_id',async(req,res)=>{
+    const body = req.body;
+    const user_id = req.params.user_id;
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the id you have sent is not a valid id'});
+        return;
+    }
+    const user = User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg : 'no such user'});
+        return;
+    }
+
+    var query = {};
+    if(body.first_name)
+    {
+        query['first_name'] = body.first_name;
+    }
+    if(body.last_name)
+        query['last_name'] = body.last_name;
+    if(body.passport)
+    {
+        if(!isNaN(body.passport))
+            query['passport'] = body.passport;
+        else
+        {
+            res.status(400).json({msg : 'the passport you have entered is not valid'});
+            return;
+        }
+    }
+    if(body.email)
+    {
+        if(validateEmail(body.email))
+            query['email'] = body.email;
+        else
+        {
+            res.status(400).json({msg : 'the email you have entered is not valid'});
+            return;
+        }
+    }
+
+    User.findByIdAndUpdate(user_id,query).then(async result =>{
+        const new_user = await User.findById(user_id);
+        res.json(new_user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json('the server has encountered an error sorry for disturbance');
+    })
+});
+
+function validateEmail (email){
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
 
 
 

@@ -1,3 +1,4 @@
+
 import '../index.css';
 import im from './margo-brodowicz-KZHhnb6XsQI-unsplash.jpg'
 
@@ -16,5 +17,3 @@ function UserHome() {
 }
 
 export default UserHome
-
-

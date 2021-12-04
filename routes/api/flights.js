@@ -7,7 +7,7 @@ const router = express.Router()
 const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
 const FlightSeat = require('../../src/Models/FlightSeat');
-const User = require('../../src/Models/User');
+const User = require('../../src/Models/Admin');
 
 // APIs here
 
@@ -226,11 +226,11 @@ router.post("/", async(req,res)=>{
             //creating a new flight
             const newFlight = new Flight(query);
             newFlight.save().then((flight)=>{
-                res.status(201).json({msg : 'flight created successfully'});
                 // initializing all seats for that flight
-                create_seats(flight._id, 'economy', body.economy_seats.price, body.economy_seats.baggage_allowance, body.economy_seats.max_seats);
-                create_seats(flight._id, 'business', body.business_seats.price, body.business_seats.baggage_allowance, body.business_seats.max_seats);
-                create_seats(flight._id, 'first', body.first_seats.price, body.first_seats.baggage_allowance,body.first_seats.max_seats);
+                create_seats(flight._id, 'economy', body.economy_seats.max_seats);
+                create_seats(flight._id, 'business', body.business_seats.max_seats);
+                create_seats(flight._id, 'first', body.first_seats.max_seats);
+                res.status(201).json({msg : 'flight created successfully'});
             }).catch(err=>{
                 console.log(err)
                 res.status(500).json('the server has encountered an internal error sorry for disturbance');
@@ -245,20 +245,23 @@ router.post("/", async(req,res)=>{
     }
 });
 
-function create_seats(flight_id, cabin_type, seat_price, seat_baggage_allowance, max_seats)
+function create_seats(flight_id, cabin_type, max_seats)
 {
     var query = {}
     query['flight_id'] = flight_id;
-    query['reseration_id'] = null;
+    query['reservation_id'] = null;
     query['seat_type'] = cabin_type;
-    query['price'] = seat_price;
-    query['baggage_allowance'] = seat_baggage_allowance;
-    for(var i=0;i<max_seats;i++)
+ 
+    for(var i=1;i<=max_seats;i++)
         {
+            
+            query['seat_name'] = (cabin_type == 'first'?'A':(cabin_type == 'business'?'B':'C'))+i;
             const new_seat = new FlightSeat(query);
             new_seat.save().catch(err=>{
                 console.log(err)
             })
+            
+            
         }
 }
 
@@ -522,6 +525,8 @@ router.delete('/:_id', async(req, res) => {
     if(await checkAdmin()){
     Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
         .catch(err => res.status(404).json({ error: 'No such a flight' }))
+    FlightSeat.remove({'flight_id': req.params._id}).exec();
+    console.log("I got here");
 }
 else{
     res.status(403).json({msg: 'you are not authorized to delete any flights'});
@@ -592,13 +597,16 @@ router.post('/user_search_flights', async(req,res)=>{
 
     if(body.departure_date)
     {
-        const d1 = new Date(body.departure_date);
+        const departure_date = body.departure_date;
+        const d1 = new Date(construct_date(departure_date));
         if(isNaN(d1))
         {
             res.status(400).json({msg: 'the departure date is not a valid date'});
             return;
         }
-        const d2 = new Date(body.departure_date);
+        console.log(departure_date);
+        const d2 = new Date(construct_date(departure_date));
+        
         d2.setDate(d2.getDate()+1);
         departure_query['departure_time']= {$gte:d1, $lt:d2};
     }
@@ -608,15 +616,17 @@ router.post('/user_search_flights', async(req,res)=>{
         return;
     }
 
-    if(body.return_date )
+    if(body.return_date)
     {
-        const d1 = new Date(body.return_date);
+        const return_date = body.return_date;
+        const d1 = new Date(construct_date(return_date));
+        
         if(isNaN(d1))
         {
             res.status(400).json({msg: 'the return date is not a valid date'});
             return;
         }
-        const d2 = new Date(body.return_date);
+        const d2 = new Date(construct_date(return_date));
         d2.setDate(d2.getDate()+1);
         return_query['departure_time']= {$gte:d1, $lt:d2};
     }
@@ -666,13 +676,91 @@ router.post('/user_search_flights', async(req,res)=>{
         }
     }
 
+    console.log(departure_query['departure_time']);
+    console.log(return_query['departure_time']);
     const depart_flights = await Flight.find(departure_query);
     const return_flights = await Flight.find(return_query);
     res.json({'departure_flights' : depart_flights, 'return_flights':return_flights});
 
 });
 
+// get the details of a flight with its id
+router.get('/:flight_id', async(req,res)=>{
+    const flight = await Flight.findOne({'_id':req.params.flight_id});
+    if(flight)
+    {
+        res.json(flight);
+    }
+    else
+    {
+        res.status(404).json({msg:'flight with this id not found'});
+    }
+})
 
-//Get All Reserved Flights by a user
+
+
+// getting all seats of a specific flight
+router.get('/all_seats/:flight_id', async (req,res)=>{
+    const flight_id = req.params.flight_id;
+    console.log(flight_id);
+    const seats = await FlightSeat.find({'flight_id':flight_id});
+    if(seats.length>0)
+        res.json({res : seats});
+    else
+        res.status(404).json({msg : "no such flight"});
+})
+
+// get the details of a flight with its id + seat
+router.get('/:flight_id/:seat', async(req,res)=>{
+    const flight = await FlightSeat.aggregate([
+        {$match:{
+            _id: mongoose.Types.ObjectId(req.params.seat)
+        }},
+        {$lookup: {
+            from: "Flight",
+            localField: "flight_id",
+            foreignField: "_id",
+            as: "flight_details"
+        }
+    }])
+    if(flight)
+    {
+        res.json(flight);
+    }
+    else
+    {
+        res.status(404).json({msg:'flight with this id not found'});
+    }
+})
+
+
+function construct_date(date)
+{
+    var day = date.day + "";
+    if(date.day<10)
+            day = 0+""+date.day;
+    var month = date.month + "";
+    if(date.month<10)
+        month = 0+""+date.month
+    return new Date(date.year + "-" + month + "-" + day + "T00:00:00.000Z");
+}
+
+// get all seats from a flight with the cabin
+
+router.get("/all_seats/:id/:cabin",(req,res)=>{
+    console.log(req.params.id);
+    FlightSeat.find({"flight_id":req.params.id,"seat_type":req.params.cabin}).then(
+         (result)=>{
+             res.json(result);
+         }
+     ).catch(
+         (err)=>{
+            console.log(err);
+         }
+     )
+});
+
+
+
 
 module.exports = router
