@@ -588,12 +588,15 @@ async function checkAdmin(){
 
 router.get("/user/:id", async (req, res) => {
     var rsvids = []
-    await Reservation.find({'user_id': req.params.id}).exec().then(function(stuff){
-        stuff.forEach(function(stuffling){
+    await Reservation.find({'user_id': req.params.id}).exec().then(//function(stuff){
+        /*stuff.forEach(function(stuffling){
                 rsvids.push(mongoose.Types.ObjectId(stuffling._id))
-        })
-    })
-    var flightids = []
+        })*/
+        result => {
+            res.json(result)
+        }
+    )
+    /*var flightids = []
     await FlightSeat.find().where('reservation_id').in(rsvids).exec().then(function(stuff){
         stuff.forEach(function(stuffling){
                 flightids.push(mongoose.Types.ObjectId(stuffling.flight_id))
@@ -605,7 +608,7 @@ router.get("/user/:id", async (req, res) => {
         })
         .catch(err => {
             console.log(err);
-        });
+        });*/
 
     
 })
