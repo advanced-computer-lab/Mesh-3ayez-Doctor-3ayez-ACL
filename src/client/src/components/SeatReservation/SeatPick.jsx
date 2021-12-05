@@ -13,27 +13,32 @@ export function SeatPick() {
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
-
-    let depSeats;
+    const [depSeats, setDepSeats] = useState([])
     let depCabinType = departure.cabin_type;
-    console.log("dep id: "+departure.flight_id+", return id: "+ret.flight_id+", cabin: "+departure.cabin_type);
-    useEffect(() => {
-        axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
-            .then(res => {
-                depSeats = res.data;
-            })
-            .catch(()=>{
-                console.log("BOOM");
-            });
-    },[]);
-    let retSeats;
+    console.log("dep id: " + departure.flight_id + ", return id: " + ret.flight_id + ", cabin: " + departure.cabin_type);
+    const [retSeats, setRetSeats] = useState();
     let retCabinType = ret.cabin_type;
     useEffect(() => {
+        console.log("Nadaaa")
+        axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
+            .then(res => {
+                setDepSeats(res.data);
+            })
+            .catch(() => {
+                console.log("BOOM");
+            });
         axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType)
             .then(res => {
-                retSeats = res.data;
+                setRetSeats(res.data);
             });
-    },[]);
+    }, []);
+
+    // useEffect(() => {
+    //     axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType)
+    //         .then(res => {
+    //             setRetSeats(res.data);
+    //         });
+    // },[]);
 
     const Item = styled(Paper)(({ theme }) => ({
         ...theme.typography.body2,
@@ -43,7 +48,7 @@ export function SeatPick() {
     var depRows = [];
     buildSeatRows(depSeats, depRows);
     var retRows = [];
-    buildSeatRows(retSeats, retRows);
+    buildSeatRows([], retRows);
 
     // handle price
     const [priceDep, setPriceDep] = useState(0);
@@ -83,7 +88,7 @@ export function SeatPick() {
         seat_name: departureSeats,
         price: priceDep,
         baggage_allowance: "",
-        flight_details: ""
+        flight_details: [{seat_type:"economy",economy_seats:{price:125,baggage_allowance:125}}]
     };
 
     var head = "";

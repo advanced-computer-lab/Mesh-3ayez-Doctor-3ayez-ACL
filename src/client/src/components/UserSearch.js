@@ -103,6 +103,7 @@ function UserSearch(props) {
                 <TextField
                     id="input-with-icon-textfield"
                     label="From"
+                    value={from}
                     className={classes.root}
                     InputProps={{
 
@@ -121,6 +122,7 @@ function UserSearch(props) {
                 <TextField
                     id="input-with-icon-textfield"
                     label="To"
+                    value={to}
                     className={classes.root}
                     InputProps={{
                         startAdornment: (

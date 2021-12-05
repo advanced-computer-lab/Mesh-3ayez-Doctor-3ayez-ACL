@@ -36,7 +36,8 @@ export default function FlightCard(props) {
         duration:props.duration,
         number_of_passengers:props.number_of_passengers,
         baggage:props.baggage,
-        price:props.price
+        price:props.price,
+        cabin_type:props.cabin_type
         }
     
     const onClick=()=>{
