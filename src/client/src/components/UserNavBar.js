@@ -124,7 +124,7 @@ const UserNavBar = (props) => {
             ))}
           </Box>
 
-          {props.user &&
+          {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -157,13 +157,13 @@ const UserNavBar = (props) => {
 
               </Menu>
             </Box>}
-          {!props.user && <Box sx={{ flexGrow: 0 }}>
+          {/* {!props.user && <Box sx={{ flexGrow: 0 }}>
             <Button textAlign="center" onClick={() => props.onLogin(true)}>Login</Button>
             <Button textAlign="center" >Sign up </Button>
 
           </Box>
 
-          }
+          } */}
 
         </Toolbar>
       </Container>
