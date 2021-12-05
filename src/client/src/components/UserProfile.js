@@ -15,6 +15,9 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
+import UserNavBar from './UserNavBar';
+import { withStyles } from '@material-ui/core';
+
 
 export default function UserProfile(probs) {
     const id = probs.id;
@@ -152,6 +155,9 @@ export default function UserProfile(probs) {
     }
     return (
         <div   >
+            <div>
+         <UserNavBar></UserNavBar>
+         </div>
             <div className='background' ref={myRef} style = {{     paddingTop: '1px',
     marginTop: '-1px' }}>
             <div className = "center"  >

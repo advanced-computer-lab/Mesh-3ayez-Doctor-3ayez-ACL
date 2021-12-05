@@ -13,16 +13,20 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './TIJ (2).png'
 import {useHistory} from'react-router-dom';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core';
+
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
+const flag=false;
 
 const UserNavBar = () => {
+  
   const colors= require("../colors")
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const history= useHistory()
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -45,15 +49,16 @@ const UserNavBar = () => {
     <AppBar position="static" style={{backgroundColor:colors.c1}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <IconButton
+        <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleNavToHome}
               color="inherit"
               variant="h6"
               component="div"
+              component={Link}
+              to="/"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', width:"60px", height:"60px" } }}
             >
             <Avatar alt="Remy Sharp" src={logo} sx={{width:"60px", height:"60px" }}/>
@@ -110,6 +115,7 @@ const UserNavBar = () => {
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
+                
               >
                 {page}
               </Button>
@@ -138,11 +144,21 @@ const UserNavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+             
+             <MenuItem key = 'Profile' component={Link}
+                to="/Profile" onClick={handleCloseNavMenu}>
+                  <Typography textAlign="left" marginLeft="true">Profile</Typography>
                 </MenuItem>
-              ))}
+                <br></br>
+                <MenuItem key = 'Dashboard' component={Link}
+                to="/Dashboard" onClick={handleCloseNavMenu}>
+                  <Typography textAlign="left"marginLeft="true">Dashboard</Typography>
+                </MenuItem>
+                <br></br>
+                <MenuItem key = 'Logout' component={Link}
+                to="/Logout" onClick={handleCloseNavMenu}>
+                  <Typography textAlign="left" marginLeft="true">Logout</Typography>
+                </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
@@ -150,4 +166,4 @@ const UserNavBar = () => {
     </AppBar>
   );
 };
-export default UserNavBar;
+export default withStyles()(UserNavBar)

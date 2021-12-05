@@ -9,6 +9,7 @@ import UserSearchResults from './UserSearchResults';
 import UserNavBar from './UserNavBar';
 
 function UserHome() {
+    
     return (
      <div className="searchBack" style={{ backgroundImage: `url(${im})` }} >
          <UserNavBar></UserNavBar>
