@@ -23,6 +23,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import { textAlign } from '@mui/system';
 import { unstable_getScrollbarSize } from '@mui/utils';
+import { Redirect, useHistory } from 'react-router';
 
 
 //This is a prototype page just to test ticket display, most functionalities are not implemented yet --youssef
@@ -44,9 +45,9 @@ function Itinerary() {
     var tinyjsons = []
     var tinyjsons2 = []
     axios.get("http://localhost:8000/api/flights/user/61aa4dadbde7d1780db3dda5")
-        .then(res =>{
-            for(var i = 0; i < res.data.length; i++){
-                axios.get("http://localhost:8000/api/users/itinerary/61aa4dadbde7d1780db3dda5/"+res.data[i]._id)
+        .then(reso =>{
+            for(var i = 0; i < reso.data.length; i++){
+                axios.get("http://localhost:8000/api/users/itinerary/61aa4dadbde7d1780db3dda5/"+reso.data[i]._id)
                     .then(res => {
                         
                         // while(theJsons.length != 0){
@@ -129,7 +130,7 @@ function Itinerary() {
 
   }, []);
 
-  
+  let history = useHistory();
   
 
   function handleClose(){
@@ -144,6 +145,7 @@ function Itinerary() {
   function handleCancellation(){
         axios.delete("http://localhost:8000/api/users/reservation/61aa4dadbde7d1780db3dda5/"+thersv);
         handleClose();
+        history.go();
   }
   
 
@@ -159,7 +161,7 @@ function Itinerary() {
             
         {theJsons.map((thing,index)=>{
             
-            return(<Accordion key={thing[0].reservation_number}>{console.log(theJsons.length)}
+            return(thing[0]==undefined?null:<Accordion key={thing[0].reservation_number}>{console.log(theJsons.length)}{useless<10?setUseless(useless+1):null}
                 <AccordionSummary
                   
                   aria-label="Expand"
@@ -177,9 +179,9 @@ function Itinerary() {
                     control={<Button key="buttonkey" variant="outlined" onClick={()=>openCancellation(theJsons[index][0]==undefined?'':theJsons[index][0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
                   />
                 
-                {/*<Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[0][0].total_price.$numberDecimal)}</label></Box>
-                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Paid: "+theJsons[0][0].amount_paid.$numberDecimal}</label></Box>
-      <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Number: "+theJsons[0][0].reservation_number}</label></Box>*/}
+                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[index][0].total_price.$numberDecimal)}</label></Box>
+                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Paid: "+theJsons[index][0].amount_paid.$numberDecimal}</label></Box>
+      <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Number: "+theJsons[index][0].reservation_number}</label></Box>
     
                 </AccordionSummary>
                 <AccordionDetails>
