@@ -18,6 +18,7 @@ function FlightDisplay(probs) {
     const [uid, setU] = React.useState({});
 
     const [rows, updateRows] = useState(probs.getRows);
+    const [seats, upsateSeats] = useState(probs.getSeats);
 
     useEffect(() => {
         
@@ -57,6 +58,7 @@ function FlightDisplay(probs) {
                                 economy_seats = {sf.economy_seats}
                                 business_seats = {sf.business_seats}
                                 first_seats = {sf.first_seats}
+                                seats = {seats}
                             />
                         })
                     }

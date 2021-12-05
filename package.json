@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/advanced-computer-lab/Mesh-3ayez-Doctor-3ayez-ACL#readme",
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@mui/core": "^5.0.0-alpha.54",
     "@mui/icons-material": "^5.1.0",
     "concurrently": "^6.3.0",
     "cors": "^2.8.5",
