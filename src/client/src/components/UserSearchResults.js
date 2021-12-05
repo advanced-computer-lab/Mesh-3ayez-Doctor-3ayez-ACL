@@ -9,13 +9,17 @@ import Navbar from './Navbar';
 import SearchResultsTmp from './SearchResultsTmp';
 function UserSearchResults() {
     const location= useLocation();
+    const [user, setUser]= useState(location.state.user);
+    function setU(){
+        setUser(true);
+    }
     return (
         <div style={{position:'relative',textAlign:"center"}}>
             {/* <UserNavBar></UserNavBar> */}
             <Stack textAlign="center">
-            <UserNavBar></UserNavBar>
+            <UserNavBar user={user} onLogin={setU}></UserNavBar>
             <UserSearch></UserSearch>
-            <SearchResultsTmp margin="Auto" textAlign= "center" flights={location.state.flights} user={location.state.user} cabin_type={location.state.cabin_type} number_of_passengers={location.state.number_of_passengers}></SearchResultsTmp>
+            <SearchResultsTmp margin="Auto" textAlign= "center" flights={location.state.flights} user={user} cabin_type={location.state.cabin_type} number_of_passengers={location.state.number_of_passengers}></SearchResultsTmp>
             </Stack>
         </div>
     )

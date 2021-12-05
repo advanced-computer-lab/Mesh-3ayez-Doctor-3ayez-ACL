@@ -112,7 +112,7 @@ function UserSearch(props) {
                         cabin_type: cabin_type,
                         number_of_passengers: number_of_passengers,
                         searchInputs: data,
-                        // user:props.user
+                        user:props.user
 
                     }
                 });

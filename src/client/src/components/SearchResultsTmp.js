@@ -9,6 +9,12 @@ import { Stack } from '@mui/material';
 import FlightCard from './FlightCard'
 import { useState } from 'react';
 import { useHistory } from 'react-router';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const steps = ['Pick departure flight', 'Pick return flight'];
 
 export default function SearchResultsTmp(props) {
@@ -66,8 +72,18 @@ export default function SearchResultsTmp(props) {
     const [departureReserved, setDepartureReserved] = useState({});
     const [returnReserved, setReturnReserved] = useState({});
     const history = useHistory();
+    const [open, setOpen] = React.useState(false);
+    const [errorMsg, setErrorMessage]=React.useState("");
+    console.log(props.user);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
+        setOpen(false);
+    };
     const onClick = (reserved) => {
+        if(props.user){
         setDepartureReserved(reserved);
         // let newSkipped = skipped;
         // if (isStepSkipped(activeStep)) {
@@ -75,7 +91,11 @@ export default function SearchResultsTmp(props) {
         //     newSkipped.delete(activeStep);
         // }
 
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);}
+        else{
+            setOpen(true);
+            setErrorMessage("You have to login");
+        }
         // setSkipped(newSkipped);
     }
     const onClickReturn = (reserved) => {
@@ -212,6 +232,14 @@ export default function SearchResultsTmp(props) {
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button> */}
                     </Box>
+                    <Stack width="100%">
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                            {errorMsg}
+                        </Alert>
+                    </Snackbar>
+                    </Stack>
+
                 </React.Fragment>
             )}
         </Box>

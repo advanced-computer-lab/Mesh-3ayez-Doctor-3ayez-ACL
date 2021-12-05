@@ -257,7 +257,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        {depSeatsLoading? null : <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />}
+                        {depSeatsLoading? null : <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={Number(departure.number_of_passengers)} visible />}
                     </div> 
                 </Box>
                 <Box gridColumn="span 8">
@@ -308,7 +308,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                       {retSeatsLoading?null: <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />}
+                       {retSeatsLoading?null: <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={Number(ret.number_of_passengers)} visible />}
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
