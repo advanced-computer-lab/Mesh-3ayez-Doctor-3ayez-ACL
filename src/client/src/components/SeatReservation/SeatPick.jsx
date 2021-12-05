@@ -22,17 +22,20 @@ export function SeatPick() {
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
-    const [depSeats, setDepSeats] = useState([])
+    const [depSeats, setDepSeats] = useState([]);
+    const [depSeatsLoading, setDepSeatsLoading] = useState(true);
+    const [retSeatsLoading, setRetSeatsLoading] = useState(true);
     let depCabinType = departure.cabin_type;
     console.log("dep id: " + departure.flight_id + ", return id: " + ret.flight_id + ", cabin: " + departure.cabin_type);
     const [retSeats, setRetSeats] = useState([]);
     let retCabinType = ret.cabin_type;
     useEffect(() => {
-        console.log("Nadaaa")
         axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
             .then(res => {
+
                 setDepSeats(res.data);
-                console.log(res.data);
+                setDepSeatsLoading(false);
+                console.log(depSeats);
             })
             .catch(() => {
                 console.log("BOOM");
@@ -40,6 +43,8 @@ export function SeatPick() {
         axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType)
             .then(res => {
                 setRetSeats(res.data);
+                setRetSeatsLoading(false);
+
             });
     }, []);
 
@@ -98,7 +103,8 @@ export function SeatPick() {
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
     function submitHandler() {
-        if (departure.number_of_passengers === departureSeats.length && ret.number_of_passengers=== returnSeats.length) {
+        console.log( ret.number_of_passengers)
+        if (departure.number_of_passengers == departureSeats.length && ret.number_of_passengers== returnSeats.length) {
             setConfirm(true);
         }
         else {
@@ -110,7 +116,16 @@ export function SeatPick() {
         setOpen(false);
     }
     function reserve() {
-        //TO BE HANDLED LATER --> Send Request With Flight details;
+        var data={
+            user_id:"", // to be handled
+            departure_flight:departure.flight_id,
+            return_flight:ret.flight_id,
+            number_of_passengers:departure.number_of_passengers,
+            cabin_type:departure.cabin_type,
+            departure_seats:reservedDepSeats,
+            return_seats:reservedRetSeats
+        };
+        axios.post("http://localhost:8000/api/reservation",data);
         console.log("done");
         setConfirm(false);
     }
@@ -125,6 +140,36 @@ export function SeatPick() {
         baggage_allowance: "",
         flight_details: [{ seat_type: "economy", economy_seats: { price: 125, baggage_allowance: 125 } }]
     };
+    function buildSeatRows(seats, rows) {
+        var rem = seats.length % 4;
+        var row = [];
+        for (var i = 0; i < seats.length - rem; i++) {
+            if (i % 4 == 0 && i != 0) {
+                rows.push(row);
+                row = [];
+            }
+            var seat = seats[i];
+    
+            var isReserved = seat['reservation_id'] != null;
+            var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved };
+            row.push(seat);
+            
+        }
+        if (row.length > 0) {
+            rows.push(row);
+            row = [];
+        }
+        for (var i = 0; i < rem; i++) {
+            var seat = seats[seats.length - rem + i];
+            var isReserved = seat['reservation_id'] != null;
+            var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved };
+            row.push(seat);
+        }
+        if (row.length > 0) {
+            rows.push(row);
+            row = [];
+        }
+    }
 
     var head = "";
     if (depCabinType.toLowerCase() === "economy")
@@ -210,8 +255,8 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />
-                    </div>
+                        {depSeatsLoading? null : <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />}
+                    </div> 
                 </Box>
                 <Box gridColumn="span 8">
                     <Box gridColumn="span 8">
@@ -261,7 +306,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />
+                       {retSeatsLoading?null: <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />}
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
@@ -306,37 +351,6 @@ export function SeatPick() {
                 </DialogActions>
             </Dialog>
         </div>
-
-
-
     );
 }
 
-function buildSeatRows(seats, rows) {
-    var rem = seats.length % 4;
-    var row = [];
-    for (var i = 0; i < seats.length - rem; i++) {
-        if (i % 4 == 0 && i != 0) {
-            rows.push(row);
-            row = [];
-        }
-        var seat = seats[i];
-        var isReserved = seat['reservation_id'] != null;
-        var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved };
-        row.push(seat);
-    }
-    if (row.length > 0) {
-        rows.push(row);
-        row = [];
-    }
-    for (var i = 0; i < rem; i++) {
-        var seat = seats[seats.length - rem + i];
-        var isReserved = seat['reservation_id'] != null;
-        var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved };
-        row.push(seat);
-    }
-    if (row.length > 0) {
-        rows.push(row);
-        row = [];
-    }
-}

@@ -26,10 +26,10 @@ export default class Seats extends Component {
       addCb(row, number, id, newTooltip)
       this.setState({ loading: false })
       this.props.priceCallBack((prevState) => {
-          return prevState + this.props.price;
+          return prevState + Number(this.props.price);
       })
       this.props.bagCB((prevState)=>{
-        return prevState + this.props.bag;
+        return prevState + Number(this.props.bag);
       })
       
     })
@@ -65,10 +65,10 @@ export default class Seats extends Component {
       removeCb(row, number, newTooltip)
       this.setState({ loading: false })
       this.props.priceCallBack((prevState) => {
-          return prevState - this.props.price;
+          return prevState -Number(this.props.price);
       })
       this.props.bagCB((prevState)=>{
-        return prevState - this.props.bag;
+        return prevState - Number(this.props.bag);
       })
     })
   }

@@ -130,11 +130,14 @@ export default function SearchResultsTmp(props) {
                                     to={item.to}
                                     arrival_time={item.arrival_time}
                                     departure_time={item.departure_time}
+                                    number_of_passengers={props.number_of_passengers}
                                     duration={d}
                                     cabin_type={props.cabin_type}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
                                     price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
                                     onClick={onClickReturn}
+                                    arrival_terminal={item.arrival_terminal}
+                                    departure_terminal={item.departure_terminal}
 
                                 >
 
