@@ -22,6 +22,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import { textAlign } from '@mui/system';
+import { unstable_getScrollbarSize } from '@mui/utils';
 
 
 //This is a prototype page just to test ticket display, most functionalities are not implemented yet --youssef
@@ -36,11 +37,12 @@ function Itinerary() {
   const [marginLeft,setMarginLeft]=useState("0");
   const [paddingLeft,setPaddingLeft] = useState("100px");
   const [paddingRight,setPaddingRight] = useState("100px");
+  const[useless,setUseless] = useState(0);
   var theflightdisplay;
   
   useEffect(() => {
-    
-
+    var tinyjsons = []
+    var tinyjsons2 = []
     axios.get("http://localhost:8000/api/flights/user/61aa4dadbde7d1780db3dda5")
         .then(res =>{
             for(var i = 0; i < res.data.length; i++){
@@ -50,7 +52,7 @@ function Itinerary() {
                         // while(theJsons.length != 0){
                         //     theJsons.pop();
                         // }
-                        var tinyjsons = []
+                        
                         tinyjsons.push(res.data.departure_seats.map((sf) => {
                             
                             return{
@@ -78,13 +80,13 @@ function Itinerary() {
                             }]
                             
                         }}));
-                        updateTheJsons(tinyjsons);
+                        
 
                         // while(theJsons2.length != 0){
                         //     theJsons2.pop();
                         // }
 
-                        var tinyjsons2 = []
+                        
 
                         tinyjsons2.push(res.data.return_seats.map((sf) => {
                             return{
@@ -108,11 +110,15 @@ function Itinerary() {
                             }]
                             
                         }}));
-                        updateTheJsons2(tinyjsons2);
+                        setUseless(useless+1);
+
                     
                     });
                 
             }
+
+            updateTheJsons(tinyjsons);
+            updateTheJsons2(tinyjsons2);
         });
 
     
@@ -123,7 +129,8 @@ function Itinerary() {
 
   }, []);
 
-  console.log(theJsons);
+  
+  
 
   function handleClose(){
     setOpen(false);
@@ -149,8 +156,10 @@ function Itinerary() {
       />
       <div>
         <div id="main" style={{marginLeft:marginLeft,paddingLeft:paddingLeft,paddingRight:paddingRight}}>
+            
         {theJsons.map((thing,index)=>{
-            return(<Accordion key={index}>
+            
+            return(<Accordion key={thing[0].reservation_number}>{console.log(theJsons.length)}
                 <AccordionSummary
                   
                   aria-label="Expand"
@@ -163,9 +172,9 @@ function Itinerary() {
                     aria-label="Acknowledge"
                     onClick={event => event.stopPropagation()}
                     onFocus={event => event.stopPropagation()}
-                    label={' '+(theJsons[0]==undefined?'':(theJsons[0][0]==undefined?'':theJsons[0][0].flight_details[0].from)+" ✈ "
-                    +(theJsons[0][0]==undefined?'':theJsons[0][0].flight_details[0].to))}
-                    control={<Button key="buttonkey" variant="outlined" onClick={()=>openCancellation(theJsons[0][0]==undefined?'':theJsons[0][0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
+                    label={' '+(theJsons[0]==undefined?'':(theJsons[index][0]==undefined?'':theJsons[index][0].flight_details[0].from)+" ✈ "
+                    +(theJsons[index][0]==undefined?'':theJsons[index][0].flight_details[0].to))}
+                    control={<Button key="buttonkey" variant="outlined" onClick={()=>openCancellation(theJsons[index][0]==undefined?'':theJsons[index][0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
                   />
                 
                 {/*<Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[0][0].total_price.$numberDecimal)}</label></Box>
@@ -177,11 +186,11 @@ function Itinerary() {
                     
                     <div>
                         <h2>Departure Tickets:</h2>
-                        {theJsons[0]==undefined?[]:theJsons[0].map((js,inddex) => {
+                        {theJsons[index]==undefined?[]:theJsons[index].map((js,inddex) => {
                             return <Ticket key={inddex+"A"} getRows= {js==undefined?[]:[js]}/>
                         })}
                         <h2>Return Tickets:</h2>
-                        {theJsons2[0]==undefined?[]:theJsons2[0].map((js,inddex) => {
+                        {theJsons2[index]==undefined?[]:theJsons2[index].map((js,inddex) => {
                             return <Ticket key={inddex+"B"} getRows= {js==undefined?[]:[js]}/>
                         })}
                     </div>
@@ -189,6 +198,7 @@ function Itinerary() {
                 </AccordionDetails>
               </Accordion>)
         })}
+        
         
         
         
