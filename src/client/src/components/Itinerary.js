@@ -24,6 +24,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { textAlign } from '@mui/system';
 import { unstable_getScrollbarSize } from '@mui/utils';
 import { Redirect, useHistory } from 'react-router';
+import UserNavBar from './UserNavBar';
+import { withStyles } from '@material-ui/core';
+
 
 
 //This is a prototype page just to test ticket display, most functionalities are not implemented yet --youssef
@@ -152,6 +155,8 @@ function Itinerary() {
   
   return (
     <div >
+     <UserNavBar ></UserNavBar>
+
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -238,4 +243,4 @@ function Itinerary() {
 
 }
 
-export default Itinerary;
+export default withStyles()(Itinerary);

@@ -20,7 +20,7 @@ import { withStyles } from '@material-ui/core';
 
 
 export default function UserProfile(probs) {
-    const id = probs.id;
+    const id = "61aa4dadbde7d1780db3dda5";
     const [vantaEffect, setVantaEffect] = useState(0)
     const myRef = useRef(null)
     useEffect(() => {
@@ -127,21 +127,20 @@ export default function UserProfile(probs) {
             setPassword(row.password);
         }
         const data = {
-            "username": username,
-            "FirstName": FirstName,
-            "LastName": LastName,
+            // "username": username,
+            "first_name": FirstName,
+            "last_name": LastName,
             "email": email,
             "Passport": Passport,
-            "Password":Password
+            // "Password":Password
             
         }
         if (username || FirstName || LastName || email || Passport ||Password) {
             axios.put("http://localhost:8000/api/users/" + id, data, { "Content-Type": "application/json" })
                 .then(result => {
-                    setSucc(result.data.success);
-                    setMsg(result.data.msg)
+                    setSucc(true);
+                    setMsg("User updated")
                     setAlert(true);
-
                 }
                 )
                 .catch(err => console.log(err));
@@ -180,7 +179,7 @@ export default function UserProfile(probs) {
                         display="inline-block"
 
                     >
-                        <TextField
+                        {/* <TextField
                             
                             onChange={function (e) {
                                 setUsername(e.target.value);
@@ -189,7 +188,7 @@ export default function UserProfile(probs) {
                             id="outlined-required"
                             label="Username"
                             type="String"
-                        />
+                        /> */}
 
                         <TextField
                             
@@ -223,7 +222,7 @@ export default function UserProfile(probs) {
                             type="String"
                         />
                         
-                        <InputLabel htmlFor="outlined-adornment-password">Change Password</InputLabel>
+                        {/* <InputLabel htmlFor="outlined-adornment-password">Change Password</InputLabel>
                         <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" label="Password">
                         <InputLabel htmlFor="outlined-adornment-password">New Password</InputLabel>
                             <OutlinedInput
@@ -267,7 +266,7 @@ export default function UserProfile(probs) {
 
                             }
                         />
-                        </FormControl>
+                        </FormControl> */}
 
                         
                         <TextField

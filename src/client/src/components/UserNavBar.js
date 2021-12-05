@@ -20,13 +20,15 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
 const flag=false;
 
-const UserNavBar = () => {
-  
-  const colors= require("../colors")
+
+
+const UserNavBar = (props) => {
+  const colors = require("../colors")
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const history= useHistory()
+  const history = useHistory()
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -41,31 +43,36 @@ const UserNavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const handleNavToHome= ()=> {
+  const handleNavToHome = () => {
     history.push('/');
+  }
+  const onClickProfile = () => {
+    history.push('/user/profile');
+  }
+  const onClickDash = () => {
+    history.push('/user/reservation');
   }
 
   return (
-    <AppBar position="static" style={{backgroundColor:colors.c1}}>
+    <AppBar position="static" style={{ backgroundColor: colors.c1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-              variant="h6"
-              component="div"
-              component={Link}
-              to="/"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', width:"60px", height:"60px" } }}
-            >
-            <Avatar alt="Remy Sharp" src={logo} sx={{width:"60px", height:"60px" }}/>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleNavToHome}
+            color="inherit"
+            variant="h6"
+            component="div"
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex', width: "60px", height: "60px" } }}
+          >
+            <Avatar alt="Remy Sharp" src={logo} sx={{ width: "60px", height: "60px" }} />
 
-            </IconButton>
+          </IconButton>
 
-           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="medium"
               aria-label="account of current user"
@@ -74,7 +81,7 @@ const UserNavBar = () => {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-            <MenuIcon />
+              <MenuIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -100,7 +107,7 @@ const UserNavBar = () => {
                 </MenuItem>
               ))}
             </Menu>
-          </Box> 
+          </Box>
           <Typography
             variant="h6"
             noWrap
@@ -109,7 +116,7 @@ const UserNavBar = () => {
           >
             LOGO
           </Typography>
-           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -120,47 +127,49 @@ const UserNavBar = () => {
                 {page}
               </Button>
             ))}
-          </Box> 
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="U" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-             
-             <MenuItem key = 'Profile' component={Link}
-                to="/Profile" onClick={handleCloseNavMenu}>
-                  <Typography textAlign="left" marginLeft="true">Profile</Typography>
-                </MenuItem>
-                <br></br>
-                <MenuItem key = 'Dashboard' component={Link}
-                to="/Dashboard" onClick={handleCloseNavMenu}>
-                  <Typography textAlign="left"marginLeft="true">Dashboard</Typography>
-                </MenuItem>
-                <br></br>
-                <MenuItem key = 'Logout' component={Link}
-                to="/Logout" onClick={handleCloseNavMenu}>
-                  <Typography textAlign="left" marginLeft="true">Logout</Typography>
-                </MenuItem>
-            </Menu>
           </Box>
+
+          {props.user &&
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="U" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+
+                <MenuItem key="Profile" onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center" onClick={onClickProfile} >Profile </Typography>
+                </MenuItem>
+                <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center" onClick={onClickDash}>Dashboard </Typography>
+                </MenuItem>
+
+              </Menu>
+            </Box>}
+          {!props.user && <Box sx={{ flexGrow: 0 }}>
+            <Button textAlign="center" onClick={() => props.onLogin(true)}>Login</Button>
+            <Button textAlign="center" >Sign up </Button>
+
+          </Box>
+
+          }
+
         </Toolbar>
       </Container>
     </AppBar>
