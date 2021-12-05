@@ -567,9 +567,16 @@ router.delete('/:_id', async(req, res) => {
 
             return;
         }
-        Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
-            .catch(err => res.status(404).json({ error: 'No such a flight' }))
-        FlightSeat.remove({'flight_id': req.params._id}).exec();
+        Flight.findByIdAndRemove(req.params._id, req.body).then(async flight => {
+
+            await FlightSeat.deleteMany({'flight_id': req.params._id});
+            await Reservation.deleteMany({'departure_flight' : req.params._id});
+            await Reservation.deleteMany({'return_flight' : req.params._id});
+            res.json({ msg: 'flight entry deleted successfully' });
+        })
+            .catch(err => res.status(404).json({ error: 'No such a flight' }));
+
+        
         console.log("I got here");
 }
 else{
