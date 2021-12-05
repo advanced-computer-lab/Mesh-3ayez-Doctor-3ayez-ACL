@@ -14,7 +14,7 @@ export default class Seats extends Component {
     loading: false
   }
   addSeatCallback = ({ row, number, id }, addCb) => {
-    this.props.addclbk(""+id);
+    this.props.addclbk(""+number,id);
     this.setState({
         
       loading: true
@@ -26,7 +26,7 @@ export default class Seats extends Component {
       addCb(row, number, id, newTooltip)
       this.setState({ loading: false })
       this.props.priceCallBack((prevState => {
-          return prevState + 30;
+          return prevState + 100;
       }))
       
     })
@@ -50,7 +50,7 @@ export default class Seats extends Component {
   }
  
   removeSeatCallback = ({ row, number, id }, removeCb) => {
-    this.props.rmvclbk(""+id);
+    this.props.rmvclbk(""+number,id);
     this.setState({
       loading: true
     }, async () => {
@@ -62,7 +62,7 @@ export default class Seats extends Component {
       removeCb(row, number, newTooltip)
       this.setState({ loading: false })
       this.props.priceCallBack((prevState) => {
-          return prevState - 30;
+          return prevState - 100;
       })
     })
   }
