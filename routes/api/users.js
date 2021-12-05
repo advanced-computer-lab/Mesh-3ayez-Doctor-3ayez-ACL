@@ -7,6 +7,8 @@ const Admin = require('../../src/Models/Admin');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
+const authorization = require('../../config/mail');
+const nodemailer = require('nodemailer');
 
 const router = express.Router()
 
@@ -16,6 +18,23 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
     
     const user_id = req.params.user_id;
     const reservation_id = req.params.reservation_id
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the user id is not a valid id'});
+        return;
+    }
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg : 'the reservation id is not a valid id'});
+        return;
+    }
+
+    const user = await User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg : 'this user is not found'});
+        return; 
+    }
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id':user_id});
     if(reservation)
     {
@@ -39,10 +58,20 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
             update_departure['first_seats.available'] = reservation.number_of_passengers + departure_flight.first_seats.available;
             update_return['first_seats.available'] = reservation.number_of_passengers + return_flight.first_seats.available;
         }
+
+        // increase the number of available seats in both departure and return seats
         await Flight.findByIdAndUpdate(reservation.departure_flight, update_departure);
         await Flight.findByIdAndUpdate(reservation.return_flight, update_return);
+
+        // deleting the reservation_id for all the reserved seats 
         await FlightSeat.updateMany({'reservation_id' : reservation_id}, {'reservation_id':null});
+
+        
+
         await Reservation.findByIdAndDelete(reservation_id);
+
+        // sending email to the user
+        await send_cancellation_mail(user, reservation.paid, reservation, departure_flight.from, departure_flight.to);
         res.json({msg:"deleted successfully"});
 
     }
@@ -50,6 +79,35 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
         res.status(404).json({msg: 'no such reservations for this specific user'});
     
 });
+
+async function send_cancellation_mail(user, refund, reservation, from, to)
+{
+    const text = `
+    Dear Mr/Mrs ${user.first_name},
+    We hope you are doing well, we are sending this mail to confirm that your reservation with id ${reservation._id} that was going from ${from} to ${to} was cancelled and you will get refunded with an amount of ${refund}.
+     
+     Regards,
+     Acl Team`;
+
+     
+
+     let transporter = nodemailer.createTransport({
+        service: 'hotmail',
+      auth: {
+            user : authorization.user,
+            pass : authorization.password
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${authorization.user}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "cancellation confirmation", // Subject line
+        text: text, // plain text body
+        
+      });
+      
+}
 
 // get itinerary of a reservation
 
