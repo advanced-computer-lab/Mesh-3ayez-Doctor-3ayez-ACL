@@ -16,6 +16,8 @@ import {useHistory} from'react-router-dom';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
 
+
+
 const UserNavBar = () => {
   const colors= require("../colors")
 
@@ -40,6 +42,13 @@ const UserNavBar = () => {
   const handleNavToHome= ()=> {
     history.push('/');
   }
+  const funct = [()=>{
+     history.push('/user/profile');
+  }, ()=>{
+  
+  }, ()=>{
+  
+  }];
 
   return (
     <AppBar position="static" style={{backgroundColor:colors.c1}}>
@@ -138,9 +147,9 @@ const UserNavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {settings.map((setting,index) => (
                 <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" onClick={funct[index]}>{setting} </Typography>
                 </MenuItem>
               ))}
             </Menu>

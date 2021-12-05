@@ -8,7 +8,7 @@ import axios from "axios";
 import { Box } from "@mui/system";
 import Ticket from '../Ticket_components/Ticket';
 import Button from '@mui/material/Button';
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -18,7 +18,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 export function SeatPick() {
-
+    const history= useHistory();
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
@@ -117,15 +117,17 @@ export function SeatPick() {
     }
     function reserve() {
         var data={
-            user_id:"", // to be handled
+            user_id:"61aa4dadbde7d1780db3dda5", // to be handled
             departure_flight:departure.flight_id,
             return_flight:ret.flight_id,
-            number_of_passengers:departure.number_of_passengers,
+            number_of_passengers:Number(departure.number_of_passengers),
             cabin_type:departure.cabin_type,
             departure_seats:reservedDepSeats,
             return_seats:reservedRetSeats
         };
-        axios.post("http://localhost:8000/api/reservation",data);
+        console.log(data);
+        axios.post("http://localhost:8000/api/reservations",data);
+        history.go();
         console.log("done");
         setConfirm(false);
     }

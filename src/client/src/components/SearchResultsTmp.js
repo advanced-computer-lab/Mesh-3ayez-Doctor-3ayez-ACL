@@ -133,6 +133,7 @@ export default function SearchResultsTmp(props) {
                                     number_of_passengers={props.number_of_passengers}
                                     duration={d}
                                     cabin_type={props.cabin_type}
+                                    number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
                                     price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
                                     onClick={onClickReturn}
@@ -204,7 +205,7 @@ export default function SearchResultsTmp(props) {
                             href="/"
                             sx={{ mr: 1 }}
                         >
-                            Back
+                            {props.flights['departure_flights'].length>0?"Back":"Home"}
                         </Button>
                         {/* <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleNext}>

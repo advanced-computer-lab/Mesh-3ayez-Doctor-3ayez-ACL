@@ -93,6 +93,7 @@ function UserSearch(props) {
                         searchInputs: data
                     }
                 });
+                history.go();
 
             })
             .catch(err => console.log(err));
