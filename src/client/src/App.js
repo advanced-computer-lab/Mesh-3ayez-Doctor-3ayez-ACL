@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 // import { Routes } from 'react-router';
 import AdminHome from './components/AdminHome';
 import UserHome from './components/UserHome';
+import Profile from './components/UserProfile';
 import UserSearchResults from './components/UserSearchResults';
 import UserSearch from './components/UserSearch';
 import FlightCard from './components/FlightCard';
@@ -15,6 +16,7 @@ function App() {
       
       <Route exact path="/" component={UserHome} />
       <Route path="/admin" component={AdminHome} />
+      <Route path="/Profile" component={Profile} />
       <Route path="/admin/createFlight" component={FlightForm} />
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
