@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import AdminHome from './components/AdminHome';
 import UserHome from './components/UserHome';
 import UserProfile from './components/UserProfile';
-import UserSearchResults from './components/UserSearchResults';
-import UserSearch from './components/UserSearch';
+// import UserSearchResults from './components/UserSearchResults';
+// import UserSearch from './components/UserSearch';
 
 
 function App() {
@@ -16,9 +16,9 @@ function App() {
       <Route exact path="/" component={UserProfile} />
 
   {/* <Route path="/createFlight" component={FlightForm} /> */}
-      <Route exact path="/" component={UserHome} />
+      {/* <Route exact path="/" component={UserHome} /> */}
       <Route path="/createFlight" component={FlightForm} />
-      <Route path="/SearchResults" component={UserSearchResults} />
+      {/* <Route path="/SearchResults" component={UserSearchResults} /> */}
 
     </Router>
   );

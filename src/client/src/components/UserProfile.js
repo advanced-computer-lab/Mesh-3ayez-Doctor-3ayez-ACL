@@ -1,4 +1,4 @@
-import FOG from 'vanta/dist/vanta.fog.min'
+import CLOUDS from 'vanta/dist/vanta.clouds.min'
 import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react'
 import * as THREE from "three";
@@ -22,7 +22,7 @@ export default function UserProfile(probs) {
     const myRef = useRef(null)
     useEffect(() => {
         if (!vantaEffect) {
-            setVantaEffect(FOG({
+            setVantaEffect(CLOUDS({
                 el: myRef.current,
                 THREE: THREE,
                 mouseControls: true,
@@ -30,9 +30,7 @@ export default function UserProfile(probs) {
                 gyroControls: false,
                 minHeight: 754.00,
                 minWidth: 200.00,
-                highlightColor: 0xb57a65,
-                midtoneColor: 0x4100ff,
-                lowlightColor: 0xb2ade2,
+                speed: 1.00,
                 baseColor: 0xffffff
             }))
         }
