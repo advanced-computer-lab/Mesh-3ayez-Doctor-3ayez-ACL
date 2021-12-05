@@ -19,11 +19,14 @@ app.use(express.urlencoded({extended : false}));
 app.use(cors());
 // defining the path for all APIs regarding flights
 app.use('/api/flights', require('../routes/api/flights'))
-app.use('/api/user/flight', require('../routes/api/user/flight'))
 app.use('/api/flight_seats', require('../routes/api/flightSeats'))
 
 // defining the path for all APIs regarding users
 app.use('/api/users', require('../routes/api/users'))
+
+
+// defining the path for all APIs regarding reservations
+app.use('/api/reservations', require('../routes/api/reservations'))
 
 
 

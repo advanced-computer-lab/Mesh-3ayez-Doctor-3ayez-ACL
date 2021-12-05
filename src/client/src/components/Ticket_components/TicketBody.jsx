@@ -21,8 +21,8 @@ function TicketBody(probs) {
     arrival_time: probs.flight_details[0].arrival_time,
     seat_type: probs.seat_type,
     seat_name: probs.seat_name.toString(),
-    price: parseFloat(probs.price.$numberDecimal),
-    baggage_allowance: parseFloat(probs.baggage_allowance.$numberDecimal)
+    price: parseFloat(probs.price),
+    baggage_allowance: parseFloat(probs.baggage_allowance)
   });
   const [flight_number, setFlightNumber] = useState(row.flight_number);
   const [from, setFrom] = useState(row.from);
