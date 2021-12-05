@@ -146,6 +146,21 @@ export default function SearchResultsTmp(props) {
                         <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleReset}>Reset</Button>
                     </Box> */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Button
+                            color="inherit"
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                        >
+                            Back
+                        </Button>
+                        {/* <Box sx={{ flex: '1 1 auto' }} />
+                        <Button onClick={handleNext}>
+                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        </Button> */}
+                    </Box>
+                    
                 </React.Fragment>
             ) : (
                 <React.Fragment>
@@ -182,8 +197,8 @@ export default function SearchResultsTmp(props) {
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
                             color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
+                            disabled={activeStep === 0&& props.flights['departure_flights'].length>0}
+                            href="/"
                             sx={{ mr: 1 }}
                         >
                             Back
