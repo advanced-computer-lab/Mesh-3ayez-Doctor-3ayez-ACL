@@ -10,6 +10,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
         <th>Arrival Terminal</th>
         <th>Departure Time</th>
         <th>Arrival Time</th>
+        <th>Seats</th>
         <th>Price</th>
         <th>Baggage Allowance</th>
     </tr>

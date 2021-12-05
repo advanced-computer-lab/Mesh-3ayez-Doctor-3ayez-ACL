@@ -20,7 +20,6 @@ function FlightDisplayBody(probs) {
     arrival_terminal:probs.arrival_terminal,
     departure_time: probs.departure_time,
     arrival_time: probs.arrival_time,
-    seat_type: probs.seat_type,
     price: probs.seat_type == 'economy'?probs.economy_seats.price.$numberDecimal:(
         probs.seat_type == 'first'?probs.first_seats.price.$numberDecimal:
         probs.business_seats.price.$numberDecimal),
@@ -30,6 +29,8 @@ function FlightDisplayBody(probs) {
 
 
   });
+  const [seatType, setSeatType] = useState(probs.seat_type);
+  const [seats, setSeats] = useState(probs.seats);
   const [flight_no, setFlightNo] = useState(row.flight_number);
   const [from, setFrom] = useState(row.from);
   const [arrivalTerminal,setAt]=useState(row.arrival_terminal);
@@ -37,6 +38,7 @@ function FlightDisplayBody(probs) {
   const [departureTerminal,setDt]=useState(row.departure_terminal);
   const [arrival_time, setArrivalTime] = useState(row.arrival_time);
   const [departure_time, setDepartureTime] = useState(row.departure_time);
+
   const [price, setPrice] = useState(row.price);
   const [baggage_allowance, setBaggageAllowance] = useState(row.baggage_allowance);
   const [open2, setOpen2] = useState(false);
@@ -63,6 +65,7 @@ function FlightDisplayBody(probs) {
       <td>{arrivalTerminal}</td>
       <td>{departure_time}</td>
       <td>{arrival_time}</td>
+      <td>{seats}</td>
       <td>{price}</td>
       <td>{baggage_allowance}</td>
      
