@@ -278,7 +278,8 @@ router.put('/:_id',async (req, res) =>{
 
     if(!mongoose.isValidObjectId(req.params._id))
     {
-        res.state(400).json({msg : "the passed flight id is not valid"});
+        res.status(400).json({msg : "the passed flight id is not valid"});
+
         return;
     }
     
@@ -286,13 +287,14 @@ router.put('/:_id',async (req, res) =>{
     {
         if(isNaN(body.flight_number))
         {
-            res.state(400).json({msg : "flight number should be a valid integer"});
+            res.status(400).json({msg : "flight number should be a valid integer"});
+
             return;
         }
         const flight = await Flight.findOne({"flight_number":body.flight_number});
         if(flight)
         {
-            res.state(400).json({msg : "a flight with the same flight number already exists"});
+            res.status(400).json({msg : "a flight with the same flight number already exists"});
             return;
         }
         query['flight_number'] = body.flight_number;
@@ -312,7 +314,8 @@ router.put('/:_id',async (req, res) =>{
     {
         if(isNaN(body.departure_terminal))
         {
-            res.state(400).json({msg : "the departure terminal should be a valid integer"});
+            res.status(400).json({msg : "the departure terminal should be a valid integer"});
+
             return;
         }
         query['departure_terminal'] = body.departure_terminal;
@@ -329,7 +332,8 @@ router.put('/:_id',async (req, res) =>{
     {
         if(isNaN(body.arrival_terminal))
         {
-            res.state(400).json({msg : "the arrival terminal should be a valid integer"});
+          res.status(400).json({msg : "the arrival terminal should be a valid integer"});
+
             return;
         }
         query['arrival_terminal'] = body.arrival_terminal;
@@ -559,7 +563,8 @@ router.delete('/:_id', async(req, res) => {
     if(await checkAdmin()){
         if(!mongoose.isValidObjectId(req.params._id))
         {
-            res.state(400).json({msg : "the flight id you have passed is not valid"});
+            res.status(400).json({msg : "the flight id you have passed is not valid"});
+
             return;
         }
         Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
@@ -743,7 +748,8 @@ router.get('/all_seats/:flight_id', async (req,res)=>{
     const flight_id = req.params.flight_id;
     if(!mongoose.isValidObjectId(req.params.flight_id))
     {
-        res.state(400).json({msg : "the flight id you have passed is not a valid id"});
+        res.status(400).json({msg : "the flight id you have passed is not a valid id"});
+
         return;
     }
     const seats = await FlightSeat.find({'flight_id':flight_id});
