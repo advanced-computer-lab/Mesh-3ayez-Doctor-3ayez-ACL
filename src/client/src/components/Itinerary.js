@@ -50,8 +50,7 @@ function Itinerary() {
                         while(theJsons.length != 0){
                             theJsons.pop();
                         }
-                        //   console.log(res.data);
-                        //console.log('data retrieved');
+                          
                         theJsons.push(res.data.departure_seats.map((sf) => {
                             
                             return{
@@ -63,6 +62,7 @@ function Itinerary() {
                             seat_name: sf.seat_name,
                             total_price: res.data.total_price,
                             amount_paid: res.data.amount_paid,
+                            reservation_number: res.data.reservation_number,
                             flight_details: [{
                                 flight_number: res.data.departure_flight.flight_number,
                                 from: res.data.departure_flight.from,
@@ -78,6 +78,7 @@ function Itinerary() {
                             }]
                             
                         }}));
+                        updateTheJsons(theJsons);
 
                         while(theJsons2.length != 0){
                             theJsons2.pop();
@@ -105,6 +106,7 @@ function Itinerary() {
                             }]
                             
                         }}));
+                        updateTheJsons(theJsons2);
                     });
             }
         });
@@ -143,46 +145,50 @@ function Itinerary() {
       />
       <div>
         <div id="main" style={{marginLeft:marginLeft,paddingLeft:paddingLeft,paddingRight:paddingRight}}>
-        {theJsons.map((th,ind) => {
-            return(<Accordion key={ind}>
-            <AccordionSummary
-              
-              aria-label="Expand"
-              aria-controls="additional-actions1-content"
-              id="additional-actions1-header"
-              
-            >
-              <FormControlLabel
+        {theJsons.map((thing,index)=>{
+            return(<Accordion key={index}>
+                <AccordionSummary
+                  
+                  aria-label="Expand"
+                  aria-controls="additional-actions1-content"
+                  id="additional-actions1-header"
+                  
+                >
+                  <FormControlLabel
+                    
+                    aria-label="Acknowledge"
+                    onClick={event => event.stopPropagation()}
+                    onFocus={event => event.stopPropagation()}
+                    label={' '+(theJsons[0]==undefined?'':(theJsons[0][0]==undefined?'':theJsons[0][0].flight_details[0].from)+" ✈ "
+                    +(theJsons[0][0]==undefined?'':theJsons[0][0].flight_details[0].to))}
+                    control={<Button key="buttonkey" variant="outlined" onClick={()=>openCancellation(theJsons[0][0]==undefined?'':theJsons[0][0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
+                  />
                 
-                aria-label="Acknowledge"
-                onClick={event => event.stopPropagation()}
-                onFocus={event => event.stopPropagation()}
-                label={' '+(theJsons[ind][0]==undefined?'':theJsons[ind][0].flight_details[0].from)+" ✈ "
-                +(theJsons[ind][0]==undefined?'':theJsons[ind][0].flight_details[0].to)}
-                control={<Button key="buttonkey" variant="outlined" onClick={()=>openCancellation(theJsons[ind][0]==undefined?'':theJsons[ind][0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
-              />
-            
-                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 700}}>{"Price: "+theJsons[ind][0].total_price.$numberDecimal}</label></Box>
-                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Paid: "+theJsons[ind][0].amount_paid.$numberDecimal}</label></Box>
-            </AccordionSummary>
-            <AccordionDetails>
-                
-                <div>
-                    <h2>Departure Tickets:</h2>
-                    {theJsons[ind]==undefined?[]:theJsons[ind].map((js) => {
-                        return <Ticket getRows= {js==undefined?[]:[js]}/>
-                    })}
-                    <h2>Return Tickets:</h2>
-                    {theJsons2[ind]==undefined?[]:theJsons2[ind].map((js) => {
-                        return <Ticket getRows= {js==undefined?[]:[js]}/>
-                    })}
-                </div>
-                
-            </AccordionDetails>
-          </Accordion>)
-        })
+                {/*<Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[0][0].total_price.$numberDecimal)}</label></Box>
+                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Paid: "+theJsons[0][0].amount_paid.$numberDecimal}</label></Box>
+      <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Number: "+theJsons[0][0].reservation_number}</label></Box>*/}
+    
+                </AccordionSummary>
+                <AccordionDetails>
+                    
+                    <div>
+                        <h2>Departure Tickets:</h2>
+                        {theJsons[0]==undefined?[]:theJsons[0].map((js,inddex) => {
+                            return <Ticket key={inddex+"A"} getRows= {js==undefined?[]:[js]}/>
+                        })}
+                        <h2>Return Tickets:</h2>
+                        {theJsons2[0]==undefined?[]:theJsons2[0].map((js,inddex) => {
+                            return <Ticket key={inddex+"B"} getRows= {js==undefined?[]:[js]}/>
+                        })}
+                    </div>
+                    
+                </AccordionDetails>
+              </Accordion>)
+        })}
         
-    }
+        
+        
+    
         
             
       
