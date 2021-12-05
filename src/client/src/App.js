@@ -15,8 +15,9 @@ function App() {
     <Router>
       
       <Route exact path="/" component={UserHome} />
-      <Route path="/admin" component={AdminHome} />
-      <Route path="/Profile" component={Profile} />
+      <Route exact path="/admin" component={AdminHome} />
+      <Route path ="/Profile" component={Profile} />
+
       <Route path="/admin/createFlight" component={FlightForm} />
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />

@@ -567,9 +567,16 @@ router.delete('/:_id', async(req, res) => {
 
             return;
         }
-        Flight.findByIdAndRemove(req.params._id, req.body).then(flight => res.json({ msg: 'flight entry deleted successfully' }))
-            .catch(err => res.status(404).json({ error: 'No such a flight' }))
-        FlightSeat.remove({'flight_id': req.params._id}).exec();
+        Flight.findByIdAndRemove(req.params._id, req.body).then(async flight => {
+
+            await FlightSeat.deleteMany({'flight_id': req.params._id});
+            await Reservation.deleteMany({'departure_flight' : req.params._id});
+            await Reservation.deleteMany({'return_flight' : req.params._id});
+            res.json({ msg: 'flight entry deleted successfully' });
+        })
+            .catch(err => res.status(404).json({ error: 'No such a flight' }));
+
+        
         console.log("I got here");
 }
 else{
@@ -588,12 +595,15 @@ async function checkAdmin(){
 
 router.get("/user/:id", async (req, res) => {
     var rsvids = []
-    await Reservation.find({'user_id': req.params.id}).exec().then(function(stuff){
-        stuff.forEach(function(stuffling){
+    await Reservation.find({'user_id': req.params.id}).exec().then(//function(stuff){
+        /*stuff.forEach(function(stuffling){
                 rsvids.push(mongoose.Types.ObjectId(stuffling._id))
-        })
-    })
-    var flightids = []
+        })*/
+        result => {
+            res.json(result)
+        }
+    )
+    /*var flightids = []
     await FlightSeat.find().where('reservation_id').in(rsvids).exec().then(function(stuff){
         stuff.forEach(function(stuffling){
                 flightids.push(mongoose.Types.ObjectId(stuffling.flight_id))
@@ -605,7 +615,7 @@ router.get("/user/:id", async (req, res) => {
         })
         .catch(err => {
             console.log(err);
-        });
+        });*/
 
     
 })

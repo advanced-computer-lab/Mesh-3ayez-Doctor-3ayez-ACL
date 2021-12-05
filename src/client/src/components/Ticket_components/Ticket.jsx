@@ -39,7 +39,7 @@ function Ticket(probs) {
 
     return (
         <div>
-            <table className="styled-table2">
+            <table className={"styled-table"+(rows[0].seat_type == 'economy'?3:(rows[0].seat_type == 'business'?'':2))}>
                 <TicketHead />
                 <tbody>
                     {
