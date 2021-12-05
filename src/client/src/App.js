@@ -7,6 +7,8 @@ import UserHome from './components/UserHome';
 import UserSearchResults from './components/UserSearchResults';
 import UserSearch from './components/UserSearch';
 import FlightCard from './components/FlightCard';
+import UserProfile from './components/UserProfile';
+
 import {SeatPick} from'./components/SeatReservation/SeatPick'
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
       <Route path="/user/seatReservation" component={SeatPick} />
+      <Route path="/user/Profile" component={UserProfile} />
 
     </Router>
   );

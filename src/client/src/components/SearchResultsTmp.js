@@ -121,7 +121,7 @@ export default function SearchResultsTmp(props) {
                     <Stack sx={{ mt: 2, mb: 1 }}  margin="auto" textAlign='center' spacing={2}>
 
                         {props.flights['return_flights'].map((item) => {
-                            const d = (new Date(item.arrival_time) - new Date(item.arrival_time)) / (1000 * 60 * 60);
+                            const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
                             return (
                                 <FlightCard flight_number={item.flight_number}
                                     key={item._id}
@@ -130,11 +130,15 @@ export default function SearchResultsTmp(props) {
                                     to={item.to}
                                     arrival_time={item.arrival_time}
                                     departure_time={item.departure_time}
+                                    number_of_passengers={props.number_of_passengers}
                                     duration={d}
                                     cabin_type={props.cabin_type}
+                                    number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
                                     price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
                                     onClick={onClickReturn}
+                                    arrival_terminal={item.arrival_terminal}
+                                    departure_terminal={item.departure_terminal}
 
                                 >
 
@@ -146,6 +150,21 @@ export default function SearchResultsTmp(props) {
                         <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleReset}>Reset</Button>
                     </Box> */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Button
+                            color="inherit"
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                        >
+                            Back
+                        </Button>
+                        {/* <Box sx={{ flex: '1 1 auto' }} />
+                        <Button onClick={handleNext}>
+                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        </Button> */}
+                    </Box>
+                    
                 </React.Fragment>
             ) : (
                 <React.Fragment>
@@ -182,11 +201,11 @@ export default function SearchResultsTmp(props) {
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
                             color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
+                            disabled={activeStep === 0&& props.flights['departure_flights'].length>0}
+                            href="/"
                             sx={{ mr: 1 }}
                         >
-                            Back
+                            {props.flights['departure_flights'].length>0?"Back":"Home"}
                         </Button>
                         {/* <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleNext}>
