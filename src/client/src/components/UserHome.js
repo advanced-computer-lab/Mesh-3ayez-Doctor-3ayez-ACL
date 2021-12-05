@@ -12,7 +12,7 @@ function UserHome() {
     const [user, setUser]= useState(false);
     return (
      <div className="searchBack" style={{ backgroundImage: `url(${im})` }} >
-         <UserNavBar user={user} onLogin={setUser}></UserNavBar>
+         <UserNavBar user={true} onLogin={setUser}></UserNavBar>
          <UserSearch user={true} position="absolute"></UserSearch>
      </div>
     )
