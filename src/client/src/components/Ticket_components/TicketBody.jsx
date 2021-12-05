@@ -36,7 +36,7 @@ function TicketBody(probs) {
   const [price, setPrice] =useState(row.price);
   const [baggage_allowance, setBaggageAllowance] =useState(row.baggage_allowance);
 
-  console.log('Seat name is'+seat_name)
+ 
 
 
 
