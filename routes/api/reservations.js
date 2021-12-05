@@ -12,6 +12,8 @@ const FlightSeat = require('../../src/Models/FlightSeat');
 router.post('/', async(req,res)=>{
     const body = req.body;
     var query = {};
+    var departure_flight_update = {};
+    var return_flight_update = {};
 
     var departure_flight;
     var return_flight;
@@ -131,7 +133,8 @@ router.post('/', async(req,res)=>{
             }
             
             query['price'] = departure_flight.economy_seats.price *body.number_of_passengers+ return_flight.economy_seats.price*body.number_of_passengers;
-
+            departure_flight_update['economy_seats.available'] = departure_flight.economy_seats.available - body.number_of_passengers;
+            return_flight_update['economy_seats.available'] = return_flight.economy_seats.available - body.number_of_passengers;
         }
         else if(body.cabin_type === 'business')
         {
@@ -147,6 +150,8 @@ router.post('/', async(req,res)=>{
                 return;
             }
             query['price'] = departure_flight.business_seats.price *body.number_of_passengers+ return_flight.business_seats.price*body.number_of_passengers;
+            departure_flight_update['business_seats.available'] = departure_flight.business_seats.available - body.number_of_passengers;
+            return_flight_update['business_seats.available'] = return_flight.business_seats.available - body.number_of_passengers;
         }
 
         else if(body.cabin_type === 'first')
@@ -163,6 +168,8 @@ router.post('/', async(req,res)=>{
                 return;
             }
             query['price'] = departure_flight.first_seats.price *body.number_of_passengers+ return_flight.first_seats.price*body.number_of_passengers;
+            departure_flight_update['first_seats.available'] = departure_flight.first_seats.available - body.number_of_passengers;
+            return_flight_update['first_seats.available'] = return_flight.first_seats.available - body.number_of_passengers;
         }
 
         else
@@ -259,6 +266,11 @@ router.post('/', async(req,res)=>{
     new_reservation.save().then(async(reservation) =>{
         
         var seat_update = {'reservation_id' : reservation._id};
+
+        // updating the flights' available seats after reservation
+        await Flight.findByIdAndUpdate(body.departure_flight, departure_flight_update);
+        await Flight.findByIdAndUpdate(body.return_flight, return_flight_update);
+
         
         body.departure_seats.map(async seat_id => {
 

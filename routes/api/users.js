@@ -60,12 +60,12 @@ router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
     if(reservation)
     {
         var response = {};
-        const departure_flight = await Flight.findById(reservation.departure_flight,
-            'flight_number from to departure_terminal arrival_terminal departure_time');
-        const return_flight = await Flight.findById(reservation.return_flight,
-            'flight_number from to departure_terminal arrival_terminal departure_time');
-        const departure_seats = await FlightSeat.find({'flight_id':reservation.departure_flight, 'reservation_id':reservation_id}, 'seat_number');
-        const return_seats = await FlightSeat.find({'flight_id':reservation.return_flight, 'reservation_id':reservation_id}, 'seat_number');
+        const departure_flight = await Flight.findById(reservation.departure_flight);
+            //'flight_number from to departure_terminal arrival_terminal departure_time');
+        const return_flight = await Flight.findById(reservation.return_flight);
+            //'flight_number from to departure_terminal arrival_terminal departure_time');
+        const departure_seats = await FlightSeat.find({'flight_id':reservation.departure_flight, 'reservation_id':reservation_id});//, 'seat_number');
+        const return_seats = await FlightSeat.find({'flight_id':reservation.return_flight, 'reservation_id':reservation_id});// 'seat_number');
         response['departure_flight'] = departure_flight;
         response['return_flight'] = return_flight;
         response['reservation_number'] = reservation_id;
