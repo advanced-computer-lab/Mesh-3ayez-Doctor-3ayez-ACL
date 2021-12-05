@@ -39,19 +39,19 @@ function Itinerary() {
   var theflightdisplay;
   
   useEffect(() => {
-    let isCancelled = false;
+    
 
     axios.get("http://localhost:8000/api/flights/user/61aa4dadbde7d1780db3dda5")
         .then(res =>{
             for(var i = 0; i < res.data.length; i++){
                 axios.get("http://localhost:8000/api/users/itinerary/61aa4dadbde7d1780db3dda5/"+res.data[i]._id)
                     .then(res => {
-                        if(!isCancelled)
-                        while(theJsons.length != 0){
-                            theJsons.pop();
-                        }
-                          
-                        theJsons.push(res.data.departure_seats.map((sf) => {
+                        
+                        // while(theJsons.length != 0){
+                        //     theJsons.pop();
+                        // }
+                        var tinyjsons = []
+                        tinyjsons.push(res.data.departure_seats.map((sf) => {
                             
                             return{
                             
@@ -78,13 +78,15 @@ function Itinerary() {
                             }]
                             
                         }}));
-                        updateTheJsons(theJsons);
+                        updateTheJsons(tinyjsons);
 
-                        while(theJsons2.length != 0){
-                            theJsons2.pop();
-                        }
+                        // while(theJsons2.length != 0){
+                        //     theJsons2.pop();
+                        // }
 
-                        theJsons2.push(res.data.return_seats.map((sf) => {
+                        var tinyjsons2 = []
+
+                        tinyjsons2.push(res.data.return_seats.map((sf) => {
                             return{
                             
                             _id: sf._id,
@@ -106,15 +108,17 @@ function Itinerary() {
                             }]
                             
                         }}));
-                        updateTheJsons(theJsons2);
+                        updateTheJsons2(tinyjsons2);
+                    
                     });
+                
             }
         });
 
     
 
 
-      return () => {isCancelled = true;}
+      
 
 
   }, []);
