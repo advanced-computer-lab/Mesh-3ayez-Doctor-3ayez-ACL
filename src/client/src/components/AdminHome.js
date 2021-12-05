@@ -9,6 +9,7 @@ import Icon from '@mui/material/Icon';
 
 
 function AdminHome() {
+  const colors= require("../colors");
   const [rows, updateRows] = useState([]);
 
   useEffect(() => {

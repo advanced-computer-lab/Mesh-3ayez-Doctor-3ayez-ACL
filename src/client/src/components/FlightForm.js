@@ -6,13 +6,18 @@ import Button from '@mui/material/Button';
 import axios from "axios";
 import BasicAlert from "./BasicAlert";
 import Stack from '@mui/material/Stack';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopTimePicker from '@mui/lab/DesktopTimePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 
 export default function FlightForm() {
+    console.log('I\'m here');
     const [flightNumber, setFlightNumber] = useState("")
     const [from, setFrom] = useState("")
     const [to, setTo] = useState("")
-    const [arrivalTime, setArrivalTime] = useState("")
-    const [departureTime, setDepartureTime] = useState("")
+    const [arrivalTime, setArrivalTime] = useState(new Date());
+    const [departureTime, setDepartureTime] = useState(new Date())
     const [economySeats, setESeats] = useState("")
     const [businessSeats, setBSeats] = useState("")
     const [firstSeats, setFSeats] = useState("")
@@ -150,8 +155,46 @@ export default function FlightForm() {
                     placeholder="yyyy-mm-dd"
                     error={errorArrival ? true : false}
                     helperText={errorArrival}
+                />    <LocalizationProvider dateAdapter={AdapterDateFns}> */}
 
-                />
+                {/* <DesktopTimePicker
+          label="Arrival time"
+          value={arrivalTime}
+          onChange={(newValue) => {
+            setArrivalTime(newValue);
+            setErrorArrival(newValue ? "" : "This field is required");
+            console.log(newValue);
+
+          }}
+          renderInput={(params) => <TextField InputLabelProps={{
+            shrink: true,
+        }} error={errorArrival==null ? true : false}
+          helperText={errorArrival} {...params} />}
+        /> */}
+
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateTimePicker
+        renderInput={(props) => <TextField {...props} />}
+        label="Departure time"
+        value={departureTime}
+        onChange={(newValue) => {
+          setDepartureTime(newValue);
+        }}
+      />
+    </LocalizationProvider>
+
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateTimePicker
+        renderInput={(props) => <TextField {...props} />}
+        label="Arrival time"
+        value={arrivalTime}
+        onChange={(newValue) => {
+          setArrivalTime(newValue);
+        }}
+      />
+    </LocalizationProvider>
+
+        {/* </LocalizationProvider>
                 <TextField
                     required
                     onChange={function (e) {
@@ -169,7 +212,7 @@ export default function FlightForm() {
                     placeholder="yyyy-mm-dd"
                     error={errorDepature ? true : false}
                     helperText={errorDepature}
-                />
+                /> */}
                 <TextField
                     required
                     id="outlined-number"
@@ -223,7 +266,7 @@ export default function FlightForm() {
                 <br />
                 <Stack direction="row" spacing={1} >
                     <Button style={{textAlign:"center",marginLeft:"auto"}} variant="contained" onClick={onSubmit} href="/createFlight">Submit </Button>
-                    <Button style={{margin:"auto"}} variant="outlined" href="/">Back </Button>
+                    <Button style={{margin:"auto"}} variant="outlined" href="/admin">Back </Button>
                 </Stack>
                 <br />
 
