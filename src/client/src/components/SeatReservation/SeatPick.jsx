@@ -98,7 +98,7 @@ export function SeatPick() {
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
     function submitHandler() {
-        if (0 === departureSeats.length && 0 === returnSeats.length) {
+        if (departure.number_of_passengers === departureSeats.length && ret.number_of_passengers=== returnSeats.length) {
             setConfirm(true);
         }
         else {
