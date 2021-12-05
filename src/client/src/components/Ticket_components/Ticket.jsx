@@ -11,7 +11,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 function Ticket(probs) {
-
+    
     const [open, setOpen] = React.useState(false);
 
     const [rid, setrid] = React.useState("");

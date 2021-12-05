@@ -30,9 +30,10 @@
     "moment": "^2.29.1",
     "mongoose": "^6.0.12",
     "node": "^17.1.0",
+    "nodemailer": "^6.7.2",
     "nodemon": "^2.0.14",
+    "prop-types": "^15.7.2",
     "react": "^17.0.2",
-    "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
     "react-seat-picker": "^1.5.3",
     "react-tooltip": "^4.2.21"
