@@ -22,6 +22,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router-dom";
 import UserSearchResults from './UserSearchResults.js';
 import { Redirect } from 'react-router';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const colors = require("../colors.js");
 
 
@@ -56,19 +64,32 @@ const useStyles = makeStyles({
         }
     }
 });
-const flights = {};
 function UserSearch(props) {
     const location = useLocation();
-    const [from, setFrom] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["from"]:'');
-    const [to, setTo] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["to"]:'');
-    const date = location.state&&location.state.searchInputs?location.state.searchInputs["return_date"]: new Date();
+    const [from, setFrom] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["from"] : '');
+    const [to, setTo] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["to"] : '');
+    const date = location.state && location.state.searchInputs ? location.state.searchInputs["return_date"] : new Date();
     const [arrival_date, setArrivalTime] = React.useState(date);
-    const date2 = location.state&&location.state.searchInputs?location.state.searchInputs["departure_date"]: new Date();
+    const date2 = location.state && location.state.searchInputs ? location.state.searchInputs["departure_date"] : new Date();
     const [departure_date, setDepartureTime] = React.useState(date2);
-    const [number_of_passengers, setPassengers] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["number_of_passengers"]:'');
-    const [cabin_type, setCabin] = React.useState(location.state&&location.state.searchInputs?location.state.searchInputs["cabin_type"]:'');
+    const [number_of_passengers, setPassengers] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["number_of_passengers"] : '');
+    const [cabin_type, setCabin] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["cabin_type"] : '');
     const classes = useStyles()
     const history = useHistory();
+
+    const [open, setOpen] = React.useState(false);
+    const [errorMsg, setErrorMessage]=React.useState("");
+    const handleClick = () => {
+    };
+    console.log(props.user);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
 
     const handleSearch = () => {
 
@@ -80,27 +101,32 @@ function UserSearch(props) {
             "cabin_type": cabin_type,
             "number_of_passengers": number_of_passengers
         }
- 
+
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
-                console.log(result.data);
+                if(result.status==200){
                 history.push({
                     pathname: '/user/searchResults', state:
                     {
                         flights: result.data,
                         cabin_type: cabin_type,
                         number_of_passengers: number_of_passengers,
-                        searchInputs: data
+                        searchInputs: data,
+                        // user:props.user
+
                     }
                 });
-                history.go();
-
+                history.go();}
+               
             })
-            .catch(err => console.log(err));
+            .catch(err => {console.log(err)
+                setOpen(true);
+                setErrorMessage(err.response.data.msg);
+            });
     }
     return (
         <div>
-            {<Box style={{ position: props.position }} className="box" sx={{ '& > :not(style)': { m: 1, width: "18ch", marginTop: "20px", textAlign: "center" } }}>
+            <Box style={{ position: props.position }} className="box" sx={{ '& > :not(style)': { m: 1, width: "18ch", marginTop: "20px", textAlign: "center" } }}>
                 <TextField
                     id="input-with-icon-textfield"
                     label="From"
@@ -140,10 +166,10 @@ function UserSearch(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Departure date"
-                        value={new Date(departure_date.year, departure_date.month-1, departure_date.day)}
+                        value={new Date(departure_date.year, departure_date.month - 1, departure_date.day)}
                         onChange={(newValue) => {
-                            console.log(newValue.getDate()+" "+(newValue.getMonth()+1)+" "+newValue.getFullYear())
-                            setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth()+1, day: newValue.getDate() });
+                            console.log(newValue.getDate() + " " + (newValue.getMonth() + 1) + " " + newValue.getFullYear())
+                            setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
                         }}
 
                         renderInput={(params) => <TextField {...params} className={classes.root}
@@ -153,10 +179,10 @@ function UserSearch(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Return date"
-                        value={new Date(arrival_date.year, arrival_date.month-1, arrival_date.day)}
+                        value={new Date(arrival_date.year, arrival_date.month - 1, arrival_date.day)}
 
                         onChange={(newValue) => {
-                            setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth()+1, day: newValue.getDate() });
+                            setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
                         }}
                         renderInput={(params) => <TextField {...params} className={classes.root}
                             InputLabelProps={{ shrink: true, }} />}
@@ -206,12 +232,21 @@ function UserSearch(props) {
                         <MenuItem value={"first"}>first</MenuItem>
                     </TextField>
                 </FormControl>
-                <Button style={{
-                    borderRadius: 5,
-                    backgroundColor: colors.c1,
-                    marginTop: "25px",
-                }} variant="contained" endIcon={<SearchIcon />} onClick={handleSearch}  >Search</Button>
-            </Box>}
+                    <Button style={{
+                        borderRadius: 5,
+                        backgroundColor: colors.c1,
+                        marginTop: "25px",
+                    }} variant="contained" endIcon={<SearchIcon />} onClick={handleSearch}  >Search</Button>
+                    <Stack width="100%">
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                            {errorMsg}
+                        </Alert>
+                    </Snackbar>
+                    </Stack>
+
+            </Box>
+
         </div>
     )
 }

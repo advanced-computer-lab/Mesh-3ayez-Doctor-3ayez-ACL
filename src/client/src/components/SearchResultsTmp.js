@@ -121,7 +121,7 @@ export default function SearchResultsTmp(props) {
                     <Stack sx={{ mt: 2, mb: 1 }}  margin="auto" textAlign='center' spacing={2}>
 
                         {props.flights['return_flights'].map((item) => {
-                            const d = (new Date(item.arrival_time) - new Date(item.arrival_time)) / (1000 * 60 * 60);
+                            const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
                             return (
                                 <FlightCard flight_number={item.flight_number}
                                     key={item._id}
