@@ -5,9 +5,18 @@ import Paper from '@mui/material/Paper';
 import SeatGuide from "./SeatGuide";
 import Seats from "./Seats";
 import axios from "axios";
+import { Box } from "@mui/system";
 import Ticket from '../Ticket_components/Ticket';
 import Button from '@mui/material/Button';
 import { useLocation } from "react-router";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 export function SeatPick() {
 
     const location = useLocation();
@@ -16,13 +25,14 @@ export function SeatPick() {
     const [depSeats, setDepSeats] = useState([])
     let depCabinType = departure.cabin_type;
     console.log("dep id: " + departure.flight_id + ", return id: " + ret.flight_id + ", cabin: " + departure.cabin_type);
-    const [retSeats, setRetSeats] = useState();
+    const [retSeats, setRetSeats] = useState([]);
     let retCabinType = ret.cabin_type;
     useEffect(() => {
         console.log("Nadaaa")
         axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
             .then(res => {
                 setDepSeats(res.data);
+                console.log(res.data);
             })
             .catch(() => {
                 console.log("BOOM");
@@ -48,11 +58,19 @@ export function SeatPick() {
     var depRows = [];
     buildSeatRows(depSeats, depRows);
     var retRows = [];
-    buildSeatRows([], retRows);
+    buildSeatRows(retSeats, retRows);
+    var oneSeatPriceDep=departure.price;
+    var oneSeatPriceRet=ret.price;
+    var oneSeatBagDep=departure.baggage;
+    var oneSeatBagRet=ret.baggage;
 
     // handle price
+    const [open, setOpen] = useState(false);
+    const [confirm, setConfirm] = useState(false);
     const [priceDep, setPriceDep] = useState(0);
     const [priceRet, setPriceRet] = useState(0);
+    const [bagDep, setBagDep] = useState(0);
+    const [bagRet, setBagRet] = useState(0);
     const [departureSeats, setDepartureSeats] = useState([]);
     const [returnSeats, setReturnSeats] = useState([]);
     const [reservedDepSeats, serReservedDepSeats] = useState([]);
@@ -79,6 +97,23 @@ export function SeatPick() {
         setReturnSeats(returnSeats.filter((y) => x != y));
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
+    function submitHandler() {
+        if (0 === departureSeats.length && 0 === returnSeats.length) {
+            setConfirm(true);
+        }
+        else {
+            setOpen(true);
+        }
+    }
+    function handleClose() {
+        setConfirm(false);
+        setOpen(false);
+    }
+    function reserve() {
+        //TO BE HANDLED LATER --> Send Request With Flight details;
+        console.log("done");
+        setConfirm(false);
+    }
     var depTcktData = {
         key: "",
         _id: "",
@@ -88,7 +123,7 @@ export function SeatPick() {
         seat_name: departureSeats,
         price: priceDep,
         baggage_allowance: "",
-        flight_details: [{seat_type:"economy",economy_seats:{price:125,baggage_allowance:125}}]
+        flight_details: [{ seat_type: "economy", economy_seats: { price: 125, baggage_allowance: 125 } }]
     };
 
     var head = "";
@@ -101,35 +136,27 @@ export function SeatPick() {
     return (
         <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
             <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={12} container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            {/* <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={12} >
                     <Grid item xs={8}>
-                        <Ticket getRows={[depTcktData]} />
                     </Grid>
                     <Grid item xs={4}>
 
-                        <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                            <Seats addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />
-                        </div>
                     </Grid>
                 </Grid>
-                <Grid item xs={12} container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={12} >
                     <Grid item xs={8}>
-                        <Ticket getRows={[depTcktData]} />
                     </Grid>
                     <Grid item xs={4}>
 
-                        <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                            <Seats addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />
-                        </div>
+
                     </Grid>
                 </Grid>
-                <Grid item xs={12} container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={12}>
                     <Grid item xs={8}>
-                        <Grid item xs={12} container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                            <Grid item xs={10}></Grid>
-                            <Grid item xs={2}>
-                                <Button variant="contained" size="medium"> confirm </Button>
+                        <Grid item xs={12} >
+                            <Grid item xs={0}></Grid>
+                            <Grid item xs={12}>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -137,7 +164,147 @@ export function SeatPick() {
                         <SeatGuide />
                     </Grid>
                 </Grid>
-            </Grid>
+            </Grid> */}
+            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+                <Box gridColumn="span 8">
+                    <React.Fragment>
+                        <CssBaseline />
+                        <Container maxWidth="sm">
+                            <Paper elevation={3}>
+                                <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
+                                    <List
+                                        sx={{
+                                            width: '100%',
+                                            maxWidth: 600
+                                        }}
+                                    >
+                                        <ListItem>
+                                            <ListItemText primary="Flight Number" secondary={departure.flight_number} />
+                                            <ListItemText primary="From" secondary={departure.from} />
+                                            <ListItemText primary="To" secondary={departure.to} />
+                                        </ListItem>
+                                        <Divider component="li" />
+                                        <ListItem>
+                                            <ListItemText primary="Departure Terminals" secondary={departure.departure_terminal} />
+                                            <ListItemText primary="Arrival Terminals" secondary={departure.arrival_terminal} />
+                                        </ListItem>
+                                        <Divider component="li" />
+                                        <ListItem>
+                                            <ListItemText primary="Departure Time" secondary={departure.departure_time}/>
+                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_terminal} />
+                                        </ListItem>
+                                        <Divider component="li" />
+                                        <ListItem>
+                                            <ListItemText primary="Seats" secondary={departureSeats} />
+                                            <ListItemText primary="Price" secondary={priceDep} />
+                                            <ListItemText primary="Baggage Allowance" secondary={bagDep} />
+                                        </ListItem>
+                                    </List>
+                                </Box>
+                            </Paper>
+
+                        </Container>
+                    </React.Fragment>
+
+                </Box>
+                <Box gridColumn="span 4">
+                    <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
+                        <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />
+                    </div>
+                </Box>
+                <Box gridColumn="span 8">
+                    <Box gridColumn="span 8">
+                        <React.Fragment>
+                            <CssBaseline />
+                            <Container maxWidth="sm">
+                                <Paper elevation={3}>
+                                    <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                    <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
+                                        <List
+                                            sx={{
+                                                width: '100%',
+                                                maxWidth: 600
+                                            }}
+                                        >
+                                            <ListItem>
+                                                <ListItemText primary="Flight Number" secondary={ret.flight_number} />
+                                                <ListItemText primary="From" secondary={ret.from} />
+                                                <ListItemText primary="To" secondary={ret.to} />
+                                            </ListItem>
+                                            <Divider component="li" />
+                                            <ListItem>
+                                                <ListItemText primary="Departure Terminals" secondary={ret.departure_terminal} />
+                                                <ListItemText primary="Arrival Terminals" secondary={ret.arrival_terminal} />
+                                            </ListItem>
+                                            <Divider component="li" />
+                                            <ListItem>
+                                                <ListItemText primary="Departure Time" secondary={ret.departure_time} />
+                                                <ListItemText primary="Arrival Time" secondary={ret.arrival_time} />
+                                            </ListItem>
+                                            <Divider component="li" />
+                                            <ListItem>
+                                                <ListItemText primary="Seats" secondary={returnSeats} />
+                                                <ListItemText primary="Price" secondary={priceRet} />
+                                                <ListItemText primary="Baggage Allowance" secondary={bagRet}/>
+                                            </ListItem>
+                                        </List>
+                                    </Box>
+                                </Paper>
+
+                            </Container>
+                        </React.Fragment>
+
+                    </Box>
+
+
+                </Box>
+                <Box gridColumn="span 4">
+                    <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
+                        <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />
+                    </div>
+                </Box>
+                <Box gridColumn="span 3">
+                </Box>
+                <Box gridColumn="span 5">
+                    <Button variant="contained" size="medium" onClick={submitHandler}> confirm </Button>
+
+                </Box>
+                <Box gridColumn="span 4">
+                <SeatGuide />
+                </Box>
+            </Box>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Oops!It seems that you did not choose your all seats.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleClose}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={confirm}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to book these flights?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={reserve}>GO ON</Button>
+                    <Button variant="outlined" onClick={handleClose}>NO</Button>
+                </DialogActions>
+            </Dialog>
         </div>
 
 
