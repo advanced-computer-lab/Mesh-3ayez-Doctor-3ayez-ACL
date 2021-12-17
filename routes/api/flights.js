@@ -742,8 +742,7 @@ router.post('/user_search_flights', async(req,res)=>{
         return;
     }
 
-    console.log(departure_query['departure_time']);
-    console.log(return_query['departure_time']);
+    
     const depart_flights = await Flight.find(departure_query);
     if(depart_flights.length==0)
     {
