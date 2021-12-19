@@ -44,9 +44,8 @@ router.post("/", async (req, res) => {
         );
 
         // save user token
-        user.token = token;
         // user
-        res.status(200).json(token);
+        res.status(200).json({"token":token,"user":user});
       }
     }
   } catch (err) {

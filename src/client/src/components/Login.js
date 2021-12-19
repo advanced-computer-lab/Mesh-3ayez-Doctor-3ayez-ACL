@@ -95,8 +95,9 @@ export default function Login() {
                             history.push({
                                 pathname: '/', state:
                                 {
-                                    token: result.data
-                                    // user:props.user
+                                    token: result.data.token,
+                                    user: result.data.user
+                                    
                                 }
                             });
                         }
@@ -173,6 +174,9 @@ export default function Login() {
                                         setUsernameErr(false);
                                         setUsernameMsg("");
                                         
+                                    }else{
+                                        setUsernameErr(true);
+                                        setUsernameMsg("Email is required");
                                     }
                                 
                                 }
@@ -189,6 +193,18 @@ export default function Login() {
                                 autoComplete="current-password"
                                 error={passErr}
                                 helperText={passMsg}
+                                onChange={function(e){
+                                    if(e.target.value)
+                                    {
+                                        setPassErr(false);
+                                        setPassMsg("");
+                                        
+                                    }else{
+                                        setPassErr(true);
+                                        setPassMsg("Password is required");
+                                    }
+                                }
+                            }
                             />
                             {/* <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
@@ -218,7 +234,7 @@ export default function Login() {
                                     </Link>
                                 </Grid>
                             </Grid>
-                            {err&&<Alert severity="error">{errMsg}</Alert>}
+                            {err&&<Typography color="red" >{errMsg}</Typography>}
                             <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>

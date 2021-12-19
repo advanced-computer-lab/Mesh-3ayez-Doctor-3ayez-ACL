@@ -18,15 +18,15 @@ router.post("/", async (req, res) => {
   
       // Validate user input
       if (!(username && email && password && first_name && last_name)) {
-        res.status(400).send("All input is required");
-      }
+        return res.status(400).json({msgSrc:"missing input",msg:"All input is required"});
+      }else{
   
       // check if user already exist
       // Validate if user exist in our database
-      const oldUser = await User.findOne({ username });
+      const oldUser = await User.findOne({ email });
   
       if (oldUser) {
-        return res.status(400).send("User Already Exist. Please Login");
+        return res.status(400).json({msgSrc:"taken",msg:"User already exists. Please Login"});
       }
   
       //Encrypt user password
@@ -50,13 +50,13 @@ router.post("/", async (req, res) => {
       );
       // save user token
 
-      user['token'] = token;
-
       // return new user
-      res.status(200).json(user);
+      res.status(200).json({token:token,user:user});
+      }
     } catch (err) {
       console.log(err);
     }
+  
     // Our register logic ends here
   });
 
