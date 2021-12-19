@@ -24,6 +24,7 @@ function App() {
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
       <Route path="/user/reservation" component={Itinerary} />
+      <Route path="/user/seatReservation" component={SeatPick} />
       <Route path="/user/Profile" component={UserProfile} />
 
     </Router>

@@ -47,10 +47,10 @@ function Itinerary() {
   useEffect(() => {
     var tinyjsons = []
     var tinyjsons2 = []
-    axios.get("http://localhost:8000/api/flights/user/61aa4dadbde7d1780db3dda5")
+    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")
         .then(reso =>{
             for(var i = 0; i < reso.data.length; i++){
-                axios.get("http://localhost:8000/api/users/itinerary/61aa4dadbde7d1780db3dda5/"+reso.data[i]._id)
+                axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+reso.data[i]._id)
                     .then(res => {
                         
                         // while(theJsons.length != 0){
@@ -146,7 +146,7 @@ function Itinerary() {
   }
 
   function handleCancellation(){
-        axios.delete("http://localhost:8000/api/users/reservation/61aa4dadbde7d1780db3dda5/"+thersv);
+        axios.delete("http://localhost:8000/api/users/reservation/61bcd1e7bf1ace92644c0287/"+thersv);
         handleClose();
         history.go();
   }

@@ -216,6 +216,7 @@ router.post("/", async(req,res)=>{
 
 
         //checking if there is an already created flight with the same flight number
+        console.log("I'm here in backend");
         const flights = await Flight.find({'flight_number' : body.flight_number}, 'flight_number');
         if(flights.length>0)
         {
@@ -291,7 +292,7 @@ router.put('/:_id',async (req, res) =>{
 
             return;
         }
-        const flight = await Flight.findOne({"flight_number":body.flight_number});
+        const flight = await Flight.findOne({"flight_number":body.flight_number, "_id":{$ne : req.params._id}});
         if(flight)
         {
             res.status(400).json({msg : "a flight with the same flight number already exists"});
