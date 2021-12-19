@@ -7,7 +7,7 @@ import { SeatPick } from './components/SeatReservation/SeatPick';
 ReactDOM.render(
   
   <React.StrictMode>
-    <App />
+    <App height/>
   </React.StrictMode>,
   document.getElementById('root')
 );
