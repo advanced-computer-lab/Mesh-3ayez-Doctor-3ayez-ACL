@@ -36,22 +36,24 @@ function Signup() {
         });
     };
     return (
-        <Grid minHeight="100%" style={{backgroundColor:colors.c1}}>
         <ThemeProvider theme={theme} >
+        <Grid sx={{ height: '100%' ,alignItems: 'center' ,   display: 'flex',
+                        flexDirection: 'column' }} style={{backgroundColor:colors.c1}}>
+            
             <Container component="main" maxWidth="xs" style={{backgroundColor:"white"}}>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        margin:"auto",
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: colors.c1 }}>
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" color={colors.c1}>
                         Sign up
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -120,12 +122,16 @@ function Signup() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            style={{
+                                borderRadius: 5,
+                                backgroundColor: colors.c1,
+                            }}
                         >
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="#" variant="body2">
+                            <Grid item xs>
+                                <Link href="#" variant="body2" style={{color:colors.c1}}>
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
@@ -134,8 +140,9 @@ function Signup() {
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>
+            </Grid>
+
         </ThemeProvider>
-        </Grid>
     );
 }
 

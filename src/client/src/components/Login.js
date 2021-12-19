@@ -123,7 +123,7 @@ export default function Login() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
+            <Grid container component="main" sx={{ height: '80vh' ,width:"70%", margin:"auto", marginTop:"4%"}}>
                 <CssBaseline />
                 <Grid
                     item
@@ -149,10 +149,10 @@ export default function Login() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <Avatar sx={{ m: 1, bgcolor: colors.c1 }}>
                             <LockOutlinedIcon />
                         </Avatar>
-                        <Typography component="h1" variant="h5">
+                        <Typography component="h1" variant="h5" color={colors.c1}>
                             Sign in
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -195,6 +195,10 @@ export default function Login() {
                                 label="Remember me"
                             /> */}
                             <Button
+                            style={{
+                                borderRadius: 5,
+                                backgroundColor: colors.c1,
+                            }}
                                 type="submit"
                                 fullWidth
                                 variant="contained"
@@ -209,7 +213,7 @@ export default function Login() {
                                     </Link>
                                 </Grid> */}
                                 <Grid item xs>
-                                    <Link href="/register" variant="body2">
+                                    <Link href="/signup" variant="body2" style={{color:colors.c1}}>
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>
