@@ -1,7 +1,6 @@
 import React from 'react'
 import UserSearch from './UserSearch'
 import UserNavBar from './UserNavBar'
-import SearchResultsList from './SearchResultsList';
 import {useEffect,useState} from 'react' 
 import { useLocation } from "react-router-dom";
 import Stack from '@mui/material/Stack'

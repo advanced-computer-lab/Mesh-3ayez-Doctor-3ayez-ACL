@@ -7,7 +7,7 @@ import { FormControl } from '@mui/material';
 import UserSearch from './UserSearch';
 import UserSearchResults from './UserSearchResults';
 import UserNavBar from './UserNavBar';
-
+import { useLocation } from 'react-router-dom';
 function UserHome() {
     const [user, setUser]= useState(false);
     return (

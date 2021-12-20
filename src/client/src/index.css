@@ -6,6 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  height: 100%;
+
 }
 
 code {
@@ -16,6 +18,7 @@ code {
   margin: auto;
   width: 100%;
   height: 100%;
+
 }
 .styled-table {
   border-collapse: collapse;
@@ -210,6 +213,5 @@ font-size: 16px;
 
 .seat-picker__row__number {
 }
-
 
 
