@@ -1,0 +1,21 @@
+Youssed Ziad 46-13158
+Nesma Harraz 46-8464
+Abdallah Elsayed 46-17899
+Omar Gamal 46-17144
+Nada Abdo 46-18492
+
+Tasks:
+
+Backend:
+
+Get User Reservations, Get Flight-Seat Join API : Youssef Ziad
+Get Flight Details: Nesma Harraz
+User Flight Seat Search: Nada Abdo
+Create reservations, Cancel Reservations, Itinerary (and the rest): Abdullah Elsayed
+
+Frontend:
+
+Search For Flights: Nada Abdo
+Pick Seats and Confirm: Omar Gamal
+User Profile Update: Nesma Harraz
+User Reservations Display: Youssef Ziad

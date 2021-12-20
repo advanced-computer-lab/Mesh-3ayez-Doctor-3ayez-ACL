@@ -12,9 +12,13 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './TIJ (2).png'
-import { useHistory } from 'react-router-dom';
+import {useHistory} from'react-router-dom';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core';
+
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
+const flag=false;
 
 
 
@@ -46,7 +50,7 @@ const UserNavBar = (props) => {
     history.push('/user/profile');
   }
   const onClickDash = () => {
-    history.push('/user/reservations');
+    history.push('/user/reservation');
   }
 
   return (
@@ -118,13 +122,14 @@ const UserNavBar = (props) => {
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
+                
               >
                 {page}
               </Button>
             ))}
           </Box>
 
-          {props.user &&
+          {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -157,17 +162,18 @@ const UserNavBar = (props) => {
 
               </Menu>
             </Box>}
+
           {!props.user && <Box sx={{ flexGrow: 0 }}>
             <Button textAlign="center" onClick={()=>{props.onLogin()}}>Login</Button>
             <Button textAlign="center" >Sign up </Button>
 
           </Box>
 
-          }
+          } */}
 
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
-export default UserNavBar;
+export default withStyles()(UserNavBar)
