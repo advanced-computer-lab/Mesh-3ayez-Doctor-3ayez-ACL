@@ -15,6 +15,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
 import { withStyles } from '@material-ui/core';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 
 function ReservationAccordion(probs){
 
@@ -89,6 +91,50 @@ function ReservationAccordion(probs){
     }
     })
 
+    const history = useHistory();
+
+    function editDepartureFlight(){
+        history.push({
+            pathname: '/user/editDepartureFlight',
+            state: {
+                reservation: thereservation,
+            }
+        });
+    }
+
+    function editReturnFlight(){
+        history.push({
+            pathname: '/user/editReturnFlight',
+            state: {
+                reservation: thereservation,
+            }
+        });
+    }
+
+    function editDepartureSeats(){
+        history.push({
+            pathname: '/user/EditSeats',
+            state: {
+                reservation: thereservation,
+                flight: theJsons[0].flight_details[0],
+                seats: theJsons,
+                type: 'departure'
+            }
+        });
+    }
+
+    function editReturnSeats(){
+        history.push({
+            pathname: '/user/EditSeats',
+            state: {
+                reservation: thereservation,
+                flight: theJsons2[0].flight_details[0],
+                seats: theJsons2,
+                type: 'return'
+            }
+        });
+    }
+
     
 if(theJsons[0]!=undefined)
     return(
@@ -107,7 +153,7 @@ if(theJsons[0]!=undefined)
                     onFocus={event => event.stopPropagation()}
                     label={' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
     +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}
-    control={<Button key="buttonkey" variant="outlined" onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right', color: 'red'}} >Cancel reservation</Button>}
+    control={<Button key="buttonkey" variant="outlined" color="error"  onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right'}} >Cancel reservation</Button>}
                   />
                 
                 <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)}</label></Box>
@@ -118,14 +164,27 @@ if(theJsons[0]!=undefined)
                 <AccordionDetails>
                     
                     <div>
-                        <h2>Departure Tickets:</h2>
+                        <div>
+                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge gray"}}>
+                        <div style={{float:'left'}}><Button variant="outlined" color="success" onClick={editDepartureFlight}>Change Departure Flight</Button></div>
+                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" color="success" onClick={editDepartureSeats}>Change Departure Seats</Button></div>
+                        <h2>Departure Tickets</h2>
                         {theJsons==undefined?[]:theJsons.map((js,inddex) => {
                             return <Ticket key={inddex+"A"} getRows= {js==undefined?[]:[js]}/>
                         })}
-                        <h2>Return Tickets:</h2>
+                        </Box>
+                        </div>
+                        <br/>
+                        <div>
+                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge gray"}}>
+                        <div style={{float:'left'}}><Button variant="outlined" color="success" onClick={editReturnFlight}>Change Return Flight</Button></div>
+                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" color="success" onClick={editReturnSeats}>Change Return Seats</Button></div>
+                        <h2>Return Tickets</h2>
                         {theJsons2==undefined?[]:theJsons2.map((js,inddex) => {
                             return <Ticket key={inddex+"B"} getRows= {js==undefined?[]:[js]}/>
                         })}
+                        </Box>
+                        </div>
                     </div>
                     
                 </AccordionDetails>
