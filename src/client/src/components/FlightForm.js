@@ -125,7 +125,9 @@ export default function FlightForm() {
         if(!firBaggageAllowance)
             setErrorFbag("This field is required");
 
+        
         if (flightNumber && from && to && arrivalTime && departureTime && economySeats && businessSeats && firstSeats && arrivalTerminal &&departureTerminal &&ecoBaggageAllowance&&ecoPrice&&busBaggageAllowance&&busPrice&&firBaggageAllowance&firPrice) {
+            console.log("I reached here");
             axios.post("http://localhost:8000/api/flights", data, { "Content-Type": "application/json" })
                 .then(
                     result => {

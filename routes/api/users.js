@@ -17,7 +17,8 @@ const router = express.Router()
 router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
     
     const user_id = req.params.user_id;
-    const reservation_id = req.params.reservation_id
+    const reservation_id = req.params.reservation_id;
+    
     if(!mongoose.isValidObjectId(user_id))
     {
         res.status(400).json({msg : 'the user id is not a valid id'});
@@ -28,19 +29,22 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
         res.status(400).json({msg : 'the reservation id is not a valid id'});
         return;
     }
-
+    
     const user = await User.findById(user_id);
+    console.log("now I'm here");
     if(!user)
     {
         res.status(404).json({msg : 'this user is not found'});
         return; 
     }
+    
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id':user_id});
     if(reservation)
     {
         
         var update_departure = {};
         var update_return = {};
+        console.log("I found a reservation with such attributes");
         const departure_flight = await Flight.findOne({'_id' : reservation.departure_flight});
         const return_flight = await Flight.findOne({'_id':reservation.return_flight});
         if(reservation.cabin_type=='economy')
@@ -92,7 +96,7 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
      
 
      let transporter = nodemailer.createTransport({
-        service: 'hotmail',
+        service: 'gmail',
       auth: {
             user : authorization.user,
             pass : authorization.password
