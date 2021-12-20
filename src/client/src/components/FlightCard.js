@@ -40,26 +40,6 @@ export default function FlightCard(props) {
         cabin_type:props.cabin_type
         }
     
-    const onClick=()=>{
-        // history.push({
-        //     pathname:"/ReturnSearchResults",
-        //     state: {
-        //         "reserved_departure":{
-        //         flight_id:props.key,
-        //         flight_number:props.flight_number,
-        //         from:props.from,
-        //         to:props.to,
-        //         departure_time:props.departure_time,
-        //         Arrival_time:props.Arrival_time,
-        //         duration:props.duration,
-        //         cabin_type:props.cabin_type,
-        //         baggage:props.baggage,
-        //         price:props.price
-        //         }
-        //     }
-        // });
-        // props.onClick;
-    }
     return (
         <Card
        sx={{textAlign:"center", maxWidth: 1100, display:"flex" }}>
