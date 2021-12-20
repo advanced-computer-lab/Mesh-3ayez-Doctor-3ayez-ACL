@@ -59,8 +59,6 @@ export default function SearchResultsTmp(props) {
         setActiveStep(0);
     };
 
-    console.log(props.flights['departure_flights']);
-    console.log(activeStep);
 
     const [retrunF, setReturn] = useState(false);
     const [departureReserved, setDepartureReserved] = useState({});
@@ -69,14 +67,7 @@ export default function SearchResultsTmp(props) {
 
     const onClick = (reserved) => {
         setDepartureReserved(reserved);
-        // let newSkipped = skipped;
-        // if (isStepSkipped(activeStep)) {
-        //     newSkipped = new Set(newSkipped.values());
-        //     newSkipped.delete(activeStep);
-        // }
-
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        // setSkipped(newSkipped);
     }
     const onClickReturn = (reserved) => {
         console.log("entered")

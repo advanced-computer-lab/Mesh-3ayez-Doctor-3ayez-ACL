@@ -162,8 +162,9 @@ const UserNavBar = (props) => {
 
               </Menu>
             </Box>}
-          {/* {!props.user && <Box sx={{ flexGrow: 0 }}>
-            <Button textAlign="center" onClick={() => props.onLogin(true)}>Login</Button>
+
+          {!props.user && <Box sx={{ flexGrow: 0 }}>
+            <Button textAlign="center" onClick={()=>{props.onLogin()}}>Login</Button>
             <Button textAlign="center" >Sign up </Button>
 
           </Box>

@@ -3,16 +3,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { Box } from '@mui/system';
-import { fabClasses, Typography } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
@@ -20,8 +16,6 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router-dom";
-import UserSearchResults from './UserSearchResults.js';
-import { Redirect } from 'react-router';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -105,8 +99,9 @@ function UserSearch(props) {
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
                 if(result.status==200){
+                    const path=props.src==='editDep'?'editDepartureFlight':(props.src==='editRet'?"editReturnFlight":"searchResults")
                 history.push({
-                    pathname: '/user/searchResults', state:
+                    pathname: `/user/${path}`, state:
                     {
                         flights: result.data,
                         cabin_type: cabin_type,
@@ -132,6 +127,7 @@ function UserSearch(props) {
                     label="From"
                     value={from}
                     className={classes.root}
+                    disabled={props.src==='editDep'||props.src=='editRet'}
                     InputProps={{
 
                         startAdornment: (
@@ -151,6 +147,7 @@ function UserSearch(props) {
                     label="To"
                     value={to}
                     className={classes.root}
+                    disabled={props.src==='editDep'||props.src=='editRet'}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -167,6 +164,7 @@ function UserSearch(props) {
                     <DatePicker
                         label="Departure date"
                         value={new Date(departure_date.year, departure_date.month - 1, departure_date.day)}
+                        disabled={props.src=='editRet'}
                         onChange={(newValue) => {
                             if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
                             {
@@ -181,6 +179,7 @@ function UserSearch(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Return date"
+                        disabled={props.src==='editDep'}
                         value={new Date(arrival_date.year, arrival_date.month - 1, arrival_date.day)}
 
                         onChange={(newValue) => {
@@ -199,6 +198,7 @@ function UserSearch(props) {
                     label="Passengers"
                     type="number"
                     value={number_of_passengers}
+                    disabled={props.src==='editDep'||props.src=='editRet'}
                     className={classes.root}
                     onChange={(e) => {
                         setPassengers(e.target.value);

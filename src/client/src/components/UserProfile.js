@@ -179,7 +179,7 @@ export default function UserProfile(probs) {
                         display="inline-block"
 
                     >
-                        {/* <TextField
+                        <TextField
                             
                             onChange={function (e) {
                                 setUsername(e.target.value);
@@ -188,7 +188,7 @@ export default function UserProfile(probs) {
                             id="outlined-required"
                             label="Username"
                             type="String"
-                        /> */}
+                        />
 
                         <TextField
                             

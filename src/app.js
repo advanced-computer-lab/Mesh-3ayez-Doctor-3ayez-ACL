@@ -28,6 +28,8 @@ app.use('/api/users', require('../routes/api/users'))
 // defining the path for all APIs regarding reservations
 app.use('/api/reservations', require('../routes/api/reservations'))
 
+app.use('/api/login', require('../routes/api/login'))
+app.use('/api/register', require('../routes/api/register'))
 
 
 // const dummyRec ={
