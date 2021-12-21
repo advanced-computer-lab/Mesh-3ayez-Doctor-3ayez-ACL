@@ -289,5 +289,114 @@ router.post('/', async(req,res)=>{
 
 });
 
+router.put('/change_seats/:reservation_id/:user_id/:flight_id', async(req,res)=>{
+    const reservation_id = req.params.reservation_id;
+    const user_id = req.params.user_id;
+    const flight_id = req.params.flight_id;
+
+    //check all ids
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg : 'the reservation id is not a valid id'});
+        return;
+    }
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the user id is not a valid id'});
+        return;
+    }
+    if(!mongoose.isValidObjectId(flight_id))
+    {
+        res.status(400).json({msg : 'the flight id is not a valid id'});
+        return;
+    }
+    const seats_ids = req.body.seats;
+
+    for(var i=0; i<seats_ids.length;i++){
+        if(!mongoose.isValidObjectId(seats_ids[i]))
+        {
+            res.status(400).json({msg : `${seats_ids[i]} is not a valid seat id`});
+            return;
+        }
+    }
+
+    //checking if the user id belongs to an existing user
+    
+    const user = await User.findById(user_id);
+    
+    if(!user)
+    {
+        res.status(400).json({msg : 'there is no such user with the passed id'});
+        return;
+    }
+    
+
+    // checking if there is a reservation for that specific user
+    const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id':user_id});
+    if(!reservation)
+    {
+        res.status(400).json({msg : 'there is no such reservation for this user'});
+        return;
+    }
+
+    //checking if the the passed flight is in the reservation departure or return flights
+    if(reservation.departure_flight != flight_id && reservation.return_flight != flight_id)
+    {
+        res.status(400).json({msg : 'this user has no reserved flight with this flight id'});
+        return;
+    }
+    //checking if the number of seats is equal to the number of seats in the reservation
+    if(reservation.number_of_passengers != seats_ids.length)
+    {
+        res.status(400).json({msg : 'the number of seats to be reserved should be equal to the number of seats for this reservation'});
+        return;
+    }
+    //checking if the passed seats are not already reserved by other passengers and they are of the same cabin type
+    for(var i=0;i<seats_ids.length;i++)
+    {
+        const seat = await FlightSeat.findById(seats_ids[i]);
+        //checking if there is a seat with such id
+        if(!seat)
+        {
+            res.status(400).json({msg : `there is no seat with id ${seats_ids[i]}`});
+            return;
+        }
+        // checking if the seat belongs to the same flight
+        if(seat.flight_id != flight_id)
+        {
+            res.status(400).json({msg: 'one of the passed seats dos not belong to this flight'});
+            return;
+        }
+        //checking if the seat is of the same cabin type
+        if(seat.seat_type != reservation.cabin_type)
+        {
+            res.status(400).json({msg: 'all seats must have the same cabin type as the reservation cabin type'});
+            return;
+        }
+        //checking if the seat is not reserved by another passenger
+
+        if(seat.reservation_id && seat.reservation_id!= reservation_id)
+        {
+            res.status(400).json({msg: 'one of the seats is already reserved by another passenger'});
+            return;
+        }
+    }
+
+    //deleting reservations for the seats reserved with the reservation id for that flight
+    const query = {'flight_id':flight_id, 'reservation_id':reservation_id}
+    for(var i=0;i<reservation.number_of_passengers;i++)
+    {
+        await FlightSeat.findOneAndUpdate(query, {'reservation_id':null});
+    }
+    
+    //reserving the new seats
+    for(var i=0;i<seats_ids.length;i++)
+    {
+        await FlightSeat.findByIdAndUpdate(seats_ids[i], {'reservation_id':reservation_id});
+    }
+    res.status(200).json({msg: 'reservation updated successfully'});
+}
+);
+
 
 module.exports = router;

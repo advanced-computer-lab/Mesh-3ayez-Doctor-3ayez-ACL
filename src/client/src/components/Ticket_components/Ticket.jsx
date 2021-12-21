@@ -9,6 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Box from '@mui/material/Box';
 
 function Ticket(probs) {
     
@@ -39,6 +40,7 @@ function Ticket(probs) {
 
     return (
         <div>
+            <Box sx={{background:'white'}}>
             <table className={"styled-table"+(rows[0].seat_type == 'economy'?3:(rows[0].seat_type == 'business'?'':2))}>
                 <TicketHead />
                 <tbody>
@@ -89,7 +91,7 @@ function Ticket(probs) {
                     <Button variant="outlined" onClick={handleClose}>Do Not Cancel reservations</Button>
                 </DialogActions>
             </Dialog>
-
+            </Box>
         </div>
     );
 }

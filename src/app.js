@@ -10,7 +10,7 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => console.log("MongoDB is now connected"))
     .catch(err => console.log(err));
 
-
+mongoose.set('debug', true);
 
 // defining the middleware functions to parse the body of the requests
 app.use(express.json());

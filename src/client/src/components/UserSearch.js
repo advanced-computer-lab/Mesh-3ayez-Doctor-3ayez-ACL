@@ -166,8 +166,10 @@ function UserSearch(props) {
                         value={new Date(departure_date.year, departure_date.month - 1, departure_date.day)}
                         disabled={props.src=='editRet'}
                         onChange={(newValue) => {
-                            console.log(newValue.getDate() + " " + (newValue.getMonth() + 1) + " " + newValue.getFullYear())
-                            setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
+                            {
+                                setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            }
                         }}
 
                         renderInput={(params) => <TextField {...params} className={classes.root}
@@ -181,7 +183,10 @@ function UserSearch(props) {
                         value={new Date(arrival_date.year, arrival_date.month - 1, arrival_date.day)}
 
                         onChange={(newValue) => {
-                            setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
+                            {
+                                setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} className={classes.root}
                             InputLabelProps={{ shrink: true, }} />}
