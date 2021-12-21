@@ -135,6 +135,10 @@ function ReservationAccordion(probs){
         });
     }
 
+    function handlePayment(){
+
+    }
+
     
 if(theJsons[0]!=undefined)
     return(
@@ -156,14 +160,19 @@ if(theJsons[0]!=undefined)
     control={<Button key="buttonkey" variant="outlined" color="error"  onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right'}} >Cancel reservation</Button>}
                   />
                 
-                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 300}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)}</label></Box>
-                <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Paid: "+(theJsons[0]==undefined?'':theJsons[0].amount_paid.$numberDecimal)}</label></Box>
-      <Box sx={{ flexGrow: 1 }}><label style={{marginLeft: 10}}>{"Number: "+(theJsons[0]==undefined?'':theJsons[0].reservation_number)}</label></Box>
+                
     
                 </AccordionSummary>
                 <AccordionDetails>
-                    
+
                     <div>
+                    <div>
+                    <div style={{float:'right'}}><Button variant="outlined" color="success" onClick={handlePayment}>Pay</Button></div>
+                    <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Paid: "+(theJsons[0]==undefined?'':theJsons[0].amount_paid.$numberDecimal)+"/"+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
+                    <Box sx={{ flexGrow: 1, float:"left" }}><label style={{marginLeft: 10}}>{"Number: "+(theJsons[0]==undefined?'':theJsons[0].reservation_number)}</label></Box>
+                    <br/>
+                    <br/>
+                    </div>
                         <div>
                         <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge gray"}}>
                         <div style={{float:'left'}}><Button variant="outlined" color="success" onClick={editDepartureFlight}>Change Departure Flight</Button></div>
