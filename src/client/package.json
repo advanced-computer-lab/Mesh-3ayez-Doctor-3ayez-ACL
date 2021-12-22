@@ -22,6 +22,7 @@
     "react-scripts": "^5.0.0",
     "react-seat-picker": "^1.5.3",
     "react-tooltip": "^4.2.21",
+    "stream": "^0.0.2",
     "three": "^0.135.0",
     "vanta": "^0.5.21",
     "web-vitals": "^1.1.2"

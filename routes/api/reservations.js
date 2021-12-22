@@ -280,6 +280,7 @@ router.post('/', async(req,res)=>{
         body.return_seats.map(async seat_id => {
              await FlightSeat.findByIdAndUpdate(seat_id, seat_update);
         })
+        // we have to send a mail once the reservation is created successfully
         res.json({msg : 'reservation created successfully'});
     }).catch(err=>{
         console.log(err);
@@ -398,5 +399,241 @@ router.put('/change_seats/:reservation_id/:user_id/:flight_id', async(req,res)=>
 }
 );
 
+router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>{
+    const old_flight_id = req.params.flight_id;
+    const reservation_id = req.params.reservation_id;
+    const user_id = req.params.user_id;
+
+    //checking if all ids are valid ids
+    if(!mongoose.isValidObjectId(old_flight_id))
+    {
+        res.status(400).json({msg:"the old flight id is not a valid id"});
+        return;
+    }
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg:"the reservation id is not a valid id"});
+        return;
+    }
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg:"the user id is not a valid id"});
+        return;
+    }
+
+    //checking if the user aready exists
+    const user = await User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg:"the user does not exist"});
+        return;   
+    }
+
+    // checking if there is a reservation with this id belongs to this user
+    const reservation = await Reservation.findById(reservation_id);
+    if(!reservation)
+    {
+        res.status(404).json({msg:"there is no reservation with such id"});
+        return;
+    }
+    if(reservation.user_id != user_id)
+    {
+        res.status(401).json({msg:"this reservation does not belong to this user"});
+        return;
+    }
+
+    // check if the sent flight is departure or return
+    var dep;
+    
+    if(reservation.departure_flight == old_flight_id)
+    {
+        dep = true;
+    }
+    else if(reservation.return_flight == old_flight_id)
+        dep = false;
+    else
+    {
+        res.status(400).json({msg:"the old flight does not belong to this reservation"});
+        return;
+    }
+    
+    //checking if the new flight id and the new seats exists in the body
+    const body = req.body;
+    const new_flight_id = body.new_flight_id;
+    const new_seats = req.body.seats;
+    if(!new_flight_id)
+    {
+        res.status(400).json({msg:"the new flight id was not provided"});
+        return;
+    }
+    if(!new_seats)
+    {
+        res.status(400).json({msg:"the new seats were not provided"});
+        return;
+    }
+    if(new_seats.length != reservation.number_of_passengers)
+    {
+        res.status(400).json({msg:"the number of seats should be equal to the number of passengers"});
+        return;
+    }
+
+
+    //checking if the seats ids are valid and they belong to the new flight with the same cabin type
+    for(var i=0;i<new_seats.length;i++)
+    {
+        var seat_id = new_seats[i];
+        //checking if the seat id is a valid id
+        if(!mongoose.isValidObjectId(seat_id))
+        {
+            res.status(400).json({msg:"one of the seats id is not a valid id"});
+            return;
+        }
+        var seat = await FlightSeat.findById(seat_id);
+        //checking if the seat id exists in the database
+        if(!seat)
+        {
+            res.status(404).json({msg : "on of the new seats does not exist"});
+            return;
+        }
+        //checking if the seat belongs to the new passed flight
+        if(seat.flight_id != new_flight_id)
+        {
+            res.status(400).json({msg : "on of the new seats does not belong to the new flight"});
+            return;   
+        }
+        //checking if the seat has the same cabin type
+        if(seat.seat_type != reservation.cabin_type)
+        {
+            res.status(400).json({msg: "one of the new seats has a different cabin type"});
+            return;
+        }
+        // checking if the seat is not reserved
+        if(seat.reservation_id)
+        {
+            res.status(400).json({msg : "on of the new seats is already reserved"});
+            return;   
+        }
+    }
+
+    //deleting the reservation for the old seats
+    for(var i=0;i<reservation.number_of_passengers;i++)
+    {
+        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
+    }
+
+    //changing the number of available seats in the old and new flight
+    const old_flight = await Flight.findById(old_flight_id);
+    const new_flight = await Flight.findById(new_flight_id);
+    var old_query = {};
+    var new_query = {};
+    var new_price;
+    if(reservation.cabin_type=='economy')
+       {
+            old_query['economy_seats.available'] = old_flight.economy_seats.available + reservation.number_of_passengers;
+            new_query['economy_seats.available'] = new_flight.economy_seats.available - reservation.number_of_passengers;
+            new_price = reservation.price + (new_flight.economy_seats.price - old_flight.economy_seats.price)*reservation.number_of_passengers
+       } 
+    else if(reservation.cabin_type == 'business')
+        {
+            old_query['business_seats.available'] = old_flight.business_seats.available + reservation.number_of_passengers;
+            new_query['business_seats.available'] = new_flight.business_seats.available - reservation.number_of_passengers;
+            new_price = reservation.price + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
+        }
+    else
+        {
+            old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
+            new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
+            new_price = reservation.price + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
+        }
+    await Flight.findByIdAndUpdate(old_flight_id, old_query);
+    await Flight.findByIdAndUpdate(new_flight_id, new_query);
+
+    //reserving the new seats
+    for(var i=0;i<new_seats.length;i++)
+    {
+        await FlightSeat.findByIdAndUpdate(new_seats[i], {'reservation_id':reservation_id});
+    }
+    // updating the price and the flight id of the reservation
+    var reservation_query={'price' : new_price};
+    if(dep)
+        reservation_query['departure_flight'] = new_flight_id;
+    else
+        reservation_query['return_flight'] = new_flight_id;
+
+    await Reservation.findByIdAndUpdate(reservation_id, reservation_query);
+
+    res.json({msg : "the reservation was updated successfully"});
+    
+
+});
+// getting all flights with to replace a reservation flight with the price difference
+
+router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
+    console.log("I'm here");
+    const reservation_id = req.params.reservation_id;
+    const body = req.body;
+    // check if reservation id is a valid id
+    
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg : 'the reservation id is not a valid id'});
+        return;
+    }
+    // checking if the reservation id belongs to an actual reservation
+    const reservation = await Reservation.findById(reservation_id);
+    if(!reservation)
+    {
+        res.status(404).json({msg : "the reservation does not exist"});
+        return; 
+    }
+    //building the query
+    var query = {};
+    if(!body.source)
+    {
+        res.status(400).json({msg : 'you need to specify if you are coming from the source or the destination'});
+        return;
+    }
+    const departure_flight = await Flight.findById(reservation.departure_flight);
+    const return_flight = await Flight.findById(reservation.return_flight);
+    // if we want to replace the departure flight
+    if(body.source ==='editDep')
+    {
+        //check if the departure flight did not take off yet
+        if(new Date() >= departure_flight.departure_time)
+        {
+            res.status(400).json({msg : 'you can not change the departure flight after its departure time'});
+            return;
+        }
+        query['_id'] = {$ne : departure_flight._id};
+        query['from'] = departure_flight.from;
+        query['to'] = departure_flight.to;
+        query['departure_time'] = {$gt : new Date(), $lt : return_flight.departure_time};
+
+    }
+    // if we want to replace the return flight
+    else
+    {
+        if(new Date() >= return_flight.departure_time)
+        {
+            res.status(400).json({msg : 'you can not change the departure flight after its departure time'});
+            return;
+        }
+        query['_id'] = {$ne : return_flight._id};
+        query['from'] = return_flight.from;
+        query['to'] = return_flight.to;
+        query['departure_time'] = {$gt : departure_flight.departure_time};
+
+    }
+    query[`${reservation.cabin_type}_seats.available`] = {$gte: reservation.number_of_passengers}
+    
+    const result = await Flight.find(query);
+    if(result.length==0)
+    {
+        res.status(404).json({msg : 'no results found'});
+        return;
+    }
+    res.json(result);
+
+});
 
 module.exports = router;
