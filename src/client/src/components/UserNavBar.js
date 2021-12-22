@@ -169,7 +169,7 @@ const UserNavBar = (props) => {
 
           </Box>
 
-          } */}
+          } 
 
         </Toolbar>
       </Container>
