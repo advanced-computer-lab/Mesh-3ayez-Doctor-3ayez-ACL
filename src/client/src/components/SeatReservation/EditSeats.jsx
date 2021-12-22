@@ -16,17 +16,21 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
+import SeatPick from '../SeatPick';
+
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
+var flag=false;
 export default function EditSeats() {
+    
     const history= useHistory();
     const location = useLocation();
     const reservation = location.state.reservation;
     const resType = location.state.type;
-    const cabinType= reservation.cabin_type;
+    const cabinType=reservation.cabin_type;
 
-    const [depSeats, setDepSeats] = useState([]);
     const [depSeatsLoading, setDepSeatsLoading] = useState(true);
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
+    const [depSeats, setDepSeats] = useState([]);
     const [retSeats, setRetSeats] = useState([]);
     const [priceDep, setPriceDep] = useState(0);
     const [priceRet, setPriceRet] = useState(0);
@@ -36,25 +40,34 @@ export default function EditSeats() {
     const [returnSeats, setReturnSeats] = useState([]);
     const [reservedDepSeats, serReservedDepSeats] = useState([]);
     const [reservedRetSeats, serReservedRetSeats] = useState([]);
+    
 
     useEffect(() => {
+        console.log("I entered the use state");
         axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.departure_flight + "/" + cabinType)
             .then(res => {
-
+                
                 setDepSeats(res.data);
                 setDepSeatsLoading(false);
-                console.log(depSeats);
+                console.log(depSeatsLoading);
+                console.log(depSeats); 
+                
             })
-            .catch(() => {
-                console.log("BOOM");
+            .catch((err) => {
+                console.log(err);
             });
         axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.return_flight + "/" + cabinType)
             .then(res => {
                 setRetSeats(res.data);
                 setRetSeatsLoading(false);
+                
 
+            })
+            .catch(()=>{
+                console.log('an error occured');
             });
     }, []);
+    
 
     var depRows = [];
     buildSeatRows(depSeats, depRows);
@@ -75,16 +88,20 @@ export default function EditSeats() {
                         if(seat.resId==reservation._id){ //waiting for the real res id 
                             seat.isReserved=false;
                             seat['isSelected']=true;
-                            if(type=="dep"){
-                                departureSeats.push(seats.number);
-                                reservedDepSeats.push(seats.id);
-                                setDepartureSeats(departureSeats);
-                                serReservedDepSeats(reservedDepSeats);
-                            }else{
-                                returnSeats.push(seats.number);
-                                reservedRetSeats.push(seats.id);
-                                setReturnSeats(returnSeats);
-                                serReservedRetSeats(reservedRetSeats);
+                            if(!flag){
+                                if(type=="dep"){
+                                    console.log("wait");
+                                    departureSeats.push(seats.number);
+                                    reservedDepSeats.push(seats.id);
+                                    setDepartureSeats(departureSeats);
+                                    serReservedDepSeats(reservedDepSeats);
+                                    console.log(reservedDepSeats);
+                                }else{
+                                    returnSeats.push(seats.number);
+                                    reservedRetSeats.push(seats.id);
+                                    setReturnSeats(returnSeats);
+                                    serReservedRetSeats(reservedRetSeats);
+                                }
                             }
                             seats[i][j]=seat;
                         } 
@@ -92,6 +109,7 @@ export default function EditSeats() {
                 }
             }
         }
+        flag=true;
     }
     
     function addDepS(x, i) {
@@ -99,11 +117,19 @@ export default function EditSeats() {
         reservedDepSeats.push(i);
         setDepartureSeats(departureSeats);
         serReservedDepSeats(reservedDepSeats);
+        console.log("Added");
+        console.log(departureSeats);
+        console.log(reservedDepSeats);
+        console.log("done");
     }
     function removeDepS(x, i) {
 
         setDepartureSeats(departureSeats.filter((y) => x != y));
         serReservedDepSeats(reservedDepSeats.filter((j) => j != i));
+        console.log("removed");
+        console.log(departureSeats);
+        console.log(reservedDepSeats);
+        console.log("done");
     }
     function addRetS(x, i) {
         returnSeats.push(x);
@@ -125,10 +151,10 @@ export default function EditSeats() {
     var head="Omar";
     
 
-    // var depRows = [];
-    // buildSeatRows(depSeats, depRows);
-    // var retRows = [];
-    // buildSeatRows(retSeats, retRows);
+    // // var depRows = [];
+    // // buildSeatRows(depSeats, depRows);
+    // // var retRows = [];
+    // // buildSeatRows(retSeats, retRows);
 
     function buildSeatRows(seats, rows) {
         var rem = seats.length % 4;
@@ -241,7 +267,8 @@ export default function EditSeats() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        <Seats bagCB={setBagDep} priceCallBack={setPriceDep} rmvclbk={removeDepS} addclbk={addDepS} rows={depRows} maxReservableSeats={3} visible />
+                    {depSeatsLoading?null:<Seats bagCB={setBagDep} priceCallBack={setPriceDep} rmvclbk={removeDepS} addclbk={addDepS} rows={depRows} maxReservableSeats={2} visible />
+}
                     </div> 
                 </Box>
                 <Box gridColumn="span 8">
@@ -292,7 +319,8 @@ export default function EditSeats() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                    <Seats bagCB={setBagRet} priceCallBack={setPriceRet} rmvclbk={removeRetS} addclbk={addRetS} rows={retRows} maxReservableSeats={3} visible />
+                   {retSeatsLoading?null:<Seats bagCB={setBagRet} priceCallBack={setPriceRet} rmvclbk={removeRetS} addclbk={addRetS} rows={retRows} maxReservableSeats={3} visible />
+}
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
@@ -308,5 +336,6 @@ export default function EditSeats() {
             
         </div>
     );
+    // return(<h1>Omar</h1>)
 }
 
