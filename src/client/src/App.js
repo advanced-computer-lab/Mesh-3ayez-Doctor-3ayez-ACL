@@ -10,6 +10,8 @@ import UserSearch from './components/UserSearch';
 import FlightCard from './components/FlightCard';
 import UserProfile from './components/UserProfile';
 import Itinerary from './components/Itinerary'
+import EditSeats from './components/SeatReservation/EditSeats';
+
 import {SeatPick} from'./components/SeatReservation/SeatPick'
 import Signup from './components/Signup';
 import Login from './components/Login';
@@ -28,6 +30,7 @@ function App() {
       <Route path="/user/reservation" component={Itinerary} />
       <Route path="/user/seatReservation" component={SeatPick} />
       <Route path="/user/Profile" component={UserProfile} />
+      <Route path="/user/EditSeats" component={EditSeats} />
 
     </Router>
   );
