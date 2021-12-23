@@ -7,6 +7,8 @@ const Reservation = require('../../src/Models/Reservation');
 const User = require('../../src/Models/User');
 const Flight = require('../../src/Models/Flight');
 const FlightSeat = require('../../src/Models/FlightSeat');
+const authorization = require('../../config/mail');
+const nodemailer = require('nodemailer');
 
 // create a new reservation
 router.post('/', async(req,res)=>{
@@ -14,18 +16,20 @@ router.post('/', async(req,res)=>{
     var query = {};
     var departure_flight_update = {};
     var return_flight_update = {};
-
+    var user;
     var departure_flight;
     var return_flight;
     var number_of_passengers;
     var cabin_type;
+    var departure_seats = [];
+    var return_seats = []
 
     //user id
     if(body.user_id)
     {
         if(mongoose.isValidObjectId(body.user_id))
         {
-            const user = await User.findById(body.user_id);
+            user = await User.findById(body.user_id);
             if(user)
                 query['user_id'] = body.user_id;
             else
@@ -213,6 +217,13 @@ router.post('/', async(req,res)=>{
                 res.status(400).json({msg : `the seat with id ${body.departure_seats[i]} is already reserved`});
                 return;
             }
+            if(seat.seat_type != body.cabin_type)
+            {
+                res.status(400).json({msg : `all seats must have the same cabin type`});
+                return;
+            }
+            departure_seats.push(seat.seat_name);
+
         }
 
        
@@ -251,6 +262,12 @@ router.post('/', async(req,res)=>{
                 res.status(400).json({msg : `the seat with id ${body.return_seats[i]} is already reserved`});
                 return;
             }
+            if(seat.seat_type!= body.cabin_type)
+            {
+                res.status(400).json({msg : `all seats must have the same cabin type`});
+                return; 
+            }
+            return_seats.push(seat.seat_name);
         }
     }
     else
@@ -281,8 +298,10 @@ router.post('/', async(req,res)=>{
              await FlightSeat.findByIdAndUpdate(seat_id, seat_update);
         })
         // we have to send a mail once the reservation is created successfully
+        await sendItinerary(user, reservation, departure_flight, return_flight, departure_seats, return_seats);
         res.json({msg : 'reservation created successfully'});
     }).catch(err=>{
+
         console.log(err);
         res.status(500).json({msg : 'the server has encountered a problem. sorry for disturbance'});
     })
@@ -569,7 +588,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
 // getting all flights with to replace a reservation flight with the price difference
 
 router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
-    console.log("I'm here");
+    
     const reservation_id = req.params.reservation_id;
     const body = req.body;
     // check if reservation id is a valid id
@@ -734,7 +753,7 @@ router.post('/find_flights/:reservation_id', async(req,res)=>{
     if(result.length===0)
     {
         res.status(404).json({msg : 'no flights were found'});
-        return;
+        return; 
     }
     res.json(result);
 });
@@ -755,4 +774,118 @@ function checkSameDay(d1, d2)
 {
     return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
 }
+
+router.post('/send_me_mail/:reservation_id/:user_id', async(req, res)=>{
+    const user_id = req.params.user_id;
+    const reservation_id = req.params.reservation_id;
+    // check if the ids are valid
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the user id is not a valid id'});
+        return;
+    }
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg : 'the reservation id is not a valid id'});
+        return;
+    }
+
+    //check if the user exists in the database
+    const user = await User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg : 'this user does not exist'});
+        return;
+    }
+
+    //check if the reservation exists in the database
+    const reservation = await Reservation.findById(reservation_id);
+    if(!reservation)
+    {
+        res.status(404).json({msg : 'there is no reservation with this id'});
+        return;
+    }
+
+    //check if the reservation belongs to this user
+    if(reservation.user_id != user_id)
+    {
+        res.status(401).json({msg : 'you are not authorized to view this reservation'});
+        return;
+    }
+
+    //getting the departure and return flight
+    const departure_flight = await Flight.findById(reservation.departure_flight);
+    const return_flight = await Flight.findById(reservation.return_flight);
+
+    // getting all the seat numbers of the departure and return flights
+    var departure_seats = await FlightSeat.find({'reservation_id':reservation_id, 'flight_id':reservation.departure_flight}, 'seat_name');
+    departure_seats = departure_seats.map(seat => {return seat.seat_name});
+    var return_seats = await FlightSeat.find({'reservation_id':reservation_id, 'flight_id':reservation.return_flight}, 'seat_name');
+    return_seats = return_seats.map(seat => {return seat.seat_name});
+    await sendItinerary(user, reservation, departure_flight, return_flight, departure_seats, return_seats);
+    res.json({msg : 'mail sent successfully'});
+});
+
+
+async function sendItinerary(user, reservation, departure_flight, return_flight, departure_seats, return_seats)
+{
+    const text = `Dear Mr/Mrs ${user.first_name},
+
+We hope you are doing well. This mail is to confirm that you have made a reservation with id ${reservation._id} that is going from ${departure_flight.from} to ${departure_flight.to}.
+
+Departure Flight:
+    from: ${departure_flight.from}, departure time: ${getDateAndTime(departure_flight.departure_time)} terminal ${departure_flight.departure_terminal}
+    to: ${departure_flight.to}, arrival time: ${getDateAndTime(departure_flight.arrival_time)} terminal ${departure_flight.arrival_terminal}
+    Seats: ${departure_seats.toString()}
+    Cabin Type: ${reservation.cabin_type} class
+
+Return Flight:
+    from: ${return_flight.from}, departure time: ${getDateAndTime(return_flight.departure_time)} terminal ${return_flight.departure_terminal}
+    to: ${return_flight.to}, arrival time: ${getDateAndTime(return_flight.arrival_time)} terminal ${return_flight.arrival_terminal}
+    Seats: ${return_seats.toString()}
+    Cabin Type: ${reservation.cabin_type} class
+
+Price Paid: ${reservation.price}
+Booking Number: ${reservation._id}
+
+    `;
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+      auth: {
+            user : authorization.user,
+            pass : authorization.password
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${authorization.user}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "Your Reservation Itinerary", // Subject line
+        text: text, // plain text body
+        
+      });
+}
+
+function getDateAndTime(date)
+{
+    var month = date.getMonth() +1;
+    if(month<10)
+        month = "0"+month;
+    var day = date.getDate();
+    if(day < 10)
+        day = "0"+day;
+    var hours = date.getHours();
+    if(hours<10)
+        hours = "0"+hours;
+    var minutes = date.getMinutes();
+    if(minutes<10)
+        minutes = "0"+minutes;
+    
+    return `${day}/${month}/${date.getFullYear()} at ${hours}:${minutes}`;
+
+}
+
+
+
 module.exports = router;
