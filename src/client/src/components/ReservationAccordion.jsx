@@ -44,6 +44,7 @@ function ReservationAccordion(probs){
                     amount_paid: res.data.amount_paid,
                     reservation_number: res.data.reservation_number,
                     flight_details: [{
+                        _id: res.data.departure_flight._id,
                         flight_number: res.data.departure_flight.flight_number,
                         from: res.data.departure_flight.from,
                         departure_terminal: res.data.departure_flight.departure_terminal,
@@ -99,6 +100,9 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
+                flight: theJsons[0].flight_details[0],
+                src:"editDep"
+
             }
         });
     }
@@ -108,6 +112,8 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
+                flight: theJsons2[0].flight_details[0],
+                src:"editRet"
             }
         });
     }

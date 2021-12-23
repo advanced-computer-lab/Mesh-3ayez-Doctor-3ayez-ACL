@@ -15,7 +15,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
         <th>Arrival Time</th>
         <th></th>
         <th>
-        <Button style={{color: "aliceblue"}} className="addButton" href="../admin/createFlight">create Flight</Button>
+        <Button style={{color: "aliceblue"}} className="addButton" href="/admin/createFlight">create Flight</Button>
         </th>
     </tr>
 </thead>

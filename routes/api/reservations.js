@@ -587,8 +587,9 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
 });
 // getting all flights with to replace a reservation flight with the price difference
 
-router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
-    
+router.get('/all_possible_flights/:reservation_id/:src', async(req,res)=>{
+    console.log("I'm here");
+
     const reservation_id = req.params.reservation_id;
     const body = req.body;
     // check if reservation id is a valid id
@@ -607,15 +608,17 @@ router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
     }
     //building the query
     var query = {};
-    if(!body.source)
+    const src=req.params.src;
+    if(!src)
     {
+        console.log(body.source)
         res.status(400).json({msg : 'you need to specify if you are coming from the source or the destination'});
         return;
     }
     const departure_flight = await Flight.findById(reservation.departure_flight);
     const return_flight = await Flight.findById(reservation.return_flight);
     // if we want to replace the departure flight
-    if(body.source ==='editDep')
+    if(src ==='editDep')
     {
         //check if the departure flight did not take off yet
         if(new Date() >= departure_flight.departure_time)
@@ -646,11 +649,7 @@ router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
     query[`${reservation.cabin_type}_seats.available`] = {$gte: reservation.number_of_passengers}
     
     const result = await Flight.find(query);
-    if(result.length==0)
-    {
-        res.status(404).json({msg : 'no results found'});
-        return;
-    }
+   
     res.json(result);
 
 });
@@ -750,11 +749,8 @@ router.post('/find_flights/:reservation_id', async(req,res)=>{
     query['departure_time'] = {$gte : date, $lt : date2};
     query[`${reservation.cabin_type}_seats.available`] = {$gte : reservation.number_of_passengers};
     const result = await Flight.find(query);
-    if(result.length===0)
-    {
-        res.status(404).json({msg : 'no flights were found'});
-        return; 
-    }
+
+
     res.json(result);
 });
 
