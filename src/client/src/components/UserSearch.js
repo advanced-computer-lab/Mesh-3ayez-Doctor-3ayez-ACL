@@ -99,7 +99,7 @@ function UserSearch(props) {
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
                 if(result.status==200){
-                    const path=props.src==='editDep'?'editDepartureFlight':(props.src==='editRet'?"editReturnFlight":"searchResults")
+                    const path="searchResults"
                 history.push({
                     pathname: `/user/${path}`, state:
                     {
@@ -127,7 +127,6 @@ function UserSearch(props) {
                     label="From"
                     value={from}
                     className={classes.root}
-                    disabled={props.src==='editDep'||props.src=='editRet'}
                     InputProps={{
 
                         startAdornment: (
@@ -147,7 +146,6 @@ function UserSearch(props) {
                     label="To"
                     value={to}
                     className={classes.root}
-                    disabled={props.src==='editDep'||props.src=='editRet'}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -164,7 +162,6 @@ function UserSearch(props) {
                     <DatePicker
                         label="Departure date"
                         value={new Date(departure_date.year, departure_date.month - 1, departure_date.day)}
-                        disabled={props.src=='editRet'}
                         onChange={(newValue) => {
                             if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
                             {
@@ -179,7 +176,6 @@ function UserSearch(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Return date"
-                        disabled={props.src==='editDep'}
                         value={new Date(arrival_date.year, arrival_date.month - 1, arrival_date.day)}
 
                         onChange={(newValue) => {
@@ -198,7 +194,6 @@ function UserSearch(props) {
                     label="Passengers"
                     type="number"
                     value={number_of_passengers}
-                    disabled={props.src==='editDep'||props.src=='editRet'}
                     className={classes.root}
                     onChange={(e) => {
                         setPassengers(e.target.value);
