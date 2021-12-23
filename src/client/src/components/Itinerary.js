@@ -27,6 +27,7 @@ import { unstable_getScrollbarSize } from '@mui/utils';
 import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
 import { withStyles } from '@material-ui/core';
+import Payment from './Payment';
 
 
 
@@ -34,6 +35,7 @@ import { withStyles } from '@material-ui/core';
 
 function Itinerary() {
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [rsvids, setrsvids] = useState([]);
   const [thersv, setTheRsv] = useState('');
   const [isLoading, setLoading] = useState(true);
@@ -72,9 +74,17 @@ function Itinerary() {
     setOpen(false);
   }
 
+  function handleClose2(){
+    setOpen2(false);
+  }
+
   function openCancellation(rsvid){
       setOpen(true);
       setTheRsv(rsvid);
+  }
+
+  function openPayment(rsvid){
+        setOpen2(true);
   }
 
   function handleCancellation(){
@@ -102,6 +112,7 @@ function Itinerary() {
                     key = {index+"PP"}
                     reservation = {thing}
                     delete_callback = {openCancellation}
+                    payment_callback = {openPayment}
                 />
                 )
         })}
@@ -136,6 +147,24 @@ function Itinerary() {
                     <Button variant="outlined" onClick={handleClose} >Do Not Cancel Reservation</Button>
                 </DialogActions>
             </Dialog>
+
+            <Dialog
+                open={open2}
+                onClose={handleClose2}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <Payment
+                        name=""
+                        price="5000"
+                        productby = "Tijwal"
+                    >
+
+                    </Payment>
+                </DialogContent>
+            </Dialog>
+                
       
     </div>
   );
