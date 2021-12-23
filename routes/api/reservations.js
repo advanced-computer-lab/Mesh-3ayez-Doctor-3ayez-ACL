@@ -636,4 +636,123 @@ router.get('/all_possible_flights/:reservation_id', async(req,res)=>{
 
 });
 
+// search for a replacement for a flight in a reservation
+router.post('/find_flights/:reservation_id', async(req,res)=>{
+    const reservation_id = req.params.reservation_id;
+    const body = req.body;
+    //check if the reservation id is a valid id
+    if(!mongoose.isValidObjectId(reservation_id))
+    {
+        res.status(400).json({msg:"the reservation id is not a valid id"});
+        return;
+    }
+    // checking if the reservation id belongs to an actual reservation
+    const reservation = await Reservation.findById(reservation_id);
+    if(!reservation)
+    {
+        res.status(404).json({msg : "the reservation does not exist"});
+        return; 
+    }
+    // checking for the cabin type errors
+    if(!body.cabin_type)
+    {
+        res.status(400).json({msg : 'please specify the cabin type'});
+        return;
+    }
+    if(body.cabin_type != reservation.cabin_type)
+    {
+        res.status(404).json({msg : 'no results found'});
+        return;
+    }
+    // see if the flight to be changed is departure flight or return flight
+    if(!body.source)
+    {
+        res.status(400).json({msg:"you need to specify which flight you need to replace"});
+        return;
+    }
+    //check if the passed date is before today
+    var date, date2;
+    if(body.date)
+    {
+        date = construct_date(body.date);
+        date2 = new Date(date.getTime());
+        date2.setDate(date2.getDate()+1);
+    }
+    else
+    {
+        res.status(400).json({msg : 'you need to specify the date of the desidred flight'});
+        return;
+    }
+    console.log(date);
+    //check if today's date is before today's date
+    if(date < new Date() && !checkSameDay(date, new Date()))
+    {
+        res.status(400).json({msg : 'you can not search for a flight before today\'s date'});
+        return;
+    }
+    var query = {};
+    const departure_flight = await Flight.findById(reservation.departure_flight);
+    const return_flight = await Flight.findById(reservation.return_flight);
+    // if the flight to be replaced is the departure flight
+    if(body.source === 'editDep')
+    {
+        if(date> return_flight.departure_time)
+        {
+            res.status(400).json({msg : 'you can not search for a departure flight after the return flight'});
+            return;
+        }
+        if(departure_flight.departure_time < new Date())
+        {
+            res.status(400).json({msg : 'your flight has already taken off'});
+            return;   
+        }
+        query['from'] = departure_flight.from;
+        query['to'] = departure_flight.to;
+        query['_id'] = {$ne: reservation.departure_flight};
+    }
+    else
+    {
+        if(date< departure_flight.departure_time)
+        {
+            res.status(400).json({msg : 'you can not search for a return flight before the departure flight'});
+            return;
+        }
+        if(return_flight.departure_time < new Date())
+        {
+            res.status(400).json({msg : 'your flight has already taken off'});
+            return;   
+        }
+        query['from'] = return_flight.from;
+        query['to'] = return_flight.to;
+        query['_id'] = {$ne: reservation.return_flight};
+    }
+
+
+    query['departure_time'] = {$gte : date, $lt : date2};
+    query[`${reservation.cabin_type}_seats.available`] = {$gte : reservation.number_of_passengers};
+    const result = await Flight.find(query);
+    if(result.length===0)
+    {
+        res.status(404).json({msg : 'no flights were found'});
+        return;
+    }
+    res.json(result);
+});
+
+function construct_date(date)
+{
+    var day = date.day + "";
+    if(date.day<10)
+            day = 0+""+date.day;
+    var month = date.month + "";
+    if(date.month<10)
+        month = 0+""+date.month
+    console.log(day);
+    return new Date(date.year + "-" + month + "-" + day + "T00:00:00.000Z");
+}
+
+function checkSameDay(d1, d2)
+{
+    return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
+}
 module.exports = router;
