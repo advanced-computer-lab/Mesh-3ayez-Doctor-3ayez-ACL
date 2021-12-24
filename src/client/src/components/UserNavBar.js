@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import logo from './TIJ (2).png'
+import logo from './Tijwal.jpg'
 import {useHistory} from'react-router-dom';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
@@ -21,10 +21,10 @@ const settings = ['Profile', 'Dashboard', 'Logout'];
 const flag=false;
 
 
-
 const UserNavBar = (props) => {
   const colors = require("../colors")
 
+ 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const history = useHistory()
@@ -52,12 +52,42 @@ const UserNavBar = (props) => {
   const onClickDash = () => {
     history.push('/user/reservation');
   }
+  const[navBackground,setNavBackground]=useState("transparent");
+  const[navFont,setFont]=useState("color.c1");
 
+  const navRef = React.useRef()
+  navRef.current="transparent";
+
+      useEffect(()=>{
+        const handleScroll=()=>{
+          const show=window.scrollY>10;
+          if(show){
+              setNavBackground("");
+              setFont("white")
+          }else{
+              setNavBackground("transparent");
+              setFont("color.c1")
+          }
+        }
+        document.addEventListener('scroll',handleScroll);
+        return function a(){document.removeEventListener('scroll',handleScroll)};
+      },[]);
   return (
-    <AppBar position="static" style={{ backgroundColor: colors.c1 }}>
+    <AppBar position="fixed" top="0" style={{ backgroundColor: colors.c1 , background:navBackground}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <IconButton
+        <IconButton
+            variant="h6"
+            noWrap
+            onClick={handleNavToHome}
+            component="div"
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            
+          >
+            <img alt="Remy Sharp" src={logo} height= "50px"  />
+
+          </IconButton>
+          {/* <IconButton
             size="large"
             aria-label="account of current user"
             aria-controls="menu-appbar"
@@ -70,7 +100,7 @@ const UserNavBar = (props) => {
           >
             <Avatar alt="Remy Sharp" src={logo} sx={{ width: "60px", height: "60px" }} />
 
-          </IconButton>
+          </IconButton> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -120,8 +150,9 @@ const UserNavBar = (props) => {
             {pages.map((page) => (
               <Button
                 key={page}
+                
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2,  display: 'block' }}
                 
               >
                 {page}
@@ -169,7 +200,7 @@ const UserNavBar = (props) => {
 
           </Box>
 
-          } */}
+          }
 
         </Toolbar>
       </Container>

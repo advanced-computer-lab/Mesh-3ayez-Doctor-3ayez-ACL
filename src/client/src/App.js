@@ -13,6 +13,8 @@ import Itinerary from './components/Itinerary'
 import {SeatPick} from'./components/SeatReservation/SeatPick'
 import Signup from './components/Signup';
 import Login from './components/Login';
+import EditProfile from './components/EditProfile'
+import ChangePassword from './components/ChangePassword'
 
 function App() {
   return (
@@ -26,7 +28,10 @@ function App() {
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
       <Route path="/user/reservation" component={Itinerary} />
-      <Route path="/user/seatReservation" component={SeatPick} />
+      <Route path="/user/EditProfile" component={EditProfile} />
+      <Route path="/user/ChangePassword" component={ChangePassword} />
+
+      {/* <Route path="/user/seatReservation" component={SeatPick} /> */}
       <Route path="/user/Profile" component={UserProfile} />
 
     </Router>

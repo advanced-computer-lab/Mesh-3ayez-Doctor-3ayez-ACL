@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/advanced-computer-lab/Mesh-3ayez-Doctor-3ayez-ACL#readme",
   "dependencies": {
-    
     "@reduxjs/toolkit": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "concurrently": "^6.3.0",
@@ -34,6 +33,5 @@
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.14",
     "prop-types": "^15.7.2"
-    
   }
 }

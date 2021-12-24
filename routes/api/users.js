@@ -197,6 +197,20 @@ router.put('/:user_id',async(req,res)=>{
     })
 });
 
+router.get('/:_id',async (req,res)=>{
+    const _id = req.params._id;
+    if(!mongoose.isValidObjectId(_id))
+    {
+        res.status(400).json({msg : 'the id is not valid'});
+        return;
+    }
+    const user = await User.findById(_id);
+    if(user)
+        res.json(user);
+    else
+        res.status(404).json({msg: 'there is no such user'});
+})
+
 function validateEmail (email){
     return String(email)
       .toLowerCase()
