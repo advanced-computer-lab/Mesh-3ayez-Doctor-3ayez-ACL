@@ -19,6 +19,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { withStyles } from '@mui/material';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -76,7 +77,6 @@ function UserSearch(props) {
     const [errorMsg, setErrorMessage]=React.useState("");
     const handleClick = () => {
     };
-    console.log(props.user);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;

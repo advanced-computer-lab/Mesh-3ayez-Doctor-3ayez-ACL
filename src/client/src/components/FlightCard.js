@@ -18,6 +18,7 @@ import bag from './baggage.png'
 import { useHistory } from "react-router-dom";
 import { CardHeader } from '@mui/material';
 import { Avatar } from '@mui/material';
+import { withStyles } from '@mui/styles';
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -27,7 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-export default function FlightCard(props) {
+function FlightCard(props) {
     const colors = require('../colors')
     const history = useHistory();
     const flight = {
@@ -64,7 +65,7 @@ export default function FlightCard(props) {
             sx={{ textAlign: "center", maxWidth: 1200 }}>
             <CardHeader style={{ textAlign: "center",marginTop:"auto", backgroundColor: colors.c5 }}
                 avatar={
-                    <Stack textAlign="center" marginTop="auto" direction="row" spacing={2}>
+                    <Stack style={{textAlign:"center",marginTop:"auto"}} direction="row" spacing={2}>
                         <Avatar sx={{ bgcolor: "#FF0000" }} aria-label="recipe" src={im}>
                         </Avatar>
                         <Typography color={colors.c1}> Flight {props.flight_number}</Typography>
@@ -72,7 +73,7 @@ export default function FlightCard(props) {
                 }
                 
                 action={
-                    <Stack textAlign="center" margin="auto" direction="row" spacing={2}>
+                    <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}>
                         <div>
                         <Typography color={colors.c1}> Baggage {props.baggage}kg</Typography>
                         </div>
@@ -101,8 +102,8 @@ export default function FlightCard(props) {
                         <Stack >
                             <Typography color={colors.c1}>{props.duration}</Typography>
 
-                            <Stack textAlign="center" margin="auto" direction="row" spacing={2}  >
-                                <img textAlign="center" margin="auto" src={fly} width="50px" height="50px" />
+                            <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}  >
+                                <img style={{textAlign:"center",margin:"auto"}} src={fly} width="50px" height="50px" />
                                 <ColoredLine />
 
                             </Stack>
@@ -135,3 +136,4 @@ export default function FlightCard(props) {
         </Card>
     );
 }
+ export default withStyles()(FlightCard);

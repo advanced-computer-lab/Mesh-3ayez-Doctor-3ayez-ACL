@@ -91,7 +91,7 @@ function Signup() {
             .then(
                 result => {
                     if (result.status == 200) {
-                        localStorage.setItem('user', JSON.stringify(result.data.user));
+                        localStorage.setItem('user_id', JSON.stringify(result.data.user._id));
                         localStorage.setItem('token', result.data.token);
                         history.push({
                             pathname: '/', state:

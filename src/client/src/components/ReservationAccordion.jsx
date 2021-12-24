@@ -29,7 +29,7 @@ function ReservationAccordion(probs){
     useEffect(() => {
         console.log(localStorage.user)
         if(isLoading){
-        axios.get("http://localhost:8000/api/users/itinerary/61c623e352a45a8ca37d4b16/"+thereservation._id.toString()).then(
+        axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
