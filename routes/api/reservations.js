@@ -276,6 +276,30 @@ router.post('/', async(req,res)=>{
         return;
     }
 
+    const token = body.stripeToken;
+    const idKey = uuidv4();
+    const customer = await stripe.customers.create({
+        email: token.email,
+        source : token.id
+    })
+    if(!customer)
+    {
+        res.json({msg : "customer error"});
+        return;
+    }
+    const payment= await stripe.charges.create({
+            amount: query['price']*100,
+            currency: 'usd',
+            customer: customer.id,
+            receipt_email: token.email
+        }, {
+            idempotencyKey: idKey
+          })
+    if(!payment)
+    {
+        res.json({msg: 'payment error'});
+        return;
+    }
     
 
     const new_reservation = new Reservation(query);
