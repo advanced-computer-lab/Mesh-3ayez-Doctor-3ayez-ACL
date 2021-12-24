@@ -1,6 +1,6 @@
-import SeatPicker from "./react-seat-picker/dist";
+import SeatPicker from "./SeatReservation/react-seat-picker/distt";
 
-export function SeatPick(){
+export default function SeatPick(){
     var cabin ="Economy";
     var head = "";
     if(cabin==="Economy")

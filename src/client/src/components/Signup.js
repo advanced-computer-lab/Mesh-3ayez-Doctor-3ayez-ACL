@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { set } from 'mongoose';
+import UserNavBar from './UserNavBar.js';
 
 function Copyright(props) {
     return (
@@ -54,6 +55,15 @@ function Signup() {
     const [passportErr, setPassportErr] = useState(false);
     const [passportMsg, setPassportMsg] = useState("");
 
+    const [homeErr, setHometErr] = useState(false);
+    const [hometMsg, setHomeMsg] = useState("");
+    
+    const [countryCodeErr, setCountryCodeErr] = useState(false);
+    const [countryCodeMsg, setCountryCodeMsg] = useState("");
+
+    const [telephoneErr, setTelephoneErr] = useState(false);
+    const [telephoneMsg, setTelephoneMsg] = useState("");
+
     const [err, setErr] = useState(false);
 
     const [errMsg, setErrMsg] = useState("");
@@ -71,12 +81,18 @@ function Signup() {
             email: data.get('email'),
             password: data.get('password'),
             passport: data.get('passport'),
+            home_address: data.get('homeAddress'),
+            country_code: data.get('countryCode'),
+            mobile_number: data.get('telephone'),
+
         };
 
         axios.post("http://localhost:8000/api/register", user, { "Content-Type": "application/json" })
             .then(
                 result => {
                     if (result.status == 200) {
+                        localStorage.setItem('user', JSON.stringify(result.data.user));
+                        localStorage.setItem('token', result.data.token);
                         history.push({
                             pathname: '/', state:
                             {
@@ -84,6 +100,7 @@ function Signup() {
                                 user: result.data.user
                             }
                         });
+                  
                     }
 
                 }
@@ -114,6 +131,18 @@ function Signup() {
                         setPassportErr(true);
                         setPassportMsg("This field is required");
                     }
+                    if (!user.home_address) {
+                        setHometErr(true);
+                        setHomeMsg("This field is required");
+                    }
+                    if (!user.country_code) {
+                        setCountryCodeErr(true);
+                        setCountryCodeMsg("This field is required");
+                    }
+                    if (!user.mobile_number) {
+                        setTelephoneErr(true);
+                        setTelephoneMsg("This field is required");
+                    }
                 } else if (err.response.data.msgSrc === "taken") {
                     setErr(true);
                     setErrMsg(err.response.data.msg);
@@ -125,206 +154,276 @@ function Signup() {
             });
     };
     return (
-        <ThemeProvider theme={theme} >
-            <Grid container component="main" sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "3%", marginBottom: "3%" }} >
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://live.staticflickr.com/8367/8507160908_ec45d733ed_b.jpg)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square >
-                    <CssBaseline />
-                    <Box
+        <div>
+            <UserNavBar></UserNavBar>
+            <ThemeProvider theme={theme} >
+                <Grid container component="main" sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "3%", marginBottom: "3%" }} >
+                    <Grid
+                        item
+                        xs={false}
+                        sm={4}
+                        md={7}
                         sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
+                            backgroundImage: 'url(https://live.staticflickr.com/8367/8507160908_ec45d733ed_b.jpg)',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundColor: (t) =>
+                                t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
                         }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: colors.c1 }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5" color={colors.c1}>
-                            Sign up
-                        </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        autoComplete="given-name"
-                                        name="firstName"
-                                        required
-                                        fullWidth
-                                        id="firstName"
-                                        label="First Name"
-                                        autoFocus
-                                        error={firstNameErr}
-                                        helperText={firstNameMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setFirstNameErr(false);
-                                                setFirstNameMsg("");
-                                            } else {
-                                                setFirstNameErr(true);
-                                                setFirstNameMsg("This field is required");
+                    />
+                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square >
+                        <CssBaseline />
+                        <Box
+                            sx={{
+                                my: 8,
+                                mx: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Avatar sx={{ m: 1, bgcolor: colors.c1 }}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Typography component="h1" variant="h5" color={colors.c1}>
+                                Sign up
+                            </Typography>
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            autoComplete="given-name"
+                                            name="firstName"
+                                            required
+                                            fullWidth
+                                            id="firstName"
+                                            label="First Name"
+                                            autoFocus
+                                            error={firstNameErr}
+                                            helperText={firstNameMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setFirstNameErr(false);
+                                                    setFirstNameMsg("");
+                                                } else {
+                                                    setFirstNameErr(true);
+                                                    setFirstNameMsg("This field is required");
+                                                }
                                             }
-                                        }
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="lastName"
-                                        label="Last Name"
-                                        name="lastName"
-                                        autoComplete="family-name"
-                                        error={lastNameErr}
-                                        helperText={lastNamMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setLastNameErr(false);
-                                                setLastNameMsg("");
-                                            } else {
-                                                setLastNameErr(true);
-                                                setLastNameMsg("This field is required");
                                             }
-                                        }
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="username"
-                                        label="Username"
-                                        name="username"
-                                        autoComplete="username"
-                                        error={usernameErr}
-                                        helperText={usernameMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setUsernameErr(false);
-                                                setUsernameMsg("");
-                                            } else {
-                                                setUsernameErr(true);
-                                                setUsernameMsg("This field is required");
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="lastName"
+                                            label="Last Name"
+                                            name="lastName"
+                                            autoComplete="family-name"
+                                            error={lastNameErr}
+                                            helperText={lastNamMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setLastNameErr(false);
+                                                    setLastNameMsg("");
+                                                } else {
+                                                    setLastNameErr(true);
+                                                    setLastNameMsg("This field is required");
+                                                }
                                             }
-                                        }
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
-                                        autoComplete="email"
-                                        error={emailErr}
-                                        helperText={emailMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setEmailErr(false);
-                                                setEmailMsg("");
-                                            } else {
-                                                setEmailErr(true);
-                                                setEmailMsg("This field is required");
                                             }
-                                        }
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="new-password"
-                                        error={passErr}
-                                        helperText={passMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setPassErr(false);
-                                                setPassMsg("");
-                                            } else {
-                                                setPassErr(true);
-                                                setPassMsg("This field is required");
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="username"
+                                            label="Username"
+                                            name="username"
+                                            autoComplete="username"
+                                            error={usernameErr}
+                                            helperText={usernameMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setUsernameErr(false);
+                                                    setUsernameMsg("");
+                                                } else {
+                                                    setUsernameErr(true);
+                                                    setUsernameMsg("This field is required");
+                                                }
                                             }
-                                        }
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        name="passport"
-                                        label="Passport"
-                                        type="number"
-                                        id="passport"
-                                        error={passportErr}
-                                        helperText={passportMsg}
-                                        onChange={function (e) {
-                                            if (e.target.value) {
-                                                setPassportErr(false);
-                                                setPassportMsg("");
-                                            } else {
-                                                setPassportErr(true);
-                                                setPassportMsg("This field is required");
                                             }
-                                        }
-                                        }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            autoComplete="email"
+                                            error={emailErr}
+                                            helperText={emailMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setEmailErr(false);
+                                                    setEmailMsg("");
+                                                } else {
+                                                    setEmailErr(true);
+                                                    setEmailMsg("This field is required");
+                                                }
+                                            }
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            autoComplete="new-password"
+                                            error={passErr}
+                                            helperText={passMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setPassErr(false);
+                                                    setPassMsg("");
+                                                } else {
+                                                    setPassErr(true);
+                                                    setPassMsg("This field is required");
+                                                }
+                                            }
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="passport"
+                                            label="Passport"
+                                            type="number"
+                                            id="passport"
+                                            error={passportErr}
+                                            helperText={passportMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setPassportErr(false);
+                                                    setPassportMsg("");
+                                                } else {
+                                                    setPassportErr(true);
+                                                    setPassportMsg("This field is required");
+                                                }
+                                            }
+                                            }
 
-                                    />
-                                </Grid>
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="homeAddress"
+                                            label="Home address"
+                                            id="homeAddress"
+                                            error={homeErr}
+                                            helperText={hometMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setHometErr(false);
+                                                    setHomeMsg("");
+                                                } else {
+                                                    setHometErr(true);
+                                                    setHomeMsg("This field is required");
+                                                }
+                                            }
+                                            }
 
-                            </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                style={{
-                                    borderRadius: 5,
-                                    backgroundColor: colors.c1,
-                                }}
-                            >
-                                Sign Up
-                            </Button>
-                            <Grid container justifyContent="flex-end">
-                                <Grid item xs>
-                                    <Link href="/login" variant="body2" style={{ color: colors.c1 }}>
-                                        Already have an account? Sign in
-                                    </Link>
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <TextField
+                                            name="countryCode"
+                                            required
+                                            fullWidth
+                                            id="countryCode"
+                                            label="Country code"
+                                            type="number"
+                                            autoFocus
+                                            error={countryCodeErr}
+                                            helperText={countryCodeMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setCountryCodeErr(false);
+                                                    setCountryCodeMsg("");
+                                                } else {
+                                                    setCountryCodeErr(true);
+                                                    setCountryCodeMsg("This field is required");
+                                                }
+                                            }
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={8}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="telephone"
+                                            label="Mobile number"
+                                            name="telephone"
+                                            type="number"
+                                            error={telephoneErr}
+                                            helperText={telephoneMsg}
+                                            onChange={function (e) {
+                                                if (e.target.value) {
+                                                    setTelephoneErr(false);
+                                                    setTelephoneMsg("");
+                                                } else {
+                                                    setTelephoneErr(true);
+                                                    setTelephoneMsg("This field is required");
+                                                }
+                                            }
+                                            }
+                                        />
+                                    </Grid>
+
                                 </Grid>
-                            </Grid>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    style={{
+                                        borderRadius: 5,
+                                        backgroundColor: colors.c1,
+                                    }}
+                                >
+                                    Sign Up
+                                </Button>
+                                <Grid container justifyContent="flex-end">
+                                    <Grid item xs>
+                                        <Link href="/login" variant="body2" style={{ color: colors.c1 }}>
+                                            Already have an account? Sign in
+                                        </Link>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            {err && <Typography color="red" >{errMsg}</Typography>}
+
                         </Box>
-                        {err && <Typography color="red" >{errMsg}</Typography>}
-
-                    </Box>
-                    <Copyright sx={{ mt: 5 }} />
+                        <Copyright sx={{ mt: 5 }} />
+                    </Grid>
                 </Grid>
-            </Grid>
 
-        </ThemeProvider>
+            </ThemeProvider>
+        </div>
     );
 }
 

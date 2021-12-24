@@ -197,6 +197,36 @@ router.put('/:user_id',async(req,res)=>{
     })
 });
 
+router.put('/changePassword/:user_id',async(req,res)=>{
+    const body = req.body;
+    const user_id = req.params.user_id;
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the id you have sent is not a valid id'});
+        return;
+    }
+    const user = User.findById(user_id);
+    if(!user)
+    {
+        res.status(404).json({msg : 'no such user'});
+        return;
+    }
+
+    var query = {};
+    if(body.password)
+    {
+        query['password'] = body.password;
+    }
+
+    User.findByIdAndUpdate(user_id,query).then(async result =>{
+        const new_user = await User.findById(user_id);
+        res.json(new_user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json('the server has encountered an error sorry for disturbance');
+    })
+});
+
 router.get('/:_id',async (req,res)=>{
     const _id = req.params._id;
     if(!mongoose.isValidObjectId(_id))

@@ -32,6 +32,7 @@
     "node": "^17.1.0",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.14",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "react-stripe-checkout": "^2.6.3"
   }
 }
