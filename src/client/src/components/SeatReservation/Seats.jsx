@@ -15,7 +15,7 @@ export default class Seats extends Component {
     loading: false
   }
   addSeatCallback = ({ row, number, id }, addCb) => {
-    this.props.addclbk(""+number,id);
+    this.props.addclbk(number+" ",id);
     this.setState({
         
       loading: true
@@ -54,7 +54,7 @@ export default class Seats extends Component {
   }
  
   removeSeatCallback = ({ row, number, id }, removeCb) => {
-    this.props.rmvclbk(""+number,id);
+    this.props.rmvclbk(number+" ",id);
     this.setState({
       loading: true
     }, async () => {

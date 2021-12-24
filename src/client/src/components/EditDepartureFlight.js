@@ -7,7 +7,10 @@ import UserNavBar from './UserNavBar';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Stack from'@mui/material/Stack'
-export default function EditDepartureFlight() {
+import { withStyles } from '@mui/styles';
+import EditReturnFlight from './EditReturnFlight';
+
+function EditDepartureFlight() {
 
     const location = useLocation();
     const [loading, setLoading] = React.useState(true);
@@ -46,3 +49,5 @@ export default function EditDepartureFlight() {
         </div>
     )
 }
+
+export default withStyles()(EditDepartureFlight);
