@@ -7,6 +7,7 @@ const Admin = require('../../src/Models/Admin');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
+var bcrypt = require('bcryptjs');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
 
@@ -215,7 +216,9 @@ router.put('/changePassword/:user_id',async(req,res)=>{
     var query = {};
     if(body.password)
     {
-        query['password'] = body.password;
+        encryptedPassword = await bcrypt.hash(body.password, 10);
+
+        query['password'] = encryptedPassword;
     }
 
     User.findByIdAndUpdate(user_id,query).then(async result =>{
