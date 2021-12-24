@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const app= express();
 const cors =require("cors");
 
-const MongoURI = require("../config/keys").MongoURI ;
+require('dotenv').config({path : __dirname+'/../config/.env'});
+
+
+
+const MongoURI = process.env.MONGOURI ;
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => console.log("MongoDB is now connected"))
@@ -31,16 +35,6 @@ app.use('/api/login', require('../routes/api/login'))
 app.use('/api/register', require('../routes/api/register'))
 
 
-// const dummyRec ={
-// From:"oo",
-// To:"yyy",                               // the line below me is important
-// FLight_Date: '2022-12-13',       //==>> I dont actually know how to insert a date, Maybe we have to changed DATE type from the schema 
-// Cabin:"Eco",                        //     the line above me is important
-// Available_Seats:20
-// };
-// const ndummyRec=new Date(dummyRec.FLight_Date);
-//dummyRec.save();
-// dummyRec['FLight_Date']=new Date(dummyRec.FLight_Date);
 
 
 const PORT = process.env.PORT || 8000;
