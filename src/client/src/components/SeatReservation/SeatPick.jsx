@@ -354,7 +354,7 @@ export function SeatPick() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <div>
+                    <div style={{marginRight:"1%"}}>
                         <Stripe
                             stripeKey='pk_test_51KACNtHLa29h6dWHVk2jjBX8fyb4f9blEHCnHoaLgaBJLGYNjp3UTBmBgi5EMifGmV9vfADqIwaArtgM8YwpeSl400CQ0mDxk8'
                             token={tokenHandler}
