@@ -7,10 +7,10 @@ const Reservation = require('../../src/Models/Reservation');
 const User = require('../../src/Models/User');
 const Flight = require('../../src/Models/Flight');
 const FlightSeat = require('../../src/Models/FlightSeat');
-const authorization = require('../../config/mail');
+require('dotenv').config({path : __dirname+'/../../config/.env'});
 const nodemailer = require('nodemailer');
 const {v4: uuidv4} = require('uuid');
-const stripe = require('stripe')("sk_test_51KACNtHLa29h6dWHwGOwi5arQZZ2Q9pK2rPitvLf5fxmIgtaumnuXuyU3rc7S6YabHJoNuj67rM1RXv4bu7a86t900VLBUWoJ6");
+const stripe = require('stripe')(process.env.STRIPESECRETKEY);
 
 // create a new reservation
 router.post('/', async(req,res)=>{
@@ -562,10 +562,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     }
 
     //deleting the reservation for the old seats
-    for(var i=0;i<reservation.number_of_passengers;i++)
-    {
-        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
-    }
+    
 
     //changing the number of available seats in the old and new flight
     const old_flight = await Flight.findById(old_flight_id);
@@ -586,13 +583,44 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
             new_price = reservation.price*1 + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
         }
     else
-        {
-            old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
-            new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
-            new_price = reservation.price*1 + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
-        }
-        console.log(new_price);
+    {
+        old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
+        new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
+        new_price = reservation.price*1 + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
+    }
 
+    if(new_price > reservation.price*1)
+    {
+        const token = body.stripeToken;
+        const idKey = uuidv4();
+        const customer = await stripe.customers.create({
+            email: token.email,
+            source : token.id
+        })
+        if(!customer)
+        {
+            res.json({msg : "customer error"});
+            return;
+        }
+        const payment= await stripe.charges.create({
+                amount: query['price']*100,
+                currency: 'usd',
+                customer: customer.id,
+                receipt_email: token.email
+            }, {
+                idempotencyKey: idKey
+            })
+        if(!payment)
+        {
+            res.json({msg: 'payment error'});
+            return;
+        }
+    }
+
+    for(var i=0;i<reservation.number_of_passengers;i++)
+    {
+        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
+    }
     await Flight.findByIdAndUpdate(old_flight_id, old_query);
     await Flight.findByIdAndUpdate(new_flight_id, new_query);
 
@@ -608,13 +636,42 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     else
         reservation_query['return_flight'] = new_flight_id;
 
-    console.log(reservation_query);
+    if(new_price < reservation.price*1)
+    {
+        sendRefundMail(user, reservation,reservation.price*1- new_price);
+    }
     await Reservation.findByIdAndUpdate(reservation_id, reservation_query);
 
     res.json({msg : "the reservation was updated successfully"});
     
 
 });
+//sending mail for the refund
+async function sendRefundMail(user, reservation, refund){
+    const text = `Dear Mr/Mrs ${user.first_name},
+
+We hope you are doing well. this mail is to confirm that you have changed your reservation and you will get refunded with a total of ${refund}.
+
+Regards,
+ACL team
+    `
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+      auth: {
+            user : process.env.USER,
+            pass : process.env.PASSWORD
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${process.env.USER}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "Your Reservation Itinerary", // Subject line
+        text: text, // plain text body
+        
+      });
+}
 // getting all flights with to replace a reservation flight with the price difference
 
 router.get('/all_possible_flights/:reservation_id/:src', async(req,res)=>{
@@ -874,18 +931,20 @@ Return Flight:
 Price Paid: ${reservation.price}
 Booking Number: ${reservation._id}
 
+Regards,
+ACL team
     `;
 
     let transporter = nodemailer.createTransport({
         service: 'gmail',
       auth: {
-            user : authorization.user,
-            pass : authorization.password
+            user : process.env.USER,
+            pass : process.env.PASSWORD
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${authorization.user}`, // sender address
+        from: `${process.env.USER}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "Your Reservation Itinerary", // Subject line
         text: text, // plain text body
