@@ -325,7 +325,7 @@ router.post('/', async(req,res)=>{
         })
         // we have to send a mail once the reservation is created successfully
         await sendItinerary(user, reservation, departure_flight, return_flight, departure_seats, return_seats);
-        res.json({msg : 'reservation created successfully'});
+        res.json({msg : 'reservation created successfully', reservation_id : reservation._id});
     }).catch(err=>{
 
         console.log(err);
