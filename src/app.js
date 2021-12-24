@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const app= express();
 const port =5000||process.env.port;
 const cors =require("cors");
-require('dotenv').config({path : '../.env'});
+
+require('dotenv').config({path : __dirname+'/../config/.env'});
 
 
-const MongoURI = require("../config/keys").MongoURI ;
+
+const MongoURI = process.env.MONGOURI ;
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => console.log("MongoDB is now connected"))

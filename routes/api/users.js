@@ -5,7 +5,7 @@ const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 const nodemailer = require('nodemailer');
-require('dotenv').config({path : '../.env'});
+require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
 
 // user cancel a reservation
@@ -94,13 +94,13 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
      let transporter = nodemailer.createTransport({
         service: 'gmail',
       auth: {
-            user : process.env.user,
-            pass : process.env.password
+            user : process.env.USER,
+            pass : process.env.PASSWORD
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${process.env.user}`, // sender address
+        from: `${process.env.USER}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "cancellation confirmation", // Subject line
         text: text, // plain text body
