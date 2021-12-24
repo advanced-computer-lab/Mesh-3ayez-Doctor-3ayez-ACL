@@ -42,7 +42,7 @@ export default function FlightCard(props) {
     
     return (
         <Card
-       sx={{textAlign:"center", maxWidth: 1200, display:"flex" }}>
+       sx={{textAlign:"center", maxWidth: 1100, display:"flex" }}>
              <CardMedia
                 component="img"
                 sx={{ width: 151 }}

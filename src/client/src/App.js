@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 // import { Routes } from 'react-router';
 import AdminHome from './components/AdminHome';
 import UserHome from './components/UserHome';
+import Profile from './components/UserProfile';
 import UserSearchResults from './components/UserSearchResults';
 import UserSearch from './components/UserSearch';
 import FlightCard from './components/FlightCard';
@@ -14,8 +15,6 @@ import EditSeats from './components/SeatReservation/EditSeats';
 import {SeatPick} from'./components/SeatReservation/SeatPick'
 import Signup from './components/Signup';
 import Login from './components/Login';
-import EditDepartureFlight from './components/EditDepartureFlight';
-import EditReturnFlight from './components/EditReturnFlight';
 
 function App() {
   return (
@@ -28,12 +27,10 @@ function App() {
       <Route path="/admin/createFlight" component={FlightForm} />
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
+      <Route path="/user/reservation" component={Itinerary} />
+      <Route path="/user/seatReservation" component={SeatPick} />
       <Route path="/user/Profile" component={UserProfile} />
       <Route path="/user/EditSeats" component={EditSeats} />
-      <Route path="/user/reservation" component={Itinerary} />
-      <Route path="/user/editDepartureFlight" component={EditDepartureFlight} />
-      <Route path="/user/editReturnFlight" component={EditReturnFlight} />
-
 
     </Router>
   );

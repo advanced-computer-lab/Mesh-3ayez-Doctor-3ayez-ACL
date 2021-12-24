@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+mongoose.set('debug', true);
 
 const FlightSeatSchema= new mongoose.Schema({
     flight_id:{
