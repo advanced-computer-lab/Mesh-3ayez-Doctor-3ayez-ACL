@@ -9,6 +9,8 @@ const Flight = require('../../src/Models/Flight');
 const FlightSeat = require('../../src/Models/FlightSeat');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
+const {v4: uuidv4} = require('uuid');
+const stripe = require('stripe')("sk_test_51KACNtHLa29h6dWHwGOwi5arQZZ2Q9pK2rPitvLf5fxmIgtaumnuXuyU3rc7S6YabHJoNuj67rM1RXv4bu7a86t900VLBUWoJ6");
 
 // create a new reservation
 router.post('/', async(req,res)=>{
