@@ -177,8 +177,8 @@ if(theJsons[0]!=undefined)
                     <div>
                     <div>
                     {/*<div style={{float:'right'}}><Button variant="outlined" color="success" onClick={handlePayment}>Pay</Button></div>*/}
-                    <Payment style={{float:'right'}} name="ThePayment" price={(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)} productby="Tijwal"></Payment>
-                    <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Paid: "+(theJsons[0]==undefined?'':theJsons[0].amount_paid.$numberDecimal)+"/"+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
+                    {/*<Payment style={{float:'right'}} name="ThePayment" price={(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)} productby="Tijwal"></Payment>*/}
+                    <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
                     <Box sx={{ flexGrow: 1, float:"left" }}><label style={{marginLeft: 10}}>{"Number: "+(theJsons[0]==undefined?'':theJsons[0].reservation_number)}</label></Box>
                     <br/>
                     <br/>
