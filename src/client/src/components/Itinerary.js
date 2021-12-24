@@ -160,7 +160,7 @@ function Itinerary() {
             
             <Stack width="100%">
                     <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                        <Alert onClose={handleClose2} severity="success" sx={{ width: '100%' }}>
                             {errorMsg}
                         </Alert>
                     </Snackbar>
