@@ -16,9 +16,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
+import Stripe from 'react-stripe-checkout'
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 export function SeatPick() {
-    const history= useHistory();
+    const history = useHistory();
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
@@ -64,10 +65,10 @@ export function SeatPick() {
     buildSeatRows(depSeats, depRows);
     var retRows = [];
     buildSeatRows(retSeats, retRows);
-    var oneSeatPriceDep=departure.price;
-    var oneSeatPriceRet=ret.price;
-    var oneSeatBagDep=departure.baggage;
-    var oneSeatBagRet=ret.baggage;
+    var oneSeatPriceDep = departure.price;
+    var oneSeatPriceRet = ret.price;
+    var oneSeatBagDep = departure.baggage;
+    var oneSeatBagRet = ret.baggage;
 
     // handle price
     const [open, setOpen] = useState(false);
@@ -103,8 +104,8 @@ export function SeatPick() {
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
     function submitHandler() {
-        console.log( ret.number_of_passengers)
-        if (departure.number_of_passengers == departureSeats.length && ret.number_of_passengers== returnSeats.length) {
+        console.log(ret.number_of_passengers)
+        if (departure.number_of_passengers == departureSeats.length && ret.number_of_passengers == returnSeats.length) {
             setConfirm(true);
         }
         else {
@@ -115,18 +116,23 @@ export function SeatPick() {
         setConfirm(false);
         setOpen(false);
     }
-    function reserve() {
-        var data={
-            user_id:"61aa4dadbde7d1780db3dda5", // to be handled
-            departure_flight:departure.flight_id,
-            return_flight:ret.flight_id,
-            number_of_passengers:Number(departure.number_of_passengers),
-            cabin_type:departure.cabin_type,
-            departure_seats:reservedDepSeats,
-            return_seats:reservedRetSeats
+    const tokenHandler = (token) => {
+        // handleToken(100, token)
+        reserve(token);
+    }
+    function reserve(token) {
+        var data = {
+            user_id: "61bcd1e7bf1ace92644c0287", // to be handled
+            departure_flight: departure.flight_id,
+            return_flight: ret.flight_id,
+            number_of_passengers: Number(departure.number_of_passengers),
+            cabin_type: departure.cabin_type,
+            departure_seats: reservedDepSeats,
+            return_seats: reservedRetSeats,
+            stripeToken:token
         };
         console.log(data);
-        axios.post("http://localhost:8000/api/reservations",data);
+        axios.post("http://localhost:8000/api/reservations", data);
         history.go();
         console.log("done");
         setConfirm(false);
@@ -151,11 +157,11 @@ export function SeatPick() {
                 row = [];
             }
             var seat = seats[i];
-    
+
             var isReserved = seat['reservation_id'] != null;
             var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved };
             row.push(seat);
-            
+
         }
         if (row.length > 0) {
             rows.push(row);
@@ -238,7 +244,7 @@ export function SeatPick() {
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Time" secondary={departure.departure_time}/>
+                                            <ListItemText primary="Departure Time" secondary={departure.departure_time} />
                                             <ListItemText primary="Arrival Time" secondary={departure.arrival_terminal} />
                                         </ListItem>
                                         <Divider component="li" />
@@ -257,8 +263,8 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        {depSeatsLoading? null : <Seats bag ={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />}
-                    </div> 
+                        {depSeatsLoading ? null : <Seats bag={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />}
+                    </div>
                 </Box>
                 <Box gridColumn="span 8">
                     <Box gridColumn="span 8">
@@ -293,7 +299,7 @@ export function SeatPick() {
                                             <ListItem>
                                                 <ListItemText primary="Seats" secondary={returnSeats} />
                                                 <ListItemText primary="Price" secondary={priceRet} />
-                                                <ListItemText primary="Baggage Allowance" secondary={bagRet}/>
+                                                <ListItemText primary="Baggage Allowance" secondary={bagRet} />
                                             </ListItem>
                                         </List>
                                     </Box>
@@ -308,7 +314,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                       {retSeatsLoading?null: <Seats bag ={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />}
+                        {retSeatsLoading ? null : <Seats bag={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />}
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
@@ -318,7 +324,7 @@ export function SeatPick() {
 
                 </Box>
                 <Box gridColumn="span 4">
-                <SeatGuide />
+                    <SeatGuide />
                 </Box>
             </Box>
             <Dialog
@@ -348,7 +354,12 @@ export function SeatPick() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={reserve}>GO ON</Button>
+                    <div>
+                        <Stripe
+                            stripeKey='pk_test_51KACNtHLa29h6dWHVk2jjBX8fyb4f9blEHCnHoaLgaBJLGYNjp3UTBmBgi5EMifGmV9vfADqIwaArtgM8YwpeSl400CQ0mDxk8'
+                            token={tokenHandler}
+                        />
+                    </div>
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
                 </DialogActions>
             </Dialog>
