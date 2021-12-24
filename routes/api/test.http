@@ -1,8 +1,0 @@
-POST http://localhost:8000/api/login/ HTTP/1.1
-content-type: application/json
-
-{
-    
-    "email":"nadaabdo588@gmail.com",
-    "password":"12346"
-}

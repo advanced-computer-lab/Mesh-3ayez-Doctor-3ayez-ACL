@@ -6,9 +6,9 @@ import UserNavBar from "./UserNavBar"
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import Stack from'@mui/material/Stack'
+import { withStyles } from '@mui/styles';
 
-
-export default function EditReturnFlight() {
+ function EditReturnFlight() {
     const location = useLocation();
     const [loading, setLoading] = React.useState(true);
     const [returnFlight, setReturnFlight] = React.useState([]);
@@ -45,3 +45,4 @@ export default function EditReturnFlight() {
         </div>
     )
 }
+export default withStyles()(EditReturnFlight);
