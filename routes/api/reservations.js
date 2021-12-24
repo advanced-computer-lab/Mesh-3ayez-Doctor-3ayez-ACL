@@ -561,10 +561,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     }
 
     //deleting the reservation for the old seats
-    for(var i=0;i<reservation.number_of_passengers;i++)
-    {
-        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
-    }
+    
 
     //changing the number of available seats in the old and new flight
     const old_flight = await Flight.findById(old_flight_id);
@@ -573,23 +570,56 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     var new_query = {};
     var new_price;
     if(reservation.cabin_type=='economy')
-       {
-            old_query['economy_seats.available'] = old_flight.economy_seats.available + reservation.number_of_passengers;
-            new_query['economy_seats.available'] = new_flight.economy_seats.available - reservation.number_of_passengers;
-            new_price = reservation.price + (new_flight.economy_seats.price - old_flight.economy_seats.price)*reservation.number_of_passengers
-       } 
+    {
+        old_query['economy_seats.available'] = old_flight.economy_seats.available + reservation.number_of_passengers;
+        new_query['economy_seats.available'] = new_flight.economy_seats.available - reservation.number_of_passengers;
+        new_price = reservation.price + (new_flight.economy_seats.price - old_flight.economy_seats.price)*reservation.number_of_passengers
+    } 
     else if(reservation.cabin_type == 'business')
-        {
-            old_query['business_seats.available'] = old_flight.business_seats.available + reservation.number_of_passengers;
-            new_query['business_seats.available'] = new_flight.business_seats.available - reservation.number_of_passengers;
-            new_price = reservation.price + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
-        }
+    {
+        old_query['business_seats.available'] = old_flight.business_seats.available + reservation.number_of_passengers;
+        new_query['business_seats.available'] = new_flight.business_seats.available - reservation.number_of_passengers;
+        new_price = reservation.price + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
+    }
     else
+    {
+        old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
+        new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
+        new_price = reservation.price + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
+    }
+
+    if(new_price > reservation.price*1)
+    {
+        const token = body.stripeToken;
+        const idKey = uuidv4();
+        const customer = await stripe.customers.create({
+            email: token.email,
+            source : token.id
+        })
+        if(!customer)
         {
-            old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
-            new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
-            new_price = reservation.price + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
+            res.json({msg : "customer error"});
+            return;
         }
+        const payment= await stripe.charges.create({
+                amount: query['price']*100,
+                currency: 'usd',
+                customer: customer.id,
+                receipt_email: token.email
+            }, {
+                idempotencyKey: idKey
+            })
+        if(!payment)
+        {
+            res.json({msg: 'payment error'});
+            return;
+        }
+    }
+
+    for(var i=0;i<reservation.number_of_passengers;i++)
+    {
+        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
+    }
     await Flight.findByIdAndUpdate(old_flight_id, old_query);
     await Flight.findByIdAndUpdate(new_flight_id, new_query);
 
@@ -605,12 +635,42 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     else
         reservation_query['return_flight'] = new_flight_id;
 
+    if(new_price < reservation.price*1)
+    {
+        sendRefundMail(user, reservation,reservation.price*1- new_price);
+    }
     await Reservation.findByIdAndUpdate(reservation_id, reservation_query);
 
     res.json({msg : "the reservation was updated successfully"});
     
 
 });
+//sending mail for the refund
+async function sendRefundMail(user, reservation, refund){
+    const text = `Dear Mr/Mrs ${user.first_name},
+
+We hope you are doing well. this mail is to confirm that you have changed your reservation and you will get refunded with a total of ${refund}.
+
+Regards,
+ACL team
+    `
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+      auth: {
+            user : authorization.user,
+            pass : authorization.password
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${authorization.user}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "Your Reservation Itinerary", // Subject line
+        text: text, // plain text body
+        
+      });
+}
 // getting all flights with to replace a reservation flight with the price difference
 
 router.get('/all_possible_flights/:reservation_id/:src', async(req,res)=>{
@@ -870,6 +930,8 @@ Return Flight:
 Price Paid: ${reservation.price}
 Booking Number: ${reservation._id}
 
+Regards,
+ACL team
     `;
 
     let transporter = nodemailer.createTransport({
