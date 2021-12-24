@@ -34,6 +34,34 @@ export default function EditSeats() {
     const resType = location.state.type;
     const cabinType=reservation.cabin_type;
     const maxSeatsNo = location.state.seats.length;
+    var oneSeatPriceDep=0;
+    var oneSeatPriceRet=0;
+    var oneSeatBagDep=0;
+    var oneSeatBagRet=0;
+    var head="";
+    if (cabinType.toLowerCase() === "economy"){
+        head = "Economy Class";
+        oneSeatPriceDep=Number(departure.economy_seats.price['$numberDecimal']);
+        oneSeatPriceRet=Number(ret.economy_seats.price['$numberDecimal']);
+        oneSeatBagDep=Number(departure.economy_seats.baggage_allowance['$numberDecimal']);
+        oneSeatBagRet=Number(ret.economy_seats.baggage_allowance['$numberDecimal']);
+ 
+    }
+    else if (cabinType.toLowerCase() === "business"){
+        head = "Buisness Class";
+        oneSeatPriceDep=Number(departure.business_seats.price['$numberDecimal']);
+        oneSeatPriceRet=Number(ret.business_seats.price['$numberDecimal']);
+        oneSeatBagDep=Number(departure.business_seats.baggage_allowance['$numberDecimal']);
+        oneSeatBagRet=Number(ret.business_seats.baggage_allowance['$numberDecimal']);
+    }
+    else{
+        head = "First Class";
+        oneSeatPriceDep=Number(departure.first_seats.price['$numberDecimal']);
+        oneSeatPriceRet=Number(ret.first_seats.price['$numberDecimal']);
+        oneSeatBagDep=Number(departure.first_seats.baggage_allowance['$numberDecimal']);
+        oneSeatBagRet=Number(ret.first_seats.baggage_allowance['$numberDecimal']);
+    }
+
     const [flag,setFlag]=useState(false);
     const [open, setOpen] = useState(false);
     const [confirm, setConfirm] = useState(false);
@@ -41,28 +69,32 @@ export default function EditSeats() {
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
     const [depSeats, setDepSeats] = useState([]);
     const [retSeats, setRetSeats] = useState([]);
-    const [priceDep, setPriceDep] = useState(0);
-    const [priceRet, setPriceRet] = useState(0);
-    const [bagDep, setBagDep] = useState(0);
-    const [bagRet, setBagRet] = useState(0);
+    const [priceDep, setPriceDep] = useState(maxSeatsNo*oneSeatPriceDep);
+    const [priceRet, setPriceRet] = useState(maxSeatsNo*oneSeatPriceRet);
+    const [bagDep, setBagDep] = useState(maxSeatsNo*oneSeatBagDep);
+    const [bagRet, setBagRet] = useState(maxSeatsNo*oneSeatBagRet);
     const [departureSeats, setDepartureSeats] = useState([]);
     const [returnSeats, setReturnSeats] = useState([]);
     const [reservedDepSeats, serReservedDepSeats] = useState([]);
     const [reservedRetSeats, serReservedRetSeats] = useState([]);
-    var oneSeatPriceDep=50;
-    var oneSeatPriceRet=ret.price;
-    var oneSeatBagDep=90;
-    var oneSeatBagRet=ret.baggage;
-    
-
+    const [depFlag,setDepFlag]=useState(false);
+    const [retFlag,setRetFlag]=useState(false);
     useEffect(() => {
         // console.log("I entered the use state");
         axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.departure_flight + "/" + cabinType)
             .then(res => {
                 setDepSeats(res.data);
                 setDict(res.data);
+                if(!depFlag){
+
+                    for(var i=0;i<res.data.length;i++){
+
+                        if(res.data[i]['reservation_id']==reservation._id)
+                            addDepS(res.data[i].seat_name+" ",res.data[i]._id);
+                    }
+                    setDepFlag(true);
+                }
                 setDepSeatsLoading(false);
-                
             })
             .catch((err) => {
                 console.log(err);
@@ -71,8 +103,17 @@ export default function EditSeats() {
             .then(res => {
                 // console.log(res.data);
                 setRetSeats(res.data);
+                
                 setDict(res.data);
+                if(!retFlag){
 
+                    for(var i=0;i<res.data.length;i++){
+
+                        if(res.data[i]['reservation_id']==reservation._id)
+                            addRetS(res.data[i].seat_name+" ",res.data[i]._id);
+                    }
+                    setRetFlag(true);
+                }
                 setRetSeatsLoading(false);    
             })
             .catch(()=>{
@@ -81,7 +122,6 @@ export default function EditSeats() {
     }, []);
     
     
-
     var depRows = [];
     buildSeatRows(depSeats, depRows);
     var retRows = [];
@@ -102,18 +142,19 @@ export default function EditSeats() {
                                 if(seat.resId==reservation._id){ //waiting for the real res id 
                                     seat.isReserved=false;
                                     seat['isSelected']=true;
-                                        if(!flag){
-                                            if(!dict[seat.id]){
-                                                if(type=="dep"){
-                                                    addDepS(seat.number+" ",seat.id);
+                                        // if(!flag){
+                                        //     if(!dict[seat.id]){
+                                        //         if(type=="dep"){
+                                        //             addDepS(seat.number+" ",seat.id);
 
-                                                }else{
-                                                    addRetS(seat.number+" ",seat.id);
-                                                }
-                                                dict[seat.id]=true;
-                                            }
-                                            setFlag(true);
-                                        }
+                                        //         }else{
+                                        //             addRetS(seat.number+" ",seat.id);
+
+                                        //         }
+                                        //         dict[seat.id]=true;
+                                        //     }
+                                        //     setFlag(true);
+                                        // }
                                     seats[i][j]=seat;
                                 } 
                             }
@@ -145,24 +186,9 @@ export default function EditSeats() {
         serReservedRetSeats(reservedRetSeats);
     }
     function removeRetS(x, i) {
-
         setReturnSeats(returnSeats.filter((y) => x != y));
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
-    
-    const [X,setX]=useState(0); 
-    function foo  (x,i){
-        console.log(x);
-    }
-    
-    var head="Omar";
-    
-
-    // // var depRows = [];
-    // // buildSeatRows(depSeats, depRows);
-    // // var retRows = [];
-    // // buildSeatRows(retSeats, retRows);
-
     function buildSeatRows(seats, rows) {
         var rem = seats.length % 4;
         var row = [];
@@ -175,7 +201,7 @@ export default function EditSeats() {
             var isReserved = seat['reservation_id'] != null;
             var seat = { 'id': seat._id, number: seat.seat_name, isReserved: isReserved,resId:seat['reservation_id']  };
             row.push(seat);
-            if(i%1==0&&i!=0&&i%3!=0)
+            if((i+1)%2==0&&(i+1)%4!=0)
                 row.push(null);
             
         }
@@ -275,7 +301,7 @@ export default function EditSeats() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                    {depSeatsLoading?null:<Seats bag={oneSeatBagDep} price={oneSeatPriceDep} bagCB={setBagDep} priceCallBack={setPriceDep} rmvclbk={removeDepS} addclbk={addDepS} rows={depRows} maxReservableSeats={resType=='departure'?maxSeatsNo:0} visible />
+                    {depSeatsLoading?null:<Seats bag={oneSeatBagDep} price={oneSeatPriceDep} bagCB={setBagDep} priceCallBack={setPriceDep} type="Departure" rmvclbk={removeDepS} addclbk={addDepS} rows={depRows} maxReservableSeats={resType=='departure'?maxSeatsNo:0} visible />
 }
                     </div> 
                 </Box>
@@ -327,7 +353,7 @@ export default function EditSeats() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                   {retSeatsLoading?null:<Seats bag={oneSeatBagRet} price={oneSeatPriceRet} bagCB={setBagRet} priceCallBack={setPriceRet} rmvclbk={removeRetS} addclbk={addRetS} rows={retRows} maxReservableSeats={resType=='return'?maxSeatsNo:0} visible />
+                   {retSeatsLoading?null:<Seats bag={oneSeatBagRet} price={oneSeatPriceRet} bagCB={setBagRet} priceCallBack={setPriceRet} type="Return" rmvclbk={removeRetS} addclbk={addRetS} rows={retRows} maxReservableSeats={resType=='return'?maxSeatsNo:0} visible />
 }
                     </div>
                 </Box>
@@ -374,6 +400,5 @@ export default function EditSeats() {
             
         </div>
     );
-    // return(<h1>Omar</h1>)
 }
 
