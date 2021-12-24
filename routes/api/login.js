@@ -5,19 +5,21 @@ const router = express.Router()
 const User = require('../../src/Models/User');
 var bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-router.post("/", async (req, res) => {
+const dotenv=require('dotenv');
+dotenv.config({path:__dirname+'/.env'});
 
+const key= process.env.SECRETKEY;
+
+router.post("/", async (req, res) => {
   // Our login logic starts here
   try {
     // Get user input
-    const { email, password } = req.body;
+
+    const { username, password } = req.body;
 
     // Validate user input
-    if (!(email )) {
-      res.status(400).json({msgSrc:"email",msg:"Email is required"});
+    if (!(username )) {
+      res.status(400).json({msgSrc:"email",msg:"Username is required"});
     }else if(!password)
     {
       res.status(400).json({msgSrc:"password",msg:"Password is required"});
@@ -25,7 +27,7 @@ router.post("/", async (req, res) => {
     }
      else {
       // Validate if user exist in our database
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ username });
       console.log(password)
       if(!user)
       {
@@ -38,8 +40,8 @@ router.post("/", async (req, res) => {
       else {
         // Create token
         const token = jwt.sign(
-          { user_id: user._id, email },
-          "secretKey"
+          { user_id: user._id, username },
+          key
 
         );
 
@@ -49,6 +51,7 @@ router.post("/", async (req, res) => {
       }
     }
   } catch (err) {
+
     console.log(err);
   }
   // Our register logic ends here
