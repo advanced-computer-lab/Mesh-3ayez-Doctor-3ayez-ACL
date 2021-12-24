@@ -9,8 +9,12 @@ import { Stack } from '@mui/material';
 import FlightCard from './FlightCard'
 import { useState } from 'react';
 import { useHistory } from 'react-router';
-const steps = ['Pick departure flight', 'Pick return flight'];
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContentText from '@mui/material/DialogContentText'
 
+const colors = require("../colors.js");
 
 function EditSearchResults(props) {
     const [reserved, setReserved] = useState({});
@@ -25,8 +29,8 @@ function EditSearchResults(props) {
         setConfirm(false);
     }
 
-    const onClick = (reserved) => {
-        console.log("entered")
+    const onClick = () => {
+        console.log(reserved);
         history.push({
             pathname: '/user/seatReservation',
             state: {
@@ -40,24 +44,26 @@ function EditSearchResults(props) {
 
     return (
         <div>
-            <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
+         <Box sx={{ width: '1200px' }} margin="auto" textAlign='center' >
 
-                {props.flights.map((item) => {
+            <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
+                {props.flights.length==0&&<Typography color={colors.c1}>No available flights </Typography>}
+                {props.flights.length>0&&props.flights.map((item) => {
                     const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
                     return (
-                        <FlightCard flight_number={item.flight_number}
+                        <FlightCard 
+                            flight_number={item.flight_number}
                             key={item._id}
                             flight_id={item._id}
                             from={item.from}
                             to={item.to}
                             arrival_time={item.arrival_time}
                             departure_time={item.departure_time}
-                            number_of_passengers={props.number_of_passengers}
+                            number_of_passengers={props.res.number_of_passengers}
                             duration={d}
-                            cabin_type={props.cabin_type}
-                            number_of_passengers={props.number_of_passengers}
-                            baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                            price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
+                            cabin_type={props.res.cabin_type}
+                            baggage={item[`${props.res.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
+                            price={item[`${props.res.cabin_type}_seats`].price['$numberDecimal']}
                             onClick={submitHandler}
                             arrival_terminal={item.arrival_terminal}
                             departure_terminal={item.departure_terminal}
@@ -84,6 +90,7 @@ function EditSearchResults(props) {
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
                 </DialogActions>
             </Dialog>
+            </Box>
         </div>
     )
 }
