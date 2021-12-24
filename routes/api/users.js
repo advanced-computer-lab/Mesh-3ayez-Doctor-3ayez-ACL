@@ -1,16 +1,13 @@
 const express = require('express')
-const moment = require('moment');
-const { Query } = require('mongoose');
 const mongoose = require('mongoose');
 const Flight = require('../../src/Models/Flight');
-const Admin = require('../../src/Models/Admin');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
 var bcrypt = require('bcryptjs');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
-
+require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
 
 // user cancel a reservation
@@ -76,7 +73,7 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
         await Reservation.findByIdAndDelete(reservation_id);
 
         // sending email to the user
-        await send_cancellation_mail(user, reservation.paid, reservation, departure_flight.from, departure_flight.to);
+        await send_cancellation_mail(user, reservation.price, reservation, departure_flight.from, departure_flight.to);
         res.json({msg:"deleted successfully"});
 
     }
@@ -99,13 +96,13 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
      let transporter = nodemailer.createTransport({
         service: 'gmail',
       auth: {
-            user : authorization.user,
-            pass : authorization.password
+            user : process.env.USER,
+            pass : process.env.PASSWORD
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${authorization.user}`, // sender address
+        from: `${process.env.USER}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "cancellation confirmation", // Subject line
         text: text, // plain text body

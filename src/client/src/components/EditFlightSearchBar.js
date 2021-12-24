@@ -19,8 +19,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { Typography } from '@mui/material';
-
+import { Typography} from '@mui/material';
+import { withStyles } from '@mui/styles';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -168,10 +168,8 @@ function EditFlightSearchBar(props) {
                     }}
                     varient="outlined"
                 /> */}
-            <span>
-                <Typography color={colors.c1}> {from} ✈ {to}</Typography></span>
-            <span><Typography color={colors.c1}> <FamilyRestroomIcon />{number_of_passengers}</Typography>
-            </span>
+            <Typography width="18Ch" color={colors.c1}> {from} ✈ {to}</Typography>
+            <Typography width="18Ch"color={colors.c1}> <FamilyRestroomIcon />{number_of_passengers}</Typography>
             {props.src == 'editDep' && <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                     label="Departure date"
@@ -262,4 +260,4 @@ function EditFlightSearchBar(props) {
         </Box>
     )
 }
-export default EditFlightSearchBar
+export default withStyles()( EditFlightSearchBar);

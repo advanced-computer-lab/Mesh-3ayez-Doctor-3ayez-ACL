@@ -5,22 +5,22 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
+import { Stack} from '@mui/material';
 import FlightCard from './FlightCard'
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContentText from '@mui/material/DialogContentText'
-
+import { withStyles } from '@mui/styles';
 const colors = require("../colors.js");
 
 function EditSearchResults(props) {
     const [reserved, setReserved] = useState({});
     const [confirm, setConfirm] = useState(false);
     const history = useHistory();
-
+    const location= useLocation();
     function submitHandler(reserved) {
         setReserved(reserved);
         setConfirm(true);
@@ -36,7 +36,9 @@ function EditSearchResults(props) {
             state: {
                 reserved: reserved,
                 return: props.src==='editRet',
-                departure: props.src==='editDep'
+                departure: props.src==='editDep',
+                departure_id:location.reservation.departure_flight,
+                return_id:location.reservation.return_flight,
 
             }
         });
@@ -49,7 +51,8 @@ function EditSearchResults(props) {
             <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
                 {props.flights.length==0&&<Typography color={colors.c1}>No available flights </Typography>}
                 {props.flights.length>0&&props.flights.map((item) => {
-                    const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
+                    const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
+                    const d= `${parseInt(d1/3600)}h ${parseInt((d1%3600)/60)}m`
                     return (
                         <FlightCard 
                             flight_number={item.flight_number}
@@ -95,4 +98,4 @@ function EditSearchResults(props) {
     )
 }
 
-export default EditSearchResults
+export default withStyles() (EditSearchResults);

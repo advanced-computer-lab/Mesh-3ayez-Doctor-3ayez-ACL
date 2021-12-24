@@ -9,11 +9,10 @@ import UserSearchResults from './UserSearchResults';
 import UserNavBar from './UserNavBar';
 import { useLocation } from 'react-router-dom';
 function UserHome() {
-    const [user, setUser]= useState(false);
     return (
      <div className="searchBack" style={{ backgroundImage: `url(${im})` }} >
-         <UserNavBar user={true} onLogin={setUser}></UserNavBar>
-         <UserSearch user={true} position="absolute"></UserSearch>
+         <UserNavBar ></UserNavBar>
+         <UserSearch  position="absolute"></UserSearch>
      </div>
     )
 }

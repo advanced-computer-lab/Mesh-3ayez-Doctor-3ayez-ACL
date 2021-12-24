@@ -22,9 +22,24 @@ const UserSchema= new mongoose.Schema({
         required:true
     },
 
-    passport:{type:Number,required:true}
+    passport:{
+        type:Number,
+        required:true
+    },
     
-    
+    home_address:{
+        type:String,
+        required:true
+    },
+
+    country_code:{
+        type:Number,
+        required:true
+    },
+    mobile_number:{
+        type:Number,
+        required:true
+    },
 });
 
 

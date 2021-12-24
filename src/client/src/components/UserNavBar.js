@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import logo from './Tijwal.jpg'
 import {useHistory} from'react-router-dom';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core';
+import { withStyles } from '@mui/styles';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
@@ -23,10 +23,11 @@ const flag=false;
 
 const UserNavBar = (props) => {
   const colors = require("../colors")
-
- 
+  // console.log(JSON.parse(localStorage.getItem('user'))+'user')
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState(localStorage.user&&true);
+
   const history = useHistory()
 
   const handleOpenNavMenu = (event) => {
@@ -52,28 +53,14 @@ const UserNavBar = (props) => {
   const onClickDash = () => {
     history.push('/user/reservation');
   }
-  const[navBackground,setNavBackground]=useState("transparent");
-  const[navFont,setFont]=useState("color.c1");
+  function handleLogout(){
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    handleCloseUserMenu();
+  }
 
-  const navRef = React.useRef()
-  navRef.current="transparent";
-
-      useEffect(()=>{
-        const handleScroll=()=>{
-          const show=window.scrollY>10;
-          if(show){
-              setNavBackground("");
-              setFont("white")
-          }else{
-              setNavBackground("transparent");
-              setFont("color.c1")
-          }
-        }
-        document.addEventListener('scroll',handleScroll);
-        return function a(){document.removeEventListener('scroll',handleScroll)};
-      },[]);
   return (
-    <AppBar position="fixed" top="0" style={{ backgroundColor: colors.c1 , background:navBackground}}>
+    <AppBar position="fixed" top="0" style={{ backgroundColor: colors.c1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
         <IconButton
@@ -160,7 +147,7 @@ const UserNavBar = (props) => {
             ))}
           </Box>
 
-          {
+          {localStorage.getItem("user")&&
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -185,18 +172,20 @@ const UserNavBar = (props) => {
               >
 
                 <MenuItem key="Profile" onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" onClick={onClickProfile} >Profile </Typography>
+                  <Button textAlign="center" onClick={onClickProfile} >Profile </Button>
                 </MenuItem>
                 <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" onClick={onClickDash}>Dashboard </Typography>
+                  <Button textAlign="center" onClick={onClickDash}>Dashboard </Button>
                 </MenuItem>
-
+                <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
+                  <Button textAlign="center" onClick={handleLogout}>Logout </Button>
+                </MenuItem>
               </Menu>
             </Box>}
 
-          {!props.user && <Box sx={{ flexGrow: 0 }}>
-            <Button textAlign="center" onClick={()=>{props.onLogin()}}>Login</Button>
-            <Button textAlign="center" >Sign up </Button>
+          {!localStorage.getItem("user")&& <Box sx={{ flexGrow: 0 }}>
+            <Button textAlign="center" href='/login'>Login</Button>
+            <Button textAlign="center" href='/signup' >Sign up </Button>
 
           </Box>
 
@@ -207,4 +196,4 @@ const UserNavBar = (props) => {
     </AppBar>
   );
 };
-export default withStyles()(UserNavBar)
+export default withStyles()(UserNavBar);
