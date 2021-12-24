@@ -28,6 +28,9 @@ import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
 import { withStyles } from '@mui/styles';
 import Payment from './Payment';
+import Stack from '@mui/material/Stack'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 
 
@@ -36,6 +39,7 @@ import Payment from './Payment';
 function Itinerary() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [rsvids, setrsvids] = useState([]);
   const [thersv, setTheRsv] = useState('');
   const [isLoading, setLoading] = useState(true);
@@ -50,7 +54,7 @@ function Itinerary() {
     var tinyjsons = []
     var tinyjsons2 = []
     if(isLoading){
-    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")
+    axios.get("http://localhost:8000/api/flights/user/61c623e352a45a8ca37d4b16")//61bcd1e7bf1ace92644c0287")
         .then(res =>{
             setrsvids(res.data);
             setLoading(false);
@@ -92,6 +96,11 @@ function Itinerary() {
         handleClose();
         history.go();
   }
+
+  function showMessage(){
+      setErrorMsg("Email sent!");
+      setOpen2(true);
+  }
   
 
   
@@ -112,7 +121,7 @@ function Itinerary() {
                     key = {index+"PP"}
                     reservation = {thing}
                     delete_callback = {openCancellation}
-                    payment_callback = {openPayment}
+                    message_callback = {showMessage}
                 />
                 )
         })}
@@ -148,22 +157,14 @@ function Itinerary() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog
-                open={open2}
-                onClose={handleClose2}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogContent>
-                    <Payment
-                        name=""
-                        price="5000"
-                        productby = "Tijwal"
-                    >
-
-                    </Payment>
-                </DialogContent>
-            </Dialog>
+            
+            <Stack width="100%">
+                    <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
+                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                            {errorMsg}
+                        </Alert>
+                    </Snackbar>
+            </Stack>
                 
       
     </div>

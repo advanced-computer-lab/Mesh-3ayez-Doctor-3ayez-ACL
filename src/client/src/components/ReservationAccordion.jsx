@@ -27,8 +27,9 @@ function ReservationAccordion(probs){
     const [theJsons2, updateTheJsons2] = useState([]);
 
     useEffect(() => {
+        console.log(localStorage.user)
         if(isLoading){
-        axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
+        axios.get("http://localhost:8000/api/users/itinerary/61c623e352a45a8ca37d4b16/"+thereservation._id.toString()).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -144,8 +145,9 @@ function ReservationAccordion(probs){
         });
     }
 
-    function handlePayment(){
-        probs.payment_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id);
+    function handleEmailing(){
+        probs.message_callback();
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/61bcd1e7bf1ace92644c0287");
     }
 
     
@@ -176,8 +178,9 @@ if(theJsons[0]!=undefined)
 
                     <div>
                     <div>
-                    {/*<div style={{float:'right'}}><Button variant="outlined" color="success" onClick={handlePayment}>Pay</Button></div>*/}
+                    <div><Button variant="outlined" color="success" onClick={handleEmailing}>Email Me a Copy of My Itinerary</Button></div>
                     {/*<Payment style={{float:'right'}} name="ThePayment" price={(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)} productby="Tijwal"></Payment>*/}
+
                     <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
                     <Box sx={{ flexGrow: 1, float:"left" }}><label style={{marginLeft: 10}}>{"Number: "+(theJsons[0]==undefined?'':theJsons[0].reservation_number)}</label></Box>
                     <br/>
