@@ -62,9 +62,10 @@ function UserSearch(props) {
     const location = useLocation();
     const [from, setFrom] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["from"] : '');
     const [to, setTo] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["to"] : '');
-    const date = location.state && location.state.searchInputs ? location.state.searchInputs["return_date"] : new Date();
+    const d1 = new Date();
+    const date = location.state && location.state.searchInputs ? location.state.searchInputs["return_date"] : { year: d1.getFullYear(), month: d1.getMonth() + 1, day: d1.getDate() };
     const [arrival_date, setArrivalTime] = React.useState(date);
-    const date2 = location.state && location.state.searchInputs ? location.state.searchInputs["departure_date"] : new Date();
+    const date2 = location.state && location.state.searchInputs ? location.state.searchInputs["departure_date"] : { year: d1.getFullYear(), month: d1.getMonth() + 1, day: d1.getDate() };
     const [departure_date, setDepartureTime] = React.useState(date2);
     const [number_of_passengers, setPassengers] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["number_of_passengers"] : '');
     const [cabin_type, setCabin] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["cabin_type"] : '');

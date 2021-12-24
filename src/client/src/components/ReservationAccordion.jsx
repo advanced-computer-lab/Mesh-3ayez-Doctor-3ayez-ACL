@@ -123,7 +123,8 @@ function ReservationAccordion(probs){
             pathname: '/user/EditSeats',
             state: {
                 reservation: thereservation,
-                flight: theJsons[0].flight_details[0],
+                depFlight: theJsons[0].flight_details[0],
+                retFlight: theJsons2[0].flight_details[0],
                 seats: theJsons,
                 type: 'departure'
             }
@@ -135,7 +136,8 @@ function ReservationAccordion(probs){
             pathname: '/user/EditSeats',
             state: {
                 reservation: thereservation,
-                flight: theJsons2[0].flight_details[0],
+                depFlight: theJsons[0].flight_details[0],
+                retFlight: theJsons2[0].flight_details[0],
                 seats: theJsons2,
                 type: 'return'
             }
