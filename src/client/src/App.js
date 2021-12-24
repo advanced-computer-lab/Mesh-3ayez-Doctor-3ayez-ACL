@@ -16,7 +16,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import EditDepartureFlight from './components/EditDepartureFlight';
 import EditReturnFlight from './components/EditReturnFlight';
-
+import {ResItinerary} from './components/SeatReservation/ResItinerary';
 function App() {
   return (
     <Router>
@@ -35,6 +35,7 @@ function App() {
       <Route path="/user/editReturnFlight" component={EditReturnFlight} />
       <Route path="/user/seatReservation" component={SeatReservation} />
       <Route path="/user/ReserveSeats" component={SeatPick}/>
+      <Route path="/it" component={ResItinerary}/>
 
 
     </Router>

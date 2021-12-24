@@ -17,12 +17,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Stripe from 'react-stripe-checkout'
+import { ResItinerary } from "./ResItinerary";
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
+import { set } from "mongoose";
 export function SeatPick() {
     const history = useHistory();
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
+    const [resId,setResId]=useState("");
     const [depSeats, setDepSeats] = useState([]);
     const [depSeatsLoading, setDepSeatsLoading] = useState(true);
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
@@ -81,6 +84,7 @@ export function SeatPick() {
     const [returnSeats, setReturnSeats] = useState([]);
     const [reservedDepSeats, serReservedDepSeats] = useState([]);
     const [reservedRetSeats, serReservedRetSeats] = useState([]);
+    const [it, setIt] = useState(false);
     function addDepS(x, i) {
         departureSeats.push(x);
         reservedDepSeats.push(i);
@@ -115,6 +119,7 @@ export function SeatPick() {
     function handleClose() {
         setConfirm(false);
         setOpen(false);
+        setIt(false);
     }
     const tokenHandler = (token) => {
         // handleToken(100, token)
@@ -122,7 +127,7 @@ export function SeatPick() {
     }
     function reserve(token) {
         var data = {
-            user_id: "61bcd1e7bf1ace92644c0287", // to be handled
+            user_id:"61bcd1e7bf1ace92644c0287", // to be handled
             departure_flight: departure.flight_id,
             return_flight: ret.flight_id,
             number_of_passengers: Number(departure.number_of_passengers),
@@ -132,10 +137,13 @@ export function SeatPick() {
             stripeToken:token
         };
         console.log(data);
-        axios.post("http://localhost:8000/api/reservations", data);
-        history.go();
+        axios.post("http://localhost:8000/api/reservations", data).then(result =>{
+            setResId(result.data.reservation_id);
+        });
+        // history.go();
         console.log("done");
         setConfirm(false);
+        setIt(true);
     }
     var depTcktData = {
         key: "",
@@ -245,7 +253,7 @@ export function SeatPick() {
                                         <Divider component="li" />
                                         <ListItem>
                                             <ListItemText primary="Departure Time" secondary={departure.departure_time} />
-                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_terminal} />
+                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
@@ -361,6 +369,43 @@ export function SeatPick() {
                         />
                     </div>
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={it}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth="true"
+            >
+                <DialogContent>
+                    <ResItinerary />
+                </DialogContent>
+                <ResItinerary 
+                resId={resId}
+                price={priceDep+priceRet}
+                depFrom={departure.from}
+                depDDay={new Date(departure.departure_time).getDate()+"/"+(new Date(departure.departure_time).getMonth()+1)+"/"+new Date(departure.departure_time).getFullYear()}
+                depDTime={new Date(departure.departure_time).getHours()+":"+new Date(departure.departure_time).getMinutes()}                            
+                depDT={departure.departure_terminal}
+                depTo={departure.to}
+                depADay={new Date(departure.arrival_time).getDate()+"/"+(new Date(departure.arrival_time).getMonth()+1)+"/"+new Date(departure.arrival_time).getFullYear()}
+                depATime={new Date(departure.arrival_time).getHours()+":"+new Date(departure.arrival_time).getMinutes()}                            
+                depAT={departure.arrival_terminal}
+                depSeats={departureSeats}
+                cabin={departure.cabin_type}
+                retFrom={ret.from}
+                retDDay={new Date(ret.departure_time).getDate()+"/"+(new Date(ret.departure_time).getMonth()+1)+"/"+new Date(ret.departure_time).getFullYear()}
+                retDTime={new Date(ret.departure_time).getHours()+":"+new Date(ret.departure_time).getMinutes()}                            
+                retDT={ret.departure_terminal}
+                retTo={ret.to}
+                retADay={new Date(ret.arrival_time).getDate()+"/"+(new Date(ret.arrival_time).getMonth()+1)+"/"+new Date(ret.arrival_time).getFullYear()}
+                retATime={new Date(ret.arrival_time).getHours()+":"+new Date(ret.arrival_time).getMinutes()}                            
+                retAT={ret.arrival_terminal}
+                retSeats={returnSeats}
+                />
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleClose}>OK</Button>
                 </DialogActions>
             </Dialog>
         </div>
