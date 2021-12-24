@@ -350,7 +350,7 @@ export function SeatPick() {
             >
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to book these flights?
+                        Are you sure you want to book these seats?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
