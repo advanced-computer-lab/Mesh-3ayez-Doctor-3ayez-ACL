@@ -11,12 +11,12 @@ import Ticket from './Ticket_components/Ticket';
 import ReservationAccordion from './ReservationAccordion';
 import FlightDisplay from './Ticket_components/FlightDisplay';
 import Box from '@mui/material/Box';
-import { Accordion } from '@material-ui/core';
-import { AccordionSummary } from '@material-ui/core';
-import { AccordionDetails } from '@material-ui/core';
-import { Checkbox } from '@material-ui/core';
-import { FormControlLabel } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
+import {Accordion} from '@material-ui/core';
+import {AccordionSummary} from '@material-ui/core';
+import {AccordionDetails} from '@material-ui/core';
+import {Checkbox} from '@material-ui/core';
+import {FormControlLabel} from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -37,100 +37,106 @@ import Alert from '@mui/material/Alert'
 
 
 function Itinerary() {
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [rsvids, setrsvids] = useState([]);
+  const [thersv, setTheRsv] = useState('');
+  const [isLoading, setLoading] = useState(true);
+  const [width,setWidth]=useState("0");
+  const [marginLeft,setMarginLeft]=useState("0");
+  const [paddingLeft,setPaddingLeft] = useState("100px");
+  const [paddingRight,setPaddingRight] = useState("100px");
+  const[useless,setUseless] = useState(0);
+  var theflightdisplay;
+  
+  useEffect(() => {
     localStorage.getItem("activeStep") && localStorage.removeItem("activeStep");
     localStorage.getItem("departureReserved") && localStorage.removeItem("departureReserved");
-    const [open, setOpen] = useState(false);
-    const [open2, setOpen2] = useState(false);
-    const [rsvids, setrsvids] = useState([]);
-    const [thersv, setTheRsv] = useState('');
-    const [isLoading, setLoading] = useState(true);
-    const [width, setWidth] = useState("0");
-    const [marginLeft, setMarginLeft] = useState("0");
-    const [paddingLeft, setPaddingLeft] = useState("100px");
-    const [paddingRight, setPaddingRight] = useState("100px");
-    const [useless, setUseless] = useState(0);
-    var theflightdisplay;
-
-    useEffect(() => {
-        var tinyjsons = []
-        var tinyjsons2 = []
-        if (isLoading) {
-            axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")
-                .then(res => {
-                    setrsvids(res.data);
-                    setLoading(false);
-                }).catch(err => {
-                    console.log(err);
-                });
-        }
-
-
-
-
-
-
-
-    }, []);
-
-    let history = useHistory();
-
-
-    function handleClose() {
-        setOpen(false);
+    var tinyjsons = []
+    var tinyjsons2 = []
+    if(isLoading){
+    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")//61bcd1e7bf1ace92644c0287")
+        .then(res =>{
+            setrsvids(res.data);
+            setLoading(false);
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
-    function handleClose2() {
-        setOpen2(false);
-    }
+    
 
-    function openCancellation(rsvid) {
-        setOpen(true);
-        setTheRsv(rsvid);
-    }
 
-    function openPayment(rsvid) {
+      
+
+
+  }, []);
+
+  let history = useHistory();
+  
+
+  function handleClose(){
+    setOpen(false);
+  }
+
+  function handleClose2(){
+    setOpen2(false);
+  }
+
+  function openCancellation(rsvid){
+      setOpen(true);
+      setTheRsv(rsvid);
+  }
+
+  function openPayment(rsvid){
         setOpen2(true);
-    }
+  }
 
-    function handleCancellation() {
-        axios.delete("http://localhost:8000/api/users/reservation/61bcd1e7bf1ace92644c0287/" + thersv);
+  function handleCancellation(){
+        axios.delete("http://localhost:8000/api/users/reservation/61bcd1e7bf1ace92644c0287/"+thersv);
         handleClose();
         history.go();
-    }
+  }
 
+  function showMessage(){
+      setErrorMsg("Email sent!");
+      setOpen2(true);
+  }
+  
 
+  
+  return (
+    <div >
+     <UserNavBar ></UserNavBar>
 
-    return (
-        <div >
-            <UserNavBar ></UserNavBar>
-
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/icon?family=Material+Icons"
-            />
-            <div>
-                <div id="main" style={{ marginLeft: marginLeft, paddingLeft: paddingLeft, paddingRight: paddingRight }}>
-
-                    {rsvids.map((thing, index) => {
-
-                        return (thing == undefined ? null : <ReservationAccordion
-                            key={index + "PP"}
-                            reservation={thing}
-                            delete_callback={openCancellation}
-                            payment_callback={openPayment}
-                        />
-                        )
-                    })}
-
-
-
-
-
-
-
-
-                </div>
-            </div>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      />
+      <div>
+        <div id="main" style={{marginLeft:marginLeft,paddingLeft:paddingLeft,paddingRight:paddingRight}}>
+            
+        {rsvids.map((thing,index)=>{
+            
+            return(thing==undefined?null:<ReservationAccordion
+                    key = {index+"PP"}
+                    reservation = {thing}
+                    delete_callback = {openCancellation}
+                    message_callback = {showMessage}
+                />
+                )
+        })}
+        
+        
+        
+        
+    
+        
+            
+      
+        </div>
+    </div>
             <Dialog
                 open={open}
                 onClose={handleClose}
