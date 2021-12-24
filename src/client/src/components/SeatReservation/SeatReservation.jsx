@@ -16,11 +16,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
+import Stripe from 'react-stripe-checkout';
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 export function SeatReservation() {
     const history= useHistory();
     const location = useLocation();
     const reserved = location.state.reserved;
+    const diff =2; 
     const [flightSeats, setFlightSeats] = useState([]);
     const [seatsLoading, setSeatsLoading] = useState(true);
     let cabinType = reserved.cabin_type;
@@ -41,6 +43,7 @@ export function SeatReservation() {
     // handle price
     const [open, setOpen] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const [paymentRef,setPaymentRef]=useState(false);
     const [price, setPrice] = useState(0);
     const [bag, setBag] = useState(0);
     const [seats, setSeats] = useState([]);
@@ -56,9 +59,12 @@ export function SeatReservation() {
         setSeats(seats.filter((y) => x != y));
         setReservedSeats(reservedSeats.filter((j) => j != i));
     }
-    function submitHandler() {
+    function submitHandler() { 
         if (reserved.number_of_passengers == seats.length) {
-            setConfirm(true);
+            if(diff<0)
+                setPaymentRef(true);
+            else
+                setConfirm(true);
         }
         else {
             setOpen(true);
@@ -67,22 +73,25 @@ export function SeatReservation() {
     function handleClose() {
         setConfirm(false);
         setOpen(false);
+        setPaymentRef(false);
     }
-    function reserve() {
-        // var data={
-        //     user_id:"61bcd1e7bf1ace92644c0287", // to be handled
-        //     departure_flight:departure.flight_id,
-        //     return_flight:ret.flight_id,
-        //     number_of_passengers:Number(departure.number_of_passengers),
-        //     cabin_type:departure.cabin_type,
-        //     departure_seats:reservedDepSeats,
-        //     return_seats:reservedRetSeats
-        // };
-        // console.log(data);
-        // axios.post("http://localhost:8000/api/reservations",data);
-        // history.go();
-        // console.log("done");
+    const tokenHandler = (token)=>{
+        reserve(token);
+      }
+    function reserve(token) {
+        var data={
+            seats:reservedSeats,
+            new_flight_id:reserved.flight_id,
+            stripeToken:token,
+        };
+        const reservation = location.state.reservation;
+        console.log(reservation);
+        const oldFlight = location.state.return?reservation.return_flight:reservation.departure_flight;
+        axios.put("http://localhost:8000/api/reservations/changeFlight/"+reservation._id+"/"+reservation.user_id+"/"+oldFlight,data).catch(err=>{
+        console.log(err.response.data.msg);
+        })
         setConfirm(false);
+        setPaymentRef(false);
     }
     function buildSeatRows(seats, rows) {
         var rem = seats.length % 4;
@@ -207,11 +216,32 @@ export function SeatReservation() {
             >
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to book these flights?
+                        Are you sure you want to book these seats? The price difference is {diff}. Click pay to proceed.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={reserve}>GO ON</Button>
+                <div style={{marginRight:"1%"}}>
+                        <Stripe
+                            stripeKey='pk_test_51KACNtHLa29h6dWHVk2jjBX8fyb4f9blEHCnHoaLgaBJLGYNjp3UTBmBgi5EMifGmV9vfADqIwaArtgM8YwpeSl400CQ0mDxk8'
+                            token={tokenHandler}
+                        />
+                    </div>
+                    <Button variant="outlined" onClick={handleClose}>NO</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={paymentRef}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        You will get refunded with amount of {diff}$.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={()=>{reserve(null)}}>GO ON</Button>
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
                 </DialogActions>
             </Dialog>

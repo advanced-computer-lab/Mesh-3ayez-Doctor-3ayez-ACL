@@ -34,8 +34,7 @@ function App() {
       <Route path="/user/editDepartureFlight" component={EditDepartureFlight} />
       <Route path="/user/editReturnFlight" component={EditReturnFlight} />
       <Route path="/user/seatReservation" component={SeatReservation} />
-      <Route path="/user/ReserveSeats" component={SeatPick} />
-
+      <Route path="/user/ReserveSeats" component={SeatPick}/>
 
 
     </Router>
