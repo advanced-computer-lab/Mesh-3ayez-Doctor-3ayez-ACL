@@ -603,7 +603,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
             return;
         }
         const payment= await stripe.charges.create({
-                amount: query['price']*100,
+                amount: (new_price-reservation.price*1)*100,
                 currency: 'usd',
                 customer: customer.id,
                 receipt_email: token.email
