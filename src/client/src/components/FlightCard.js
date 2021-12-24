@@ -14,7 +14,10 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import im from './chanas-hclTKUfuf1U-unsplash.jpg'
 import fly from './flight@2x.webp'
-import bag from './baggage.png'
+import bag from './travel-baggage.png'
+import seat from './seat.png'
+import fnum from './code.png'
+
 import { useHistory } from "react-router-dom";
 import { CardHeader } from '@mui/material';
 import { Avatar } from '@mui/material';
@@ -65,19 +68,18 @@ function FlightCard(props) {
             sx={{ textAlign: "center", maxWidth: 1200 }}>
             <CardHeader style={{ textAlign: "center",marginTop:"auto", backgroundColor: colors.c5 }}
                 avatar={
-                    <Stack style={{textAlign:"center",marginTop:"auto"}} direction="row" spacing={2}>
-                        <Avatar sx={{ bgcolor: "#FF0000" }} aria-label="recipe" src={im}>
-                        </Avatar>
-                        <Typography color={colors.c1}> Flight {props.flight_number}</Typography>
+                    <Stack style={{textAlign:"center",marginTop:"auto"}} direction="row">
+                        <img src={fnum} width="25px" height="25px"/>
+                        <Typography color={colors.c1}>{props.flight_number}</Typography>
                     </Stack>
                 }
                 
                 action={
                     <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}>
-                        <div>
-                        <Typography color={colors.c1}> Baggage {props.baggage}kg</Typography>
-                        </div>
-                        <Typography color={colors.c1}> Class {props.cabin_type}</Typography>
+                        
+                        <Typography color={colors.c1}> <img src={bag} width="20px" height="25px"/> {props.baggage}kg</Typography>
+                       
+                        <Typography color={colors.c1}> <img src={seat} width="20px" height="25px"/> {props.cabin_type}</Typography>
                     </Stack>
 
 
