@@ -33,6 +33,7 @@
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.14",
     "prop-types": "^15.7.2",
-    "react-stripe-checkout": "^2.6.3"
+    "react-stripe-checkout": "^2.6.3",
+    "uuid": "^8.3.2"
   }
 }
