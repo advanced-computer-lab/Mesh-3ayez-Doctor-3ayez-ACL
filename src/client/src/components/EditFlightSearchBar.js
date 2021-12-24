@@ -113,7 +113,9 @@ function EditFlightSearchBar(props) {
                             number_of_passengers: number_of_passengers,
                             searchInputs: data,
                             src: "search",
-                            reservation: props.res
+                            reservation: props.res,
+                            depFlight:props.depFlight,
+                            retFlight:props.retFlight
                             // user:props.user
 
                         }
