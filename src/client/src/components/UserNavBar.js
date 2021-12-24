@@ -55,8 +55,7 @@ const UserNavBar = (props) => {
     history.push('/user/reservation');
   }
   function handleLogout(){
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    localStorage.clear();
     handleCloseUserMenu();
   }
 
@@ -110,7 +109,7 @@ const UserNavBar = (props) => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography style={{textAlign:"center"}}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -161,20 +160,20 @@ const UserNavBar = (props) => {
               >
 
                 <MenuItem key="Profile" onClick={handleCloseNavMenu}>
-                  <Button textAlign="center" onClick={onClickProfile} >Profile </Button>
+                  <Button style={{textAlign:"center"}} onClick={onClickProfile} >Profile </Button>
                 </MenuItem>
                 <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
-                  <Button textAlign="center" onClick={onClickDash}>Dashboard </Button>
+                  <Button style={{textAlign:"center"}} onClick={onClickDash}>Dashboard </Button>
                 </MenuItem>
                 <MenuItem key="Logout" onClick={handleCloseNavMenu}>
-                  <Button textAlign="center" onClick={handleLogout}>Logout </Button>
+                  <Button style={{textAlign:"center"}} onClick={handleLogout}>Logout </Button>
                 </MenuItem>
               </Menu>
             </Box>}
 
           {!localStorage.getItem("token")&& <Box sx={{ flexGrow: 0 }}>
-            <Button textAlign="center" href='/login'>Login</Button>
-            <Button textAlign="center" href='/signup' >Sign up </Button>
+            <Button style={{textAlign:"center"}} href='/login'>Login</Button>
+            <Button style={{textAlign:"center"}} href='/signup' >Sign up </Button>
 
           </Box>
 

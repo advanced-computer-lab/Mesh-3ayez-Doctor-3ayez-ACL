@@ -65,7 +65,7 @@ function FlightCard(props) {
             sx={{ textAlign: "center", maxWidth: 1200 }}>
             <CardHeader style={{ textAlign: "center",marginTop:"auto", backgroundColor: colors.c5 }}
                 avatar={
-                    <Stack textAlign="center" marginTop="auto" direction="row" spacing={2}>
+                    <Stack style={{textAlign:"center",marginTop:"auto"}} direction="row" spacing={2}>
                         <Avatar sx={{ bgcolor: "#FF0000" }} aria-label="recipe" src={im}>
                         </Avatar>
                         <Typography color={colors.c1}> Flight {props.flight_number}</Typography>
@@ -73,7 +73,7 @@ function FlightCard(props) {
                 }
                 
                 action={
-                    <Stack textAlign="center" margin="auto" direction="row" spacing={2}>
+                    <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}>
                         <div>
                         <Typography color={colors.c1}> Baggage {props.baggage}kg</Typography>
                         </div>
@@ -102,8 +102,8 @@ function FlightCard(props) {
                         <Stack >
                             <Typography color={colors.c1}>{props.duration}</Typography>
 
-                            <Stack textAlign="center" margin="auto" direction="row" spacing={2}  >
-                                <img textAlign="center" margin="auto" src={fly} width="50px" height="50px" />
+                            <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}  >
+                                <img style={{textAlign:"center",margin:"auto"}} src={fly} width="50px" height="50px" />
                                 <ColoredLine />
 
                             </Stack>

@@ -10,6 +10,8 @@ import UserNavBar from './UserNavBar';
 import { useLocation } from 'react-router-dom';
 import { withStyles } from '@mui/styles';
 function UserHome() {
+    localStorage.getItem("activeStep")&&localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved")&&localStorage.removeItem("departureReserved");
     return (
      <div className="searchBack" style={{ backgroundImage: `url(${im})` }} >
          <UserNavBar ></UserNavBar>

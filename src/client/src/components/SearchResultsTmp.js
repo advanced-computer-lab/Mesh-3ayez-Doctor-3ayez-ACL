@@ -10,9 +10,12 @@ import FlightCard from './FlightCard'
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 const steps = ['Pick departure flight', 'Pick return flight'];
-
+const colors= require("../colors")
 export default function SearchResultsTmp(props) {
-    const [activeStep, setActiveStep] = React.useState(0);
+    console.log(localStorage);
+    console.log(localStorage.getItem("departureReserved"));
+
+    const [activeStep, setActiveStep] = React.useState(localStorage.getItem("activeStep")?parseInt(localStorage.getItem("activeStep")):0);
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
@@ -22,43 +25,13 @@ export default function SearchResultsTmp(props) {
     const isStepSkipped = (step) => {
         return skipped.has(step);
     };
-
-    const handleNext = () => {
-        let newSkipped = skipped;
-        if (isStepSkipped(activeStep)) {
-            newSkipped = new Set(newSkipped.values());
-            newSkipped.delete(activeStep);
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped(newSkipped);
-    };
-
     const handleBack = () => {
         setReturnReserved({});
         setDepartureReserved({});
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleSkip = () => {
-        if (!isStepOptional(activeStep)) {
-            // You probably want to guard against something like this,
-            // it should never occur unless someone's actively trying to break something.
-            throw new Error("You can't skip a step that isn't optional.");
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped((prevSkipped) => {
-            const newSkipped = new Set(prevSkipped.values());
-            newSkipped.add(activeStep);
-            return newSkipped;
-        });
-    };
-
-    const handleReset = () => {
         setActiveStep(0);
+        localStorage.setItem("activeStep",0);
+        localStorage.removeItem("departureReserved");
     };
-
 
     const [retrunF, setReturn] = useState(false);
     const [departureReserved, setDepartureReserved] = useState({});
@@ -66,24 +39,28 @@ export default function SearchResultsTmp(props) {
     const history = useHistory();
 
     const onClick = (reserved) => {
+        console.log(localStorage.getItem("activeStep"))
         setDepartureReserved(reserved);
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        localStorage.setItem("activeStep",1);
+        setActiveStep(1);
+        console.log(activeStep)
+        localStorage.setItem("departureReserved",JSON.stringify(reserved));
+        console.log(JSON.parse(localStorage.getItem("departureReserved")));
+
     }
     const onClickReturn = (reserved) => {
-        console.log("entered")
-
-
+        console.log(JSON.parse(localStorage.getItem("departureReserved")));
         setReturnReserved(reserved);
-        console.log(reserved.cabin_type)
-
-
         history.push({
-            pathname: '/user/seatReservation',
+            pathname: '/user/ReserveSeats',
             state: {
-                departure: departureReserved,
+                departure: JSON.parse(localStorage.getItem("departureReserved")),
                 return: reserved
             }
         });
+        localStorage.removeItem("activeStep");
+        localStorage.removeItem("departureReserved");
+
     }
 
     return (
@@ -127,7 +104,7 @@ export default function SearchResultsTmp(props) {
                                     cabin_type={props.cabin_type}
                                     number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
+                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']*props.number_of_passengers}
                                     onClick={onClickReturn}
                                     arrival_terminal={item.arrival_terminal}
                                     departure_terminal={item.departure_terminal}
@@ -144,7 +121,9 @@ export default function SearchResultsTmp(props) {
                     </Box> */}
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
-                            color="inherit"
+                            style={{
+                                color:activeStep===0?colors.c3:colors.c1
+                            }}
                             disabled={activeStep === 0}
                             onClick={handleBack}
                             sx={{ mr: 1 }}
@@ -179,7 +158,7 @@ export default function SearchResultsTmp(props) {
                                     cabin_type={props.cabin_type}
                                     number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']}
+                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']*props.number_of_passengers}
 
                                     onClick={onClick}
 
@@ -193,7 +172,9 @@ export default function SearchResultsTmp(props) {
                     </Stack>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
-                            color="inherit"
+                            style={{
+                                color:colors.c1
+                            }}
                             disabled={activeStep === 0 && props.flights['departure_flights'].length > 0}
                             href="/"
                             sx={{ mr: 1 }}
