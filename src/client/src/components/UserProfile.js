@@ -20,6 +20,8 @@ import { withStyles } from '@material-ui/core';
 
 
 export default function UserProfile(probs) {
+    localStorage.getItem("activeStep")&&localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved")&&localStorage.removeItem("departureReserved");
     const id = "61aa4dadbde7d1780db3dda5";
     const [vantaEffect, setVantaEffect] = useState(0)
     const myRef = useRef(null)
