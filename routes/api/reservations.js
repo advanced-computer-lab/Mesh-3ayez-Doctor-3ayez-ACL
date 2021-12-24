@@ -325,7 +325,7 @@ router.post('/', async(req,res)=>{
         })
         // we have to send a mail once the reservation is created successfully
         await sendItinerary(user, reservation, departure_flight, return_flight, departure_seats, return_seats);
-        res.json({msg : 'reservation created successfully'});
+        res.json({msg : 'reservation created successfully', reservation_id : reservation._id});
     }).catch(err=>{
 
         console.log(err);
@@ -603,7 +603,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
             return;
         }
         const payment= await stripe.charges.create({
-                amount: query['price']*100,
+                amount: (new_price-reservation.price*1)*100,
                 currency: 'usd',
                 customer: customer.id,
                 receipt_email: token.email
