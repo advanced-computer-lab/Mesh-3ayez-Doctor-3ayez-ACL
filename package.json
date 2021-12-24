@@ -34,6 +34,7 @@
     "nodemon": "^2.0.14",
     "prop-types": "^15.7.2",
     "react-stripe-checkout": "^2.6.3",
+    "stripe": "^8.195.0",
     "uuid": "^8.3.2"
   }
 }
