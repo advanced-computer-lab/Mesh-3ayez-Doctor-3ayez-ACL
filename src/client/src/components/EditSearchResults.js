@@ -37,8 +37,10 @@ function EditSearchResults(props) {
                 reserved: reserved,
                 return: props.src==='editRet',
                 departure: props.src==='editDep',
-                reservation:location.state.reservation,
-
+                departure_id:location.state.reservation.departure_flight,
+                return_id:location.state.reservation.return_flight,
+                depFlight: location.state.depFlight,
+                retFlight: location.state.retFlight
             }
         });
     }
@@ -52,6 +54,11 @@ function EditSearchResults(props) {
                 {props.flights.length>0&&props.flights.map((item) => {
                     const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
                     const d= `${parseInt(d1/3600)}h ${parseInt((d1%3600)/60)}m`
+                    const n=props.res.number_of_passengers
+                    const newPrice= item[`${props.res.cabin_type}_seats`].price['$numberDecimal'];
+                    const priceDiff=n*newPrice-n*props.oldPrice;
+                    console.log(props.oldPrice);
+                    console.log(newPrice);
                     return (
                         <FlightCard 
                             flight_number={item.flight_number}
@@ -65,7 +72,7 @@ function EditSearchResults(props) {
                             duration={d}
                             cabin_type={props.res.cabin_type}
                             baggage={item[`${props.res.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                            price={item[`${props.res.cabin_type}_seats`].price['$numberDecimal']}
+                            price={priceDiff>0?("+"+priceDiff):(priceDiff)}
                             onClick={submitHandler}
                             arrival_terminal={item.arrival_terminal}
                             departure_terminal={item.departure_terminal}

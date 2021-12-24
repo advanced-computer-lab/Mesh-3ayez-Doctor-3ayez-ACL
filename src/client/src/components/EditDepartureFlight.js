@@ -36,15 +36,19 @@ function EditDepartureFlight() {
         }
     }, [])
     //search with all attributes except for the departure date and cabin class
-
+    const cabin=location.state.reservation.cabin_type
+    const price=location.state.flight[`${cabin}_seats`].price['$numberDecimal']
     return (
         <div style={{position:'relative',textAlign:"center"}}>
-
+          
             <Stack textAlign="center">
 
                 <UserNavBar></UserNavBar>
-                <EditFlightSearchBar src='editDep' flight={location.state.flight} number_of_passengers={location.state.reservation.number_of_passengers} res={location.state.reservation}></EditFlightSearchBar>
-                {!loading && <EditSearchResults  margin="Auto" textAlign= "center" flights={departureFlight} src='editDep' res={location.state.reservation}></EditSearchResults>}
+                <EditFlightSearchBar src='editDep' flight={location.state.flight} number_of_passengers={location.state.reservation.number_of_passengers} res={location.state.reservation}
+                depFlight={location.state.depFlight} retFlight={location.state.retFlight}></EditFlightSearchBar>
+                {!loading && <EditSearchResults  margin="Auto" textAlign= "center" flights={departureFlight} src='editDep' 
+                res={location.state.reservation} oldPrice={price} flight={location.state.flight}>
+                    </EditSearchResults>}
             </Stack>
         </div>
     )

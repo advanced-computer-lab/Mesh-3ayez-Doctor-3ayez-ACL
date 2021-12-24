@@ -14,10 +14,14 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import im from './chanas-hclTKUfuf1U-unsplash.jpg'
 import fly from './flight@2x.webp'
-import bag from './baggage.png'
+import bag from './travel-baggage.png'
+import seat from './seat.png'
+import fnum from './code.png'
+
 import { useHistory } from "react-router-dom";
 import { CardHeader } from '@mui/material';
 import { Avatar } from '@mui/material';
+import { withStyles } from '@mui/styles';
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -27,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-export default function FlightCard(props) {
+function FlightCard(props) {
     const colors = require('../colors')
     const history = useHistory();
     const flight = {
@@ -64,19 +68,18 @@ export default function FlightCard(props) {
             sx={{ textAlign: "center", maxWidth: 1200 }}>
             <CardHeader style={{ textAlign: "center",marginTop:"auto", backgroundColor: colors.c5 }}
                 avatar={
-                    <Stack textAlign="center" marginTop="auto" direction="row" spacing={2}>
-                        <Avatar sx={{ bgcolor: "#FF0000" }} aria-label="recipe" src={im}>
-                        </Avatar>
-                        <Typography color={colors.c1}> Flight {props.flight_number}</Typography>
+                    <Stack style={{textAlign:"center",marginTop:"auto"}} direction="row">
+                        <img src={fnum} width="25px" height="25px"/>
+                        <Typography color={colors.c1}>{props.flight_number}</Typography>
                     </Stack>
                 }
                 
                 action={
-                    <Stack textAlign="center" margin="auto" direction="row" spacing={2}>
-                        <div>
-                        <Typography color={colors.c1}> Baggage {props.baggage}kg</Typography>
-                        </div>
-                        <Typography color={colors.c1}> Class {props.cabin_type}</Typography>
+                    <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}>
+                        
+                        <Typography color={colors.c1}> <img src={bag} width="20px" height="25px"/> {props.baggage}kg</Typography>
+                       
+                        <Typography color={colors.c1}> <img src={seat} width="20px" height="25px"/> {props.cabin_type}</Typography>
                     </Stack>
 
 
@@ -101,8 +104,8 @@ export default function FlightCard(props) {
                         <Stack >
                             <Typography color={colors.c1}>{props.duration}</Typography>
 
-                            <Stack textAlign="center" margin="auto" direction="row" spacing={2}  >
-                                <img textAlign="center" margin="auto" src={fly} width="50px" height="50px" />
+                            <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}  >
+                                <img style={{textAlign:"center",margin:"auto"}} src={fly} width="50px" height="50px" />
                                 <ColoredLine />
 
                             </Stack>
@@ -135,3 +138,4 @@ export default function FlightCard(props) {
         </Card>
     );
 }
+ export default withStyles()(FlightCard);

@@ -6,7 +6,8 @@ import { useLocation } from "react-router-dom";
 import Stack from '@mui/material/Stack'
 import Navbar from './Navbar';
 import SearchResultsTmp from './SearchResultsTmp';
-function UserSearchResults() {
+import { withStyles } from '@mui/styles';
+function UserSearchResults() { 
     const location= useLocation();
     return (
         <div style={{position:'relative',textAlign:"center"}}>
@@ -20,4 +21,4 @@ function UserSearchResults() {
     )
 }
 
-export default UserSearchResults
+export default withStyles() (UserSearchResults)

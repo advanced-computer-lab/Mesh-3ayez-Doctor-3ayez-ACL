@@ -51,10 +51,12 @@ function Itinerary() {
   var theflightdisplay;
   
   useEffect(() => {
+    localStorage.getItem("activeStep") && localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved") && localStorage.removeItem("departureReserved");
     var tinyjsons = []
     var tinyjsons2 = []
     if(isLoading){
-    axios.get("http://localhost:8000/api/flights/user/61c623e352a45a8ca37d4b16")//61bcd1e7bf1ace92644c0287")
+    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")//61bcd1e7bf1ace92644c0287")
         .then(res =>{
             setrsvids(res.data);
             setLoading(false);
@@ -160,7 +162,7 @@ function Itinerary() {
             
             <Stack width="100%">
                     <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                        <Alert onClose={handleClose2} severity="success" sx={{ width: '100%' }}>
                             {errorMsg}
                         </Alert>
                     </Snackbar>

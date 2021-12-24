@@ -29,7 +29,7 @@ function ReservationAccordion(probs){
     useEffect(() => {
         console.log(localStorage.user)
         if(isLoading){
-        axios.get("http://localhost:8000/api/users/itinerary/61c623e352a45a8ca37d4b16/"+thereservation._id.toString()).then(
+        axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -101,7 +101,8 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
-                flight: theJsons[0].flight_details[0],
+                depflight: theJsons[0].flight_details[0],
+                retflight: theJsons2[0].flight_details[0],
                 src:"editDep"
 
             }
@@ -113,7 +114,8 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
-                flight: theJsons2[0].flight_details[0],
+                retflight: theJsons2[0].flight_details[0],
+                depflight: theJsons[0].flight_details[0],
                 src:"editRet"
             }
         });
@@ -147,7 +149,7 @@ function ReservationAccordion(probs){
 
     function handleEmailing(){
         probs.message_callback();
-        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/61bcd1e7bf1ace92644c0287");
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/61c623e352a45a8ca37d4b16");
     }
 
     
@@ -166,10 +168,10 @@ if(theJsons[0]!=undefined)
                     aria-label="Acknowledge"
                     onClick={event => event.stopPropagation()}
                     onFocus={event => event.stopPropagation()}
-                    label={' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
-    +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}
     control={<Button key="buttonkey" variant="outlined" color="error"  onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right'}} >Cancel reservation</Button>}
                   />
+                  <label style={{marginTop: 7, marginLeft: -20}}>{' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
+    +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}</label>
                 
                 
     

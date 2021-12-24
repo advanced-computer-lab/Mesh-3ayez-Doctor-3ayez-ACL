@@ -88,12 +88,11 @@ export default function Login() {
             username: data.get('email'),
             password: data.get('password'),
         };
-        console.log(user);
         axios.post("http://localhost:8000/api/login", user, { "Content-Type": "application/json" })
             .then(
                 result => {
                     if (result.status == 200) {
-                        localStorage.setItem('user', JSON.stringify(result.data.user));
+                        localStorage.setItem('user_id', JSON.stringify(result.data.user._id));
                         localStorage.setItem('token', result.data.token);
                         history.push({
                             pathname: '/', state:
@@ -109,7 +108,6 @@ export default function Login() {
                 }
             )
             .catch(err => {
-                console.log(err.response.data.msgSrc)
                 if (err.response.data.msgSrc === "email") {
                     setUsernameErr(true);
                     setUsernameMsg(err.response.data.msg);
