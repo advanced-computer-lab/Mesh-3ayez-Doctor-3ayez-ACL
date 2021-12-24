@@ -7,7 +7,7 @@ const Reservation = require('../../src/Models/Reservation');
 const User = require('../../src/Models/User');
 const Flight = require('../../src/Models/Flight');
 const FlightSeat = require('../../src/Models/FlightSeat');
-const authorization = require('../../config/mail');
+require('dotenv').config({path : '../.env'});
 const nodemailer = require('nodemailer');
 const {v4: uuidv4} = require('uuid');
 const stripe = require('stripe')("sk_test_51KACNtHLa29h6dWHwGOwi5arQZZ2Q9pK2rPitvLf5fxmIgtaumnuXuyU3rc7S6YabHJoNuj67rM1RXv4bu7a86t900VLBUWoJ6");
@@ -658,13 +658,13 @@ ACL team
     let transporter = nodemailer.createTransport({
         service: 'gmail',
       auth: {
-            user : authorization.user,
-            pass : authorization.password
+            user : process.env.user,
+            pass : process.env.password
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${authorization.user}`, // sender address
+        from: `${process.env.user}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "Your Reservation Itinerary", // Subject line
         text: text, // plain text body
@@ -937,13 +937,13 @@ ACL team
     let transporter = nodemailer.createTransport({
         service: 'gmail',
       auth: {
-            user : authorization.user,
-            pass : authorization.password
+            user : process.env.user,
+            pass : process.env.password
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${authorization.user}`, // sender address
+        from: `${process.env.user}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "Your Reservation Itinerary", // Subject line
         text: text, // plain text body
