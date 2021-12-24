@@ -37,8 +37,7 @@ function EditSearchResults(props) {
                 reserved: reserved,
                 return: props.src==='editRet',
                 departure: props.src==='editDep',
-                departure_id:location.reservation.departure_flight,
-                return_id:location.reservation.return_flight,
+                reservation:location.state.reservation,
 
             }
         });

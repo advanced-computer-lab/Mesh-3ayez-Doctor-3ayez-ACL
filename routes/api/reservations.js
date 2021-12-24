@@ -333,6 +333,7 @@ router.post('/', async(req,res)=>{
     })
     
 
+    
 });
 
 router.put('/change_seats/:reservation_id/:user_id/:flight_id', async(req,res)=>{
@@ -570,22 +571,22 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
     var new_query = {};
     var new_price;
     if(reservation.cabin_type=='economy')
-    {
-        old_query['economy_seats.available'] = old_flight.economy_seats.available + reservation.number_of_passengers;
-        new_query['economy_seats.available'] = new_flight.economy_seats.available - reservation.number_of_passengers;
-        new_price = reservation.price + (new_flight.economy_seats.price - old_flight.economy_seats.price)*reservation.number_of_passengers
-    } 
+       {
+            old_query['economy_seats.available'] = old_flight.economy_seats.available + reservation.number_of_passengers;
+            new_query['economy_seats.available'] = new_flight.economy_seats.available - reservation.number_of_passengers;
+            new_price = reservation.price*1 + (new_flight.economy_seats.price - old_flight.economy_seats.price)*reservation.number_of_passengers
+       } 
     else if(reservation.cabin_type == 'business')
-    {
-        old_query['business_seats.available'] = old_flight.business_seats.available + reservation.number_of_passengers;
-        new_query['business_seats.available'] = new_flight.business_seats.available - reservation.number_of_passengers;
-        new_price = reservation.price + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
-    }
+        {
+            old_query['business_seats.available'] = old_flight.business_seats.available + reservation.number_of_passengers;
+            new_query['business_seats.available'] = new_flight.business_seats.available - reservation.number_of_passengers;
+            new_price = reservation.price*1 + (new_flight.business_seats.price - old_flight.business_seats.price)*reservation.number_of_passengers;
+        }
     else
     {
         old_query['first_seats.available'] = old_flight.first_seats.available + reservation.number_of_passengers;
         new_query['first_seats.available'] = new_flight.first_seats.available - reservation.number_of_passengers;
-        new_price = reservation.price + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
+        new_price = reservation.price*1 + (new_flight.first_seats.price - old_flight.first_seats.price)*reservation.number_of_passengers
     }
 
     if(new_price > reservation.price*1)

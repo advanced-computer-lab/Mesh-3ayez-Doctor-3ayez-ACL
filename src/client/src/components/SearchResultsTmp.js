@@ -78,7 +78,7 @@ export default function SearchResultsTmp(props) {
 
 
         history.push({
-            pathname: '/user/seatReservation',
+            pathname: '/user/ReserveSeats',
             state: {
                 departure: departureReserved,
                 return: reserved
