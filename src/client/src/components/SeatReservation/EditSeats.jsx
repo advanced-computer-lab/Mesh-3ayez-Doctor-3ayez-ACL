@@ -16,7 +16,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import SeatPick from '../SeatPick';
+import { ResItinerary } from "./ResItinerary";
+import UserNavBar from "../UserNavBar";
 
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 var dict = {};
@@ -66,6 +67,7 @@ export default function EditSeats() {
     const [flag,setFlag]=useState(false);
     const [open, setOpen] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const [it, setIt] = useState(false);
     const [depSeatsLoading, setDepSeatsLoading] = useState(true);
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
     const [depSeats, setDepSeats] = useState([]);
@@ -242,7 +244,9 @@ export default function EditSeats() {
     function handleClose() {
         setConfirm(false);
         setOpen(false);
+        setIt(false);
     }
+
     
     function updateSeats(){
         if(resType=='departure'){
@@ -255,11 +259,12 @@ export default function EditSeats() {
  
             }
         setConfirm(false);
+        setIt(true);
 
     }
     return (
         <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
-            <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>           
+            <UserNavBar/>
 
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
                 <Box gridColumn="span 8">
@@ -288,7 +293,7 @@ export default function EditSeats() {
                                         <Divider component="li" />
                                         <ListItem>
                                             <ListItemText primary="Departure Time" secondary={departure.departure_time}/>
-                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_terminal} />
+                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
@@ -405,6 +410,43 @@ export default function EditSeats() {
                 <DialogActions>
                     <Button variant="outlined" onClick={updateSeats}>GO ON</Button>
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={it}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+            >
+                <DialogContent>
+                    <ResItinerary />
+                </DialogContent>
+                <ResItinerary 
+                resId={reservation._id}
+                price={priceDep+priceRet}
+                depFrom={departure.from}
+                depDDay={new Date(departure.departure_time).getDate()+"/"+(new Date(departure.departure_time).getMonth()+1)+"/"+new Date(departure.departure_time).getFullYear()}
+                depDTime={new Date(departure.departure_time).getHours()+":"+new Date(departure.departure_time).getMinutes()}                            
+                depDT={departure.departure_terminal}
+                depTo={departure.to}
+                depADay={new Date(departure.arrival_time).getDate()+"/"+(new Date(departure.arrival_time).getMonth()+1)+"/"+new Date(departure.arrival_time).getFullYear()}
+                depATime={new Date(departure.arrival_time).getHours()+":"+new Date(departure.arrival_time).getMinutes()}                            
+                depAT={departure.arrival_terminal}
+                depSeats={departureSeats}
+                cabin={cabinType}
+                retFrom={ret.from}
+                retDDay={new Date(ret.departure_time).getDate()+"/"+(new Date(ret.departure_time).getMonth()+1)+"/"+new Date(ret.departure_time).getFullYear()}
+                retDTime={new Date(ret.departure_time).getHours()+":"+new Date(ret.departure_time).getMinutes()}                            
+                retDT={ret.departure_terminal}
+                retTo={ret.to}
+                retADay={new Date(ret.arrival_time).getDate()+"/"+(new Date(ret.arrival_time).getMonth()+1)+"/"+new Date(ret.arrival_time).getFullYear()}
+                retATime={new Date(ret.arrival_time).getHours()+":"+new Date(ret.arrival_time).getMinutes()}                            
+                retAT={ret.arrival_terminal}
+                retSeats={returnSeats}
+                />
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleClose}>OK</Button>
                 </DialogActions>
             </Dialog>
 

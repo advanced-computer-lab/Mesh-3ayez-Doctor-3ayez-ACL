@@ -20,6 +20,7 @@ import Stripe from 'react-stripe-checkout'
 import { ResItinerary } from "./ResItinerary";
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 import { set } from "mongoose";
+import UserNavBar from "../UserNavBar";
 export function SeatPick() {
     const history = useHistory();
     const location = useLocation();
@@ -196,7 +197,8 @@ export function SeatPick() {
         head = "First Class";
     return (
         <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
-            <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>
+            <UserNavBar/>
+            {/* <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div> */}
             {/* <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={12} >
                     <Grid item xs={8}>
@@ -271,7 +273,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        {depSeatsLoading ? null : <Seats bag={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={departure.number_of_passengers} visible />}
+                        {depSeatsLoading ? null : <Seats bag={oneSeatBagDep} bagCB={setBagDep} price={oneSeatPriceDep} addclbk={addDepS} rmvclbk={removeDepS} type="Departure" priceCallBack={setPriceDep} style={{ display: "inline-block" }} rows={depRows} maxReservableSeats={Number(departure.number_of_passengers)} visible />}
                     </div>
                 </Box>
                 <Box gridColumn="span 8">
@@ -322,7 +324,7 @@ export function SeatPick() {
                 </Box>
                 <Box gridColumn="span 4">
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
-                        {retSeatsLoading ? null : <Seats bag={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={ret.number_of_passengers} visible />}
+                        {retSeatsLoading ? null : <Seats bag={oneSeatBagRet} bagCB={setBagRet} price={oneSeatPriceRet} addclbk={addRetS} rmvclbk={removeRetS} type="Return" priceCallBack={setPriceRet} style={{ display: "inline-block" }} rows={retRows} maxReservableSeats={Number(ret.number_of_passengers)} visible />}
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
@@ -376,7 +378,7 @@ export function SeatPick() {
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                fullWidth="true"
+                fullWidth={true}
             >
                 <DialogContent>
                     <ResItinerary />
