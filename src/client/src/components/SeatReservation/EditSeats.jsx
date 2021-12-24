@@ -25,6 +25,7 @@ function setDict(arr){
         dict[arr[i]._id]=false;
     }
 }
+
 export default function EditSeats() {
     const history= useHistory();
     const location = useLocation();
@@ -130,8 +131,7 @@ export default function EditSeats() {
         reFormatSeats(depRows,"dep");
     }else{
         reFormatSeats(retRows,"ret");
-    }
-    
+    }    
     function reFormatSeats(seats,type){
                 for(var i=0;i<seats.length;i++){
                     for(var j=0;j<seats[i].length;j++){
@@ -163,6 +163,7 @@ export default function EditSeats() {
                 }
             
         
+
     }
     
     function addDepS(x, i) {
@@ -170,13 +171,13 @@ export default function EditSeats() {
         reservedDepSeats.push(i);
         setDepartureSeats(departureSeats);
         serReservedDepSeats(reservedDepSeats);
-
     }
     function removeDepS(x, i) {
         console.log(x);
         console.log(departureSeats.filter((y) => x != y));
         setDepartureSeats(departureSeats.filter((y) => x != y));
         serReservedDepSeats(reservedDepSeats.filter((j) => j != i));
+
 
     }
     function addRetS(x, i) {
@@ -189,6 +190,8 @@ export default function EditSeats() {
         setReturnSeats(returnSeats.filter((y) => x != y));
         serReservedRetSeats(reservedRetSeats.filter((j) => j != i));
     }
+
+
     function buildSeatRows(seats, rows) {
         var rem = seats.length % 4;
         var row = [];
@@ -203,6 +206,7 @@ export default function EditSeats() {
             row.push(seat);
             if((i+1)%2==0&&(i+1)%4!=0)
                 row.push(null);
+
             
         }
         if (row.length > 0) {
@@ -251,11 +255,12 @@ export default function EditSeats() {
  
             }
         setConfirm(false);
+
     }
     return (
         <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
-            <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>
-           
+            <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>           
+
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
                 <Box gridColumn="span 8">
                     <React.Fragment>
@@ -290,6 +295,7 @@ export default function EditSeats() {
                                             <ListItemText primary="Seats" secondary={departureSeats} />
                                             <ListItemText primary="Price" secondary={priceDep} />
                                             <ListItemText primary="Baggage Allowance" secondary={bagDep} />
+
                                         </ListItem>
                                     </List>
                                 </Box>
@@ -303,6 +309,7 @@ export default function EditSeats() {
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
                     {depSeatsLoading?null:<Seats bag={oneSeatBagDep} price={oneSeatPriceDep} bagCB={setBagDep} priceCallBack={setPriceDep} type="Departure" rmvclbk={removeDepS} addclbk={addDepS} rows={depRows} maxReservableSeats={resType=='departure'?maxSeatsNo:0} visible />
 }
+
                     </div> 
                 </Box>
                 <Box gridColumn="span 8">
@@ -339,6 +346,7 @@ export default function EditSeats() {
                                                 <ListItemText primary="Seats" secondary={returnSeats} />
                                                 <ListItemText primary="Price" secondary={priceRet} />
                                                 <ListItemText primary="Baggage Allowance" secondary={bagRet}/>
+
                                             </ListItem>
                                         </List>
                                     </Box>
@@ -355,12 +363,14 @@ export default function EditSeats() {
                     <div style={{ boxShadow: "2px 3px #999999", borderRadius: "7%", backgroundColor: "whitesmoke", padding: "30px 20px 20px 10px", display: "inline-block" }}>
                    {retSeatsLoading?null:<Seats bag={oneSeatBagRet} price={oneSeatPriceRet} bagCB={setBagRet} priceCallBack={setPriceRet} type="Return" rmvclbk={removeRetS} addclbk={addRetS} rows={retRows} maxReservableSeats={resType=='return'?maxSeatsNo:0} visible />
 }
+
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
                 </Box>
                 <Box gridColumn="span 5">
                     <Button variant="contained" size="medium" onClick={submitHandler} > confirm </Button>
+
                 </Box>
                 <Box gridColumn="span 4">
                 <SeatGuide />
@@ -397,6 +407,7 @@ export default function EditSeats() {
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
                 </DialogActions>
             </Dialog>
+
             
         </div>
     );
