@@ -6,16 +6,16 @@ const User = require('../../src/Models/User');
 var bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const dotenv=require('dotenv');
-dotenv.config({path:__dirname+'/.env'});
+dotenv.config({path:__dirname+'/../../config/.env'});
 
 const key= process.env.SECRETKEY;
-
 router.post("/", async (req, res) => {
   // Our login logic starts here
   try {
     // Get user input
 
     const { username, password } = req.body;
+    
 
     // Validate user input
     if (!(username )) {
