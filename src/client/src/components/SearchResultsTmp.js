@@ -73,7 +73,7 @@ export default function SearchResultsTmp(props) {
         console.log("entered")
 
 
-        setReturnReserved(reserved);     
+        setReturnReserved(reserved);
         console.log(reserved.cabin_type)
 
 
@@ -107,12 +107,13 @@ export default function SearchResultsTmp(props) {
                     );
                 })}
             </Stepper>
-            {activeStep === steps.length-1 ? (
+            {activeStep === steps.length - 1 ? (
                 <React.Fragment>
-                    <Stack sx={{ mt: 2, mb: 1 }}  margin="auto" textAlign='center' spacing={2}>
+                    <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
 
                         {props.flights['return_flights'].map((item) => {
-                            const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
+                            const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
+                            const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`                  
                             return (
                                 <FlightCard flight_number={item.flight_number}
                                     key={item._id}
@@ -155,14 +156,15 @@ export default function SearchResultsTmp(props) {
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button> */}
                     </Box>
-                    
+
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    <Stack sx={{ mt: 2, mb: 1 }}  margin="auto" textAlign='center' spacing={2}>
+                    <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
                         {props.flights['departure_flights'].map((item) => {
-                            const d = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000 * 60 * 60);
-                            return (
+                        const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
+                        const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`  
+                                return (
                                 <FlightCard
                                     flight_number={item.flight_number}
                                     key={item._id}
@@ -192,11 +194,11 @@ export default function SearchResultsTmp(props) {
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
                             color="inherit"
-                            disabled={activeStep === 0&& props.flights['departure_flights'].length>0}
+                            disabled={activeStep === 0 && props.flights['departure_flights'].length > 0}
                             href="/"
                             sx={{ mr: 1 }}
                         >
-                            {props.flights['departure_flights'].length>0?"Back":"Home"}
+                            {props.flights['departure_flights'].length > 0 ? "Back" : "Home"}
                         </Button>
                         {/* <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleNext}>

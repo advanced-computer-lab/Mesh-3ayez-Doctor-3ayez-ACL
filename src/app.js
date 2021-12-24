@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const app= express();
-const port =5000||process.env.port;
 const cors =require("cors");
 
 const MongoURI = require("../config/keys").MongoURI ;
@@ -44,5 +43,5 @@ app.use('/api/register', require('../routes/api/register'))
 // dummyRec['FLight_Date']=new Date(dummyRec.FLight_Date);
 
 
-const PORT = process.env.PORT | 8000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, console.log(`server running on port ${PORT}`));

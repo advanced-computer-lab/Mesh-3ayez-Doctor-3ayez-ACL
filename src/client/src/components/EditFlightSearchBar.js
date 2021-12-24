@@ -107,6 +107,7 @@ function EditFlightSearchBar(props) {
                         pathname: `/user/${path}`, 
                         state:
                         {
+                            flight:props.flight,
                             flights: result.data,
                             cabin_type: cabin_type,
                             number_of_passengers: number_of_passengers,

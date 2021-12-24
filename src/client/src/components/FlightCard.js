@@ -18,6 +18,7 @@ import bag from './baggage.png'
 import { useHistory } from "react-router-dom";
 import { CardHeader } from '@mui/material';
 import { Avatar } from '@mui/material';
+import { withStyles } from '@mui/styles';
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -27,7 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-export default function FlightCard(props) {
+function FlightCard(props) {
     const colors = require('../colors')
     const history = useHistory();
     const flight = {
@@ -135,3 +136,4 @@ export default function FlightCard(props) {
         </Card>
     );
 }
+ export default withStyles()(FlightCard);

@@ -136,7 +136,7 @@ const UserNavBar = (props) => {
             ))}
           </Box>
 
-          {localStorage.getItem("user")&&
+          {localStorage.getItem("token")&&
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -166,13 +166,13 @@ const UserNavBar = (props) => {
                 <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
                   <Button textAlign="center" onClick={onClickDash}>Dashboard </Button>
                 </MenuItem>
-                <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
+                <MenuItem key="Logout" onClick={handleCloseNavMenu}>
                   <Button textAlign="center" onClick={handleLogout}>Logout </Button>
                 </MenuItem>
               </Menu>
             </Box>}
 
-          {!localStorage.getItem("user")&& <Box sx={{ flexGrow: 0 }}>
+          {!localStorage.getItem("token")&& <Box sx={{ flexGrow: 0 }}>
             <Button textAlign="center" href='/login'>Login</Button>
             <Button textAlign="center" href='/signup' >Sign up </Button>
 
@@ -185,4 +185,4 @@ const UserNavBar = (props) => {
     </AppBar>
   );
 };
-export default withStyles()(UserNavBar);
+export default (UserNavBar);
