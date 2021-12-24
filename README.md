@@ -12,6 +12,12 @@ An Airline Reservation web application through which individuals can reserve and
 * [React JS](https://reactjs.org/) - A declarative, efficient, and flexible JavaScript library for building user interfaces.
 ##### Back end
 * [Node JS](http://nodejs.org/) - A platform built on Chrome's JS runtime for easily building fast, scalable network apps.
+# LICENSE
+Distributed under the MIT License.See `LICENSE.txt` for more information.
+>Copyright (c) 2021 Tijwal Airlines
+
+
+
 
 
 
