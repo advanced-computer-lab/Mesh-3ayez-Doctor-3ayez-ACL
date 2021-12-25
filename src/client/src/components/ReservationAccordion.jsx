@@ -29,7 +29,8 @@ function ReservationAccordion(probs){
     useEffect(() => {
         
         if(isLoading){
-            var user_id = localStorage.getItem('user_id')
+
+        var user_id = localStorage.getItem('user_id')
         user_id = user_id.substring(1, user_id.length-1);
         axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString()).then(
             res => {
@@ -103,11 +104,11 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
+
                 depFlight: theJsons[0].flight_details[0],
                 retFlight: theJsons2[0].flight_details[0],
                 src:"editDep",
                 flight:theJsons[0].flight_details[0],
-
             }
         });
     }
@@ -117,6 +118,7 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
+
                 retFlight: theJsons2[0].flight_details[0],
                 depFlight: theJsons[0].flight_details[0],
                 src:"editRet",

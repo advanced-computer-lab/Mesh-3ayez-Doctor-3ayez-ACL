@@ -105,4 +105,4 @@ function EditSearchResults(props) {
     )
 }
 
-export default withStyles() (EditSearchResults);
+export default (EditSearchResults);
