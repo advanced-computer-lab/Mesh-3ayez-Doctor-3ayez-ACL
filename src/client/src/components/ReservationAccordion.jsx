@@ -27,9 +27,11 @@ function ReservationAccordion(probs){
     const [theJsons2, updateTheJsons2] = useState([]);
 
     useEffect(() => {
-        console.log(localStorage.user)
+        
         if(isLoading){
-        axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
+            var user_id = localStorage.getItem('user_id')
+        user_id = user_id.substring(1, user_id.length-1);
+        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString()).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -151,7 +153,9 @@ function ReservationAccordion(probs){
 
     function handleEmailing(){
         probs.message_callback();
-        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/61c623e352a45a8ca37d4b16");
+        var user_id = localStorage.getItem('user_id')
+        user_id = user_id.substring(1, user_id.length-1);
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id);
     }
 
     
