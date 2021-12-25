@@ -2,6 +2,12 @@
 # Tijwal
 An Airline Reservation web application through which individuals can reserve and pay for flights in order to travel to different countries and sometimes domestic cities.
 
+# Motivation
+###### The following are the objectives of this project:
+* Master working with *MERN Stack*.
+* Work using the Agile Methodology to plan out a project and develop the software.
+* Practice working together as a team on GitHub.
+* Learn the process of following a given set of System Requirements to develop a software. 
 # Tech/Framework used
 ### we used MERN Stack framework to create the Application
 ##### Database 
@@ -24,6 +30,96 @@ Visual Studio Code
 * open the client directory. `cd client`
 * open the source directory. `cd crs`
 * Run front end. `npm start`
+
+# API reaferences
+
+### Flights
+##### 1.Show all flights
+ - Route `flights\`
+ - Request type `GET`
+ - Response Body
+
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+}
+   // All the available flights in the database
+```
+
+
+##### 2.Create a flights
+ - Route `flights\`
+ - Request type `POST`
+ - Response Request
+
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+}
+   // All the available flights in the database
+```
+- Response Body
+
+```
+{msg: 'Reservation added successfully', reservationId: reservation._id}
+   ```
+// or 
+   ```
+{msg:'flight number must be an integer'}}
+```
+
+
+
 
 
 # Code Style
