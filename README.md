@@ -20,7 +20,7 @@ An Airline Reservation web application through which individuals can reserve and
 * [Node JS](http://nodejs.org/) - A platform built on Chrome's JS runtime for easily building fast, scalable network apps.
 # How to use?
 ### Built with
-Visual Studio Code
+Visual Studio Code  [DOwnload](https://code.visualstudio.com/download
 
 ### Prerequisets
 * After Cloning the repository.
@@ -30,6 +30,9 @@ Visual Studio Code
 * open the client directory. `cd client`
 * open the source directory. `cd crs`
 * Run front end. `npm start`
+
+### 
+
 
 # API reaferences
 
