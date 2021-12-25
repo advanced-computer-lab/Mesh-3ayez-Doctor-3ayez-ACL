@@ -126,6 +126,12 @@ export function SeatPick() {
         // handleToken(100, token)
         reserve(token);
     }
+    function reserveDone(){
+        handleClose();
+        history.push({
+            pathname: '/user/reservation',
+        });
+    }
     function reserve(token) {
         var data = {
             user_id:"61bcd1e7bf1ace92644c0287", // to be handled
@@ -407,7 +413,7 @@ export function SeatPick() {
                 retSeats={returnSeats}
                 />
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleClose}>OK</Button>
+                <Button variant="outlined" onClick={reserveDone}>OK</Button>
                 </DialogActions>
             </Dialog>
         </div>

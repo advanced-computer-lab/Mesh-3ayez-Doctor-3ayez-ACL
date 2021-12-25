@@ -246,7 +246,12 @@ export default function EditSeats() {
         setOpen(false);
         setIt(false);
     }
-
+    function reserveDone(){
+        handleClose();
+        history.push({
+            pathname: '/user/reservation',
+        });
+    }
     
     function updateSeats(){
         if(resType=='departure'){
@@ -446,7 +451,7 @@ export default function EditSeats() {
                 retSeats={returnSeats}
                 />
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleClose}>OK</Button>
+                <Button variant="outlined" onClick={reserveDone}>OK</Button>
                 </DialogActions>
             </Dialog>
 

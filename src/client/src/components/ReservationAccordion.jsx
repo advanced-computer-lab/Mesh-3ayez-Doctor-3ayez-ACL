@@ -101,9 +101,10 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
-                depflight: theJsons[0].flight_details[0],
-                retflight: theJsons2[0].flight_details[0],
-                src:"editDep"
+                depFlight: theJsons[0].flight_details[0],
+                retFlight: theJsons2[0].flight_details[0],
+                src:"editDep",
+                flight:theJsons[0].flight_details[0],
 
             }
         });
@@ -114,9 +115,10 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
-                retflight: theJsons2[0].flight_details[0],
-                depflight: theJsons[0].flight_details[0],
-                src:"editRet"
+                retFlight: theJsons2[0].flight_details[0],
+                depFlight: theJsons[0].flight_details[0],
+                src:"editRet",
+                flight:theJsons2[0].flight_details[0],
             }
         });
     }
