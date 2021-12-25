@@ -180,7 +180,7 @@ export default function UserProfile(probs) {
                             </Button><Button
                                 fullWidth
                                 variant="contained"
-                                onClick={() => history.goBack()}
+                                href="/"
                                 sx={{ mt: 0, mb: 2 }}
                                 style={{
                                     borderRadius: 5,

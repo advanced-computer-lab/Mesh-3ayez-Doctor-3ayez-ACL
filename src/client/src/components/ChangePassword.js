@@ -236,7 +236,7 @@ export default function PasswordChange(probs) {
                                         borderRadius: 5,
                                         backgroundColor: colors.c1,
                                     }}
-                                    onClick={() => {history.pop()}}
+                                    href="/user/Profile"
                                 >
                                     Back
                                 </Button>

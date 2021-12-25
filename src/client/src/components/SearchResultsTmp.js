@@ -254,7 +254,6 @@ export default function SearchResultsTmp(props) {
                             style={{
                                 color: colors.c1
                             }}
-                            disabled={activeStep === 0 && props.flights['departure_flights'].length > 0}
                             href="/"
                             sx={{ mr: 1 }}
                         >
