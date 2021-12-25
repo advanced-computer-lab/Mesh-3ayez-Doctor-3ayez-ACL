@@ -52,11 +52,18 @@ function TableRow(probs) {
   const [firBaggageAllowance, setFirBag] = useState(row.first_seats.baggage_allowance.$numberDecimal);
   const [firMaxSeats, setFirMax] = useState(row.first_seats.max_seats);
 
+  
+  const [alert, setAlert] = useState(false);
+  const [succ, setSucc] = useState(false);
+  const [msg, setMsg] = useState("");
+
+
 
 
 
 
   function handleClickOpen2 (){
+    setAlert(false);
     setOpen2(true);
     setFlightNo(flight_no);
     setFrom(from);
@@ -83,6 +90,7 @@ function TableRow(probs) {
 };
 
 function handleCloseDone (){
+  setAlert(false);
   setFlightNo(flight_no?flight_no:row.flight_number);
   setFrom(from?from:row.from);
   setAt(arrivalTerminal?arrivalTerminal:row.arrival_terminal);
@@ -159,7 +167,6 @@ function foo2() {
             "baggage_allowance":firBaggageAllowance
             }
   }
-  console.log("heeeeereeeee");
   console.log(data);
   axios.put("http://localhost:8000/api/flights/" +id, data, { "Content-Type": "application/json" })
       .then(result => {console.log(result);
@@ -167,7 +174,11 @@ function foo2() {
       handleCloseDone();
     }
       )
-      .catch(err => console.log(err));
+      .catch(err =>{
+          setAlert(true);
+          setSucc(false);
+          setMsg(err.response.data.msg)
+      });
 }
 
 
@@ -538,6 +549,8 @@ function foo2() {
                         Done
                     </Button>
                     <Button variant="outlined" onClick={handleClose2}>Cancel</Button>
+                    {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
+
 
                 </DialogActions>
             </Dialog>
