@@ -681,7 +681,6 @@ router.get('/all_possible_flights/:reservation_id/:src',auth, async(req,res)=>{
     console.log("I'm here");
 
     const reservation_id = req.params.reservation_id;
-    const body = req.body;
     // check if reservation id is a valid id
     
     if(!mongoose.isValidObjectId(reservation_id))

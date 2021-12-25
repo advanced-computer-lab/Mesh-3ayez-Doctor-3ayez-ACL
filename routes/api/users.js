@@ -294,7 +294,7 @@ router.put('/forget_password', async(req,res)=>{
     //sending mail to the user
     await sendMail(user, new_password);
 
-    res.json({mag: 'an email has been sent to you, please check your mail'});
+    res.json({mag: 'an email has been sent to you, please check your email'});
 
 });
 

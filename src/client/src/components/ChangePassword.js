@@ -281,7 +281,7 @@ export default function PasswordChange(probs) {
                                     }}
                                     onClick={()=>history.goBack()}
                                 >
-                                    Cancel
+                                    Back
                                 </Button>
                                 <Grid container justifyContent="flex-end">
                                     <Grid item xs>

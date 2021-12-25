@@ -55,7 +55,7 @@ function EditProfile() {
             passport: data.get('passport'),
         };
 
-        axios.put("http://localhost:8000/api/users/edit_user"+id, user,{headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
+        axios.put("http://localhost:8000/api/users/edit_user/"+id, user,{headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
             .then(
                 result => {
                     if (result.status == 200) {
@@ -192,7 +192,7 @@ function EditProfile() {
                                     backgroundColor: colors.c1,
                                 }}
                             >
-                                Cancel
+                                Back
                             </Button>
                             <Grid container justifyContent="flex-end">
                                 <Grid item xs>
