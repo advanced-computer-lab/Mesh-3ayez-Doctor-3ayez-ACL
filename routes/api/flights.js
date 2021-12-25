@@ -6,6 +6,7 @@ const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/Admin');
+const auth =require("./middleware/auth.js");
 
 // APIs here
 
@@ -592,7 +593,7 @@ async function checkAdmin(){
 
 //Get All Reserved Flights by a user
 
-router.get("/user/:id", async (req, res) => {
+router.get("/user/:id", auth, async (req, res) => {
     var rsvids = []
     await Reservation.find({'user_id': req.params.id}).exec().then(//function(stuff){
         /*stuff.forEach(function(stuffling){
@@ -781,7 +782,7 @@ router.get('/:flight_id', async(req,res)=>{
 
 
 // getting all seats of a specific flight
-router.get('/all_seats/:flight_id', async (req,res)=>{
+router.get('/all_seats/:flight_id', auth, async (req,res)=>{
     const flight_id = req.params.flight_id;
     if(!mongoose.isValidObjectId(req.params.flight_id))
     {
@@ -797,7 +798,7 @@ router.get('/all_seats/:flight_id', async (req,res)=>{
 })
 
 // get the details of a flight with its id + seat
-router.get('/:flight_id/:seat', async(req,res)=>{
+router.get('/:flight_id/:seat', auth, async(req,res)=>{
     const flight = await FlightSeat.aggregate([
         {$match:{
             _id: mongoose.Types.ObjectId(req.params.seat)
@@ -833,7 +834,7 @@ function construct_date(date)
 
 // get all seats from a flight with the cabin
 
-router.get("/all_seats/:id/:cabin",(req,res)=>{
+router.get("/all_seats/:id/:cabin", auth, (req,res)=>{
     console.log(req.params.id);
     if(!mongoose.isValidObjectId(req.params.id))
     {

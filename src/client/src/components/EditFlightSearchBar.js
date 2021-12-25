@@ -99,7 +99,8 @@ function EditFlightSearchBar(props) {
         } else {
             data["date"] = arrival_date
         }
-        axios.post(`http://localhost:8000/api/reservations/find_flights/${location.state.reservation._id}`, data, { "Content-Type": "application/json" })
+        axios.post(`http://localhost:8000/api/reservations/find_flights/${location.state.reservation._id}`, data, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        )
             .then(result => {
                 if (result.status == 200) {
                     const path = props.src === 'editDep' ? 'editDepartureFlight' : "editReturnFlight";
