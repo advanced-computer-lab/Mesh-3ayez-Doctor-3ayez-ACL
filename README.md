@@ -584,6 +584,739 @@ Visual Studio Code  [DOwnload](https://code.visualstudio.com/download
 {msgSrc:"missing input",msg:"All input is required"}
 ```
 
+### Reservations
+
+##### 1. Create A Reservation
+
+- Route `reservations\`
+
+- Request type `POST`
+
+- Request Body
+
+```
+{
+user_id:  "61bcd1e7bf1ace92644c0287"
+
+departure_flight:  departure.flight_id,
+
+return_flight:  ret.flight_id,
+
+number_of_passengers:  Number(departure.number_of_passengers),
+
+cabin_type:  departure.cabin_type,
+
+departure_seats:  reservedDepSeats,
+
+return_seats:  reservedRetSeats,
+
+stripeToken:token
+}
+```
+
+- Response Body
+
+```
+{msg :  "there is no such user with this id"}
+
+// or
+
+{msg :  "this user id is not a valid id"}
+
+// or
+
+{msg :  "you need to specify the user id"}
+
+// or
+
+{msg :  "there is no such departure flight with this id"}
+
+// or
+
+{msg :  "this departure flight id is not a valid id"}
+
+// or
+
+{msg :  "you need to specify the departure flight id"}
+
+// or
+
+{msg :  "there is no such return flight with this id"}
+
+// or
+
+{msg :  "this return flight id is not a valid id"}
+
+// or
+
+{msg :  "you need to specify the return flight id"}
+
+// or
+
+{msg :  'the number of passengers should be a valid integer'}
+
+// or
+
+{msg :  'you need to specify the number of passengers'}
+
+// or
+
+{msg :  'the number of passengers must be less than the available seats in the chosen cabin in the departure flight'}
+
+// or
+
+{msg :  'the number of passengers must be less than the available seats in the chosen cabin in the return flight'}
+
+// or
+
+{msg :  'the cabin type is incorrect. please choose between economy, business, and first'}
+
+// or
+
+{msg :  'you need to specify the cabin type'}
+
+// or
+
+{msg :  'the number of chosen seats in the departure flight should be equal to the number of passengers'}
+
+// or
+
+{msg :  `foo is not a valid id`}
+
+// or
+
+{msg :  `the seat with id foo does not exist in the departure flight`}
+
+// or
+
+{msg :  `the seat with id ${body.departure_seats[i]} is already reserved`}
+
+// or
+
+{msg :  `all seats must have the same cabin type`}
+
+// or
+
+{msg :  'you should specify the departure flight seats'}
+
+// or
+
+{msg :  'the number of chosen seats in the return flight should be equal to the number of passengers'}
+
+// or
+
+{msg :  'the seat with id foo does not exist in the return flight'}
+
+// or
+
+{msg :  'you should specify the return flight seats'}
+
+// or
+
+{msg :  "customer error"}
+
+// or
+
+{msg:  'payment error'}
+
+// or
+
+{msg :  'reservation created successfully'}
+
+// or
+
+{msg :  'the server has encountered a problem. sorry for disturbance'}
+```
+
+##### 2. Change Reservation Seats
+
+- Route `reservations\change_seats\`
+
+- Request Type `PUT`
+
+- Response Body
+
+```
+{msg :  'the reservation id is not a valid id'}
+
+// or
+
+{msg :  'the user id is not a valid id'}
+
+// or
+
+{msg :  'the flight id is not a valid id'}
+
+// or
+
+{msg :  'foo is not a valid seat id'}
+
+// or
+
+{msg :  'there is no such user with the passed id'}
+
+// or
+
+{msg :  'there is no such reservation for this user'}
+
+// or
+
+{msg :  'this user has no reserved flight with this flight id'}
+
+// or
+
+{msg :  'the number of seats to be reserved should be equal to the number of seats for this reservation'}
+
+// or
+
+{msg :  `there is no seat with id foo`}
+
+// or
+
+{msg:  'one of the passed seats dos not belong to this flight'}
+
+// or
+
+{msg:  'all seats must have the same cabin type as the reservation cabin type'}
+
+// or
+
+{msg:  'one of the seats is already reserved by another passenger'}
+
+// or
+
+{msg:  'reservation updated successfully'}
+```
+
+##### 3. Change Reservation Flights
+
+- Route `reservations\changeFlight`
+
+- Request Type `PUT`
+
+- Request Body
+
+```
+{msg:"the old flight id is not a valid id"}
+
+// or
+
+{msg:"the reservation id is not a valid id"}
+
+// or
+
+{msg:"the user id is not a valid id"}
+
+// or
+
+{msg:"the user does not exist"}
+
+// or
+
+{msg:"there is no reservation with such id"}
+
+// or
+
+{msg:"this reservation does not belong to this user"}
+
+// or
+
+{msg:"the old flight does not belong to this reservation"}
+
+// or
+
+{msg:"the new flight id was not provided"}
+
+// or
+
+{msg:"the new seats were not provided"}
+
+// or
+
+{msg:"the number of seats should be equal to the number of passengers"}
+
+// or
+
+{msg:"one of the seats id is not a valid id"}
+
+// or
+
+{msg :  "on of the new seats does not exist"}
+
+// or
+
+{msg :  "on of the new seats does not belong to the new flight"}
+
+// or
+
+{msg:  "one of the new seats has a different cabin type"}
+
+// or
+
+{msg :  "on of the new seats is already reserved"}
+
+// or
+
+{msg :  "customer error"}
+
+// or
+
+{msg:  'payment error'}
+
+// or
+
+{msg :  "the reservation was updated successfully"}
+```
+
+##### 4. Getting All Replacement Flights For A Reservation
+
+- Route `reservations\all_possible_flights\`
+
+- Request Type `GET`
+
+- Response Body
+
+```
+{msg :  'the reservation id is not a valid id'}
+
+// or
+
+{msg :  "the reservation does not exist"}
+
+// or
+
+{msg :  'you need to specify if you are coming from the source or the destination'}
+
+// or
+
+{msg :  'you can not change the departure flight after its departure time'}
+
+// or
+
+{msg :  'you can not change the departure flight after its departure time'}
+
+// or
+
+[{
+
+flight_number:15,
+
+from:"Munich",
+
+departure_terminal:2,
+
+to:"Cairo",
+
+arrival_terminal:15,
+
+economy_seats:{
+
+max_seats:20,
+
+available:20,
+
+price:15.5,
+
+baggage_allowance:22
+
+},
+
+business_seats:{
+
+max_seats:8,
+
+available:8,
+
+price:50,
+
+baggage_allowance:30.5,
+
+}
+
+first_seats:{
+
+max_seats:1,
+
+available:1,
+
+price:1550.99,
+
+baggage_allowance:45.9
+
+}
+
+departure_time:2021-12-15T22:00:00.000+00:00,
+
+arrival_time:2021-12-16T03:00:00.000+00:00,
+
+__v:0
+
+}]
+```
+
+##### 5. Searching For a Specific Replacement Flight For A Reservation
+
+- Route `reservations\find_flights\`
+
+- Request Type `POST`
+
+- Request Body
+
+```
+{
+
+from:  'Cairo',
+
+to:  'Bali',
+
+cabin_type:  'economy',
+
+number_of_passengers:  1,
+
+source:  editDep
+
+}
+```
+
+- Response Body
+
+```
+{msg:"the reservation id is not a valid id"}
+
+// or
+
+{msg :  "the reservation does not exist"}
+
+// or
+
+{msg :  'please specify the cabin type'}
+
+// or
+
+{msg :  'no results found'}
+
+// or
+
+{msg:"you need to specify which flight you need to replace"}
+
+// or
+
+{msg :  'you need to specify the date of the desidred flight'}
+
+// or
+
+{msg :  'you can not search for a flight before today's date'}
+
+// or
+
+{msg :  'you can not search for a departure flight after the return flight'}
+
+// or
+
+{msg :  'your flight has already taken off'}
+
+// or
+
+[{
+
+flight_number:15,
+
+from:"Munich",
+
+departure_terminal:2,
+
+to:"Cairo",
+
+arrival_terminal:15,
+
+economy_seats:{
+
+max_seats:20,
+
+available:20,
+
+price:15.5,
+
+baggage_allowance:22
+
+},
+
+business_seats:{
+
+max_seats:8,
+
+available:8,
+
+price:50,
+
+baggage_allowance:30.5,
+
+}
+
+first_seats:{
+
+max_seats:1,
+
+available:1,
+
+price:1550.99,
+
+baggage_allowance:45.9
+
+}
+
+departure_time:2021-12-15T22:00:00.000+00:00,
+
+arrival_time:2021-12-16T03:00:00.000+00:00,
+
+__v:0
+
+}]
+```
+
+##### 6. Send Mail
+
+- Route `reservations\send_me_mail`
+
+- Request Type `POST`
+
+- Response Body
+
+```
+{msg :  'the user id is not a valid id'}
+
+// or
+
+{msg :  'the reservation id is not a valid id'}
+
+// or
+
+{msg :  'this user does not exist'}
+
+// or
+
+{msg :  'there is no reservation with this id'}
+
+// or
+
+{msg :  'you are not authorized to view this reservation'}
+
+// or
+
+{msg :  'mail sent successfully'}
+```
+  
+  
+
+### Users
+
+  
+
+##### 1.User Cancel a Reservation
+
+- Route `users\reservation`
+
+- Request type `DELETE`
+
+- Response Body
+
+  
+```
+
+
+{msg : 'the user id is not a valid id'}
+
+
+
+// or
+
+
+
+{msg : 'the reservation id is not a valid id'}
+
+
+
+// or
+
+
+
+{msg : 'this user is not found'}
+
+
+
+// or
+
+
+
+{msg:"deleted successfully"}
+
+
+
+// or
+
+
+
+{msg: 'no such reservations for this specific user'}
+
+```
+
+// Deletes a reservation from the database
+  
+
+##### 2. User Get Reservation Itinerary
+
+- Route `users\itinerary`
+
+- Request type `GET`
+
+- Response Body
+```
+{"departure_flight":{"economy_seats":{"max_seats":40,"available":36,"price":{"$numberDecimal":"250"},"baggage_allowance":{"$numberDecimal":"30"}},"business_seats":{"max_seats":20,"available":14,"price":{"$numberDecimal":"500"},"baggage_allowance":{"$numberDecimal":"45"}},"first_seats":{"max_seats":5,"available":5,"price":{"$numberDecimal":"1000"},"baggage_allowance":{"$numberDecimal":"50"}},"_id":"61bf2b93c93bc7a6a0dee3dd","flight_number":1256,"from":"Cairo","departure_terminal":1,"to":"Bali","arrival_terminal":5,"departure_time":"2021-12-27T16:45:45.000Z","arrival_time":"2021-12-31T15:00:45.000Z","__v":0},"return_flight":{"economy_seats":{"max_seats":40,"available":31,"price":{"$numberDecimal":"250"},"baggage_allowance":{"$numberDecimal":"30"}},"business_seats":{"max_seats":20,"available":11,"price":{"$numberDecimal":"500"},"baggage_allowance":{"$numberDecimal":"45"}},"first_seats":{"max_seats":5,"available":1,"price":{"$numberDecimal":"1000"},"baggage_allowance":{"$numberDecimal":"50"}},"_id":"61bf2bc5c93bc7a6a0dee465","flight_number":1257,"from":"Bali","departure_terminal":1,"to":"Cairo","arrival_terminal":5,"departure_time":"2021-12-31T14:00:45.000Z","arrival_time":"2021-12-31T15:00:45.000Z","__v":0},"reservation_number":"61c73c8f736c30248a9bba95","departure_seats":[{"_id":"61bf2b94c93bc7a6a0dee41b","flight_id":"61bf2b93c93bc7a6a0dee3dd","reservation_id":"61c73c8f736c30248a9bba95","seat_type":"first","seat_name":"A1","__v":0}],"return_seats":[{"_id":"61bf2bc5c93bc7a6a0dee4a5","flight_id":"61bf2bc5c93bc7a6a0dee465","reservation_id":"61c73c8f736c30248a9bba95","seat_type":"first","seat_name":"A3","__v":0}],"cabin_type":"first","total_price":{"$numberDecimal":"2000"},"amount_paid":{"$numberDecimal":"0"}}
+
+// or
+
+{msg:'no such reservation for this specific user'}
+```
+##### 3. Update User Information
+
+- Route `users\`
+
+- Request type `PUT`
+
+- Request Body
+
+```
+{
+first_name:  "Youssef",
+
+last_name:  "Ziad",
+
+email:  "yzfm2000@gmail.com",
+
+Passport:  123
+}
+```
+
+- Response Body
+
+```
+{msg :  'the id you have sent is not a valid id'}
+
+// or
+
+{msg :  'no such user'}
+
+// or
+
+{msg :  'the passport you have entered is not valid'}
+
+// or
+
+{msg :  'the email you have entered is not valid'}
+```
+
+##### 4. User Change Password
+
+- Route `users/changePassword/`
+
+- Request Type `PUT`
+
+- Request Body
+
+```
+{
+oldPassword: 'cookies',
+password: 'newcookies'
+}
+```
+
+- Response Body
+
+```
+{msg :  'the id you have sent is not a valid id'}
+
+// or
+
+{msg :  'no such user'}
+
+// or
+
+{msg :  'the Old Password you have entered is not correct'}
+```
+
+##### 5. Get User Info
+
+- Route `users/`
+
+- Request Type `GET`
+
+- Response Body
+
+```
+{
+
+"_id": "61c731d494f7fd5a1fdef011",
+
+"username": "youssef ziad",
+
+"password": "$2a$10$jy0dc39j8pUjVb/FOx76v.i5FvovlYG7K7exYv7jjKOzV0W8I67OG",
+
+"first_name": "Youssef",
+
+"last_name": "Ziad",
+
+"email": "youssefziad",
+
+"passport": 122,
+
+"home_address": "Masr",
+
+"country_code": 20,
+
+"mobile_number": 1019816933,
+
+"__v": 0
+
+}
+```
+
+##### 6. User Forget Password
+
+- Route `users\`
+
+- Request Type `PUT`
+
+- Request Body
+
+```
+{
+username: 'youssefziad'
+email: 'yzfm2000@gmail.com'
+}
+```
+
+- Response Body
+
+```
+{msg :  'you must provide your username'}
+
+// or
+
+{msg :  'you must provide your email'}
+
+// or
+
+{msg :  'there is no user with such username'}
+
+// or
+
+{msg :  'your email is incorrect'}
+
+// or
+
+{mag:  'an email has been sent to you, please check your mail'}
+```
+
 # Code Style
 * Readability counts.
 * Be consistent.
