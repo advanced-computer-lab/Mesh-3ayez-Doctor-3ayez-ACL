@@ -14,8 +14,6 @@ import {SeatReservation} from'./components/SeatReservation/SeatReservation'
 import {SeatPick} from'./components/SeatReservation/SeatPick'
 import Signup from './components/Signup';
 import Login from './components/Login';
-import EditProfile from './components/EditProfile'
-import ChangePassword from './components/ChangePassword'
 import EditDepartureFlight from './components/EditDepartureFlight';
 import EditReturnFlight from './components/EditReturnFlight';
 import { withStyles } from '@mui/styles';
@@ -31,8 +29,6 @@ function App() {
       <Route path="/admin/createFlight" component={FlightForm} />
       <Route path="/user/searchResults" component={UserSearchResults} />
       <Route path="/user/ReturnSearchResults" component={UserSearchResults} />
-      <Route path="/user/EditProfile" component={EditProfile} />
-      <Route path="/user/ChangePassword" component={ChangePassword} />
       <Route path="/user/Profile" component={UserProfile} />
       <Route path="/user/EditSeats" component={EditSeats} />
       <Route path="/user/reservation" component={Itinerary} />
