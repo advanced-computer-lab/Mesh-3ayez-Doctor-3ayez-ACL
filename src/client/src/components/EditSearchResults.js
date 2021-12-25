@@ -83,12 +83,19 @@ function EditSearchResults(props) {
                             </FlightCard>)
                     })
                     }
-                    <Box>
-                        <Button href="/user/reservation" variant="contained" style={{
-                            borderRadius: 5,
-                            backgroundColor: colors.c1,
-                            marginTop: "25px",
-                        }}>Back</Button>
+                    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
+                        <Box gridColumn="span 1 " sx={{ height: '8vh' }} >
+                            <Button href="/user/reservation" variant="contained" style={{
+                                borderRadius: 5,
+                                backgroundColor: colors.c1,
+                                marginTop: "25px",
+                            }}>Back</Button>
+                        </Box>
+                        <Box gridColumn="span 11" sx={{ height: '8vh' }} >
+
+                        </Box>
+
+
                     </Box>
                 </Stack>
 
