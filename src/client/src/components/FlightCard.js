@@ -12,12 +12,12 @@ import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import im from './chanas-hclTKUfuf1U-unsplash.jpg'
-import fly from './flight@2x.webp'
-import passenger from './passenger.png'
-import bag from './travel-baggage.png'
-import seat from './seat.png'
-import fnum from './code.png'
+import im from './images/chanas-hclTKUfuf1U-unsplash.jpg'
+import fly from './images/flight@2x.webp'
+import passenger from './images/passenger.png'
+import bag from './images/travel-baggage.png'
+import seat from './images/seat.png'
+import fnum from './images/code.png'
 
 import { useHistory } from "react-router-dom";
 import { CardHeader } from '@mui/material';

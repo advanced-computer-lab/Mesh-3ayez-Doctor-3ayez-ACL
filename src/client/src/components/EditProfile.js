@@ -12,6 +12,7 @@ import UserNavBar from './UserNavBar';
 import axios from 'axios';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import profile from './images/profile.png'
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useHistory, useLocation } from "react-router-dom";
@@ -83,23 +84,9 @@ function EditProfile() {
         <ThemeProvider theme={theme} >
             <UserNavBar></UserNavBar>
 
-            <Grid container component={Paper} sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "3%", marginBottom: "3%" }} >
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://live.staticflickr.com/8367/8507160908_ec45d733ed_b.jpg)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square >
-                    <CssBaseline />
+            <Container maxWidth="md">
+                <CssBaseline />
+                <Paper elevation={4} style={{paddingTop:"2%", marginTop:"2%"}}>
                     <Box
                         sx={{
                             my: 8,
@@ -109,12 +96,8 @@ function EditProfile() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: colors.c1 }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5" color={colors.c1}>
-                            Edit Account Info
-                        </Typography>
+                        <img sx={{ bgcolor: colors.c1 }} width="100px" height="100px" src={profile} />
+                        <br></br>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} >
@@ -207,9 +190,8 @@ function EditProfile() {
                     </Box>
 
                     <Copyright sx={{ mt: 5 }} />
-                
-                </Grid>
-            </Grid>
+                    </Paper>
+            </Container>
 
         </ThemeProvider>
     );
