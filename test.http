@@ -1,0 +1,10 @@
+POST http://localhost:8000/api/login/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "first_name":"nada",
+    "last_name":"abdo",
+    "email":"nadaabdo588@gmail.com",
+    "password":"123467891",
+    "passport":"1234"
+}

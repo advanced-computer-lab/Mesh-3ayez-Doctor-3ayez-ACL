@@ -1,6 +1,4 @@
 const express = require('express')
-const moment = require('moment');
-const { Query } = require('mongoose');
 const mongoose = require('mongoose');
 const router = express.Router()
 
@@ -8,6 +6,7 @@ const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation');
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/Admin');
+const auth =require("./middleware/auth.js");
 
 // APIs here
 
@@ -193,6 +192,11 @@ router.post("/", async(req,res)=>{
             }
             else
                 query['departure_time'] = d1;
+            if(d1 < new Date())
+            {
+                res.status(400).json({msg : 'you can not create a flight in the past'});
+                return;
+            }
         }
 
         // arrival time
@@ -212,10 +216,15 @@ router.post("/", async(req,res)=>{
             }
             else
                 query['arrival_time'] = d1;
+            if(query['arrival_time'] < query['departure_time'])
+            {
+                res.status(400).json({msg : 'the arrival time can\'t be before the departure time'});
+            }
         }
 
 
         //checking if there is an already created flight with the same flight number
+        console.log("I'm here in backend");
         const flights = await Flight.find({'flight_number' : body.flight_number}, 'flight_number');
         if(flights.length>0)
         {
@@ -274,6 +283,13 @@ router.put('/:_id',async (req, res) =>{
     if(await checkAdmin()){
     const body = req.body;
     
+    //check if the flight id is a valid id
+    if(!mongoose.isValidObjectId(req.params._id))
+    {
+        res.status(400).json({msg : 'the flight id is not a valid id'});
+        return;
+    }
+    const flight = await Flight.findById(req.params._id);
     var query = {}
 
     if(!mongoose.isValidObjectId(req.params._id))
@@ -291,7 +307,7 @@ router.put('/:_id',async (req, res) =>{
 
             return;
         }
-        const flight = await Flight.findOne({"flight_number":body.flight_number});
+        const flight = await Flight.findOne({"flight_number":body.flight_number, "_id":{$ne : req.params._id}});
         if(flight)
         {
             res.status(400).json({msg : "a flight with the same flight number already exists"});
@@ -355,6 +371,12 @@ router.put('/:_id',async (req, res) =>{
             
             query['departure_time'] = d1;
         }
+        if(d1 < new Date())
+        {
+            res.status(400).json({msg : 'the departure time can not be in the past'});
+            return;
+        }
+        
     }
 
     
@@ -371,6 +393,20 @@ router.put('/:_id',async (req, res) =>{
            
             query['arrival_time'] = d1
         }
+        if(query['departure_time'])
+        {
+            if(d1 < query['departure_time'])
+            {
+                res.status(400).json({msg : 'the arrival time can not be before the departure time'});
+                return;
+            }
+        }
+        else if(d1 < flight.arrival_time)
+        {
+            res.status(400).json({msg : 'the arrival time can not be before the departure time'});
+            return;
+        }
+        
     }
 
 
@@ -593,7 +629,7 @@ async function checkAdmin(){
 
 //Get All Reserved Flights by a user
 
-router.get("/user/:id", async (req, res) => {
+router.get("/user/:id", auth, async (req, res) => {
     var rsvids = []
     await Reservation.find({'user_id': req.params.id}).exec().then(//function(stuff){
         /*stuff.forEach(function(stuffling){
@@ -649,11 +685,12 @@ router.post('/user_search_flights', async(req,res)=>{
         return;
     }
 
+    var dep_date;
     if(body.departure_date)
     {
         const departure_date = body.departure_date;
-        const d1 = new Date(construct_date(departure_date));
-        if(isNaN(d1))
+        dep_date = new Date(construct_date(departure_date));
+        if(isNaN(dep_date))
         {
             res.status(400).json({msg: 'the departure date is not a valid date'});
             return;
@@ -662,27 +699,27 @@ router.post('/user_search_flights', async(req,res)=>{
         const d2 = new Date(construct_date(departure_date));
         
         d2.setDate(d2.getDate()+1);
-        departure_query['departure_time']= {$gte:d1, $lt:d2};
+        departure_query['departure_time']= {$gte:dep_date, $lt:d2};
     }
     else
     {
         res.status(400).json({msg: 'you need to specify the date of your departure'});
         return;
     }
-
+    var ret_date;
     if(body.return_date)
     {
         const return_date = body.return_date;
-        const d1 = new Date(construct_date(return_date));
+        ret_date = new Date(construct_date(return_date));
         
-        if(isNaN(d1))
+        if(isNaN(ret_date))
         {
             res.status(400).json({msg: 'the return date is not a valid date'});
             return;
         }
         const d2 = new Date(construct_date(return_date));
         d2.setDate(d2.getDate()+1);
-        return_query['departure_time']= {$gte:d1, $lt:d2};
+        return_query['departure_time']= {$gte:ret_date, $lt:d2};
     }
     else
     {
@@ -729,14 +766,41 @@ router.post('/user_search_flights', async(req,res)=>{
             return;
         }
     }
+    
+    if(dep_date > ret_date)
+    {
+        res.status(400).json({msg: 'you can\'t specify the retun date before the departure date'});
+        return;
+    }
+    if(dep_date < new Date() && !checkSameDay(dep_date, new Date()))
+    {
+        res.status(400).json({msg: 'the departure date can\'t be before today\'s date'});
+        return;
+    }
 
-    console.log(departure_query['departure_time']);
-    console.log(return_query['departure_time']);
+    
     const depart_flights = await Flight.find(departure_query);
+    if(depart_flights.length==0)
+    {
+        res.status(404).json({msg: 'there are no departure flights with this search criteria'});
+        return;
+    }
+
     const return_flights = await Flight.find(return_query);
+    if(return_flights.length==0)
+    {
+        res.status(404).json({msg: 'there are no return flights with this search criteria'});
+        return;
+    }
+
     res.json({'departure_flights' : depart_flights, 'return_flights':return_flights});
 
 });
+
+function checkSameDay(d1, d2)
+{
+    return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
+}
 
 // get the details of a flight with its id
 router.get('/:flight_id', async(req,res)=>{
@@ -754,7 +818,7 @@ router.get('/:flight_id', async(req,res)=>{
 
 
 // getting all seats of a specific flight
-router.get('/all_seats/:flight_id', async (req,res)=>{
+router.get('/all_seats/:flight_id', auth, async (req,res)=>{
     const flight_id = req.params.flight_id;
     if(!mongoose.isValidObjectId(req.params.flight_id))
     {
@@ -770,7 +834,7 @@ router.get('/all_seats/:flight_id', async (req,res)=>{
 })
 
 // get the details of a flight with its id + seat
-router.get('/:flight_id/:seat', async(req,res)=>{
+router.get('/:flight_id/:seat', auth, async(req,res)=>{
     const flight = await FlightSeat.aggregate([
         {$match:{
             _id: mongoose.Types.ObjectId(req.params.seat)
@@ -806,7 +870,7 @@ function construct_date(date)
 
 // get all seats from a flight with the cabin
 
-router.get("/all_seats/:id/:cabin",(req,res)=>{
+router.get("/all_seats/:id/:cabin", auth, (req,res)=>{
     console.log(req.params.id);
     if(!mongoose.isValidObjectId(req.params.id))
     {
@@ -828,6 +892,8 @@ router.get("/all_seats/:id/:cabin",(req,res)=>{
          }
      )
 });
+
+
 
 
 

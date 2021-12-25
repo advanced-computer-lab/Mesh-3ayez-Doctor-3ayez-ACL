@@ -9,6 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Box from '@mui/material/Box';
 
 function Ticket(probs) {
     
@@ -39,6 +40,7 @@ function Ticket(probs) {
 
     return (
         <div>
+            <Box sx={{background:'white'}}>
             <table className={"styled-table"+(rows[0].seat_type == 'economy'?3:(rows[0].seat_type == 'business'?'':2))}>
                 <TicketHead />
                 <tbody>
@@ -52,12 +54,12 @@ function Ticket(probs) {
                                 reservation_id = {sf.reservation_id}
                                 seat_type = {sf.seat_type}
                                 seat_name = {sf.seat_name}
-                                price = {sf.flight_details[0].seat_type == 'economy'?sf.flight_details[0].economy_seats.price.$numberDecimal:(
-                                    sf.flight_details[0].seat_type == 'first'?sf.flight_details[0].first_seats.price.$numberDecimal:
+                                price = {sf.seat_type == 'economy'?sf.flight_details[0].economy_seats.price.$numberDecimal:(
+                                    sf.seat_type == 'first'?sf.flight_details[0].first_seats.price.$numberDecimal:
                                     sf.flight_details[0].business_seats.price.$numberDecimal
                                 )}
-                                baggage_allowance = {sf.flight_details[0].seat_type == 'economy'?sf.flight_details[0].economy_seats.baggage_allowance.$numberDecimal:(
-                                    sf.flight_details[0].seat_type == 'first'?sf.flight_details[0].first_seats.baggage_allowance.$numberDecimal:
+                                baggage_allowance = {sf.seat_type == 'economy'?sf.flight_details[0].economy_seats.baggage_allowance.$numberDecimal:(
+                                    sf.seat_type == 'first'?sf.flight_details[0].first_seats.baggage_allowance.$numberDecimal:
                                     sf.flight_details[0].business_seats.baggage_allowance.$numberDecimal)}
                                 flight_details = {sf.flight_details}
                                 
@@ -89,7 +91,7 @@ function Ticket(probs) {
                     <Button variant="outlined" onClick={handleClose}>Do Not Cancel reservations</Button>
                 </DialogActions>
             </Dialog>
-
+            </Box>
         </div>
     );
 }

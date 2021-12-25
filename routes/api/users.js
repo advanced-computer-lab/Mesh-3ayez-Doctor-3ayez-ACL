@@ -1,23 +1,24 @@
 const express = require('express')
-const moment = require('moment');
-const { Query } = require('mongoose');
 const mongoose = require('mongoose');
 const Flight = require('../../src/Models/Flight');
-const Admin = require('../../src/Models/Admin');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
+var bcrypt = require('bcryptjs');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
-
+const auth =require("./middleware/auth.js");
+var bcrypt = require('bcryptjs');
+require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
-
+var bcrypt = require('bcryptjs');
 // user cancel a reservation
 
-router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
+router.delete('/reservation/:user_id/:reservation_id', auth, async(req,res)=>{
     
     const user_id = req.params.user_id;
-    const reservation_id = req.params.reservation_id
+    const reservation_id = req.params.reservation_id;
+    
     if(!mongoose.isValidObjectId(user_id))
     {
         res.status(400).json({msg : 'the user id is not a valid id'});
@@ -28,19 +29,22 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
         res.status(400).json({msg : 'the reservation id is not a valid id'});
         return;
     }
-
+    
     const user = await User.findById(user_id);
+    console.log("now I'm here");
     if(!user)
     {
         res.status(404).json({msg : 'this user is not found'});
         return; 
     }
+    
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id':user_id});
     if(reservation)
     {
         
         var update_departure = {};
         var update_return = {};
+        console.log("I found a reservation with such attributes");
         const departure_flight = await Flight.findOne({'_id' : reservation.departure_flight});
         const return_flight = await Flight.findOne({'_id':reservation.return_flight});
         if(reservation.cabin_type=='economy')
@@ -71,7 +75,8 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
         await Reservation.findByIdAndDelete(reservation_id);
 
         // sending email to the user
-        await send_cancellation_mail(user, reservation.paid, reservation, departure_flight.from, departure_flight.to);
+        await send_cancellation_mail(user, reservation.price, reservation, departure_flight.from, departure_flight.to);
+        console.log('mail sent');
         res.json({msg:"deleted successfully"});
 
     }
@@ -92,15 +97,15 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
      
 
      let transporter = nodemailer.createTransport({
-        service: 'hotmail',
+        service: 'gmail',
       auth: {
-            user : authorization.user,
-            pass : authorization.password
+            user : process.env.USER,
+            pass : process.env.PASSWORD
       }
     });
 
     let info = await transporter.sendMail({
-        from: `${authorization.user}`, // sender address
+        from: `${process.env.USER}`, // sender address
         to: `${user.email}`, // list of receivers
         subject: "cancellation confirmation", // Subject line
         text: text, // plain text body
@@ -111,8 +116,9 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
 
 // get itinerary of a reservation
 
-router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
+router.get('/itinerary/:user_id/:reservation_id', auth, async(req,res)=>{
     const user_id = req.params.user_id;
+    console.log(user_id);
     const reservation_id = req.params.reservation_id;
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id' : user_id});
     if(reservation)
@@ -141,7 +147,7 @@ router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
 });
 
 // edit user info
-router.put('/:user_id',async(req,res)=>{
+router.put('/edit_user/:user_id', auth, async(req,res)=>{
     const body = req.body;
     const user_id = req.params.user_id;
     if(!mongoose.isValidObjectId(user_id))
@@ -192,6 +198,136 @@ router.put('/:user_id',async(req,res)=>{
         res.status(500).json('the server has encountered an error sorry for disturbance');
     })
 });
+
+router.put('/changePassword/:user_id',auth, async(req,res)=>{
+    const body = req.body;
+    const user_id = req.params.user_id;
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the id you have sent is not a valid id'});
+        return;
+    }
+    const user = await User.findById(user_id);
+    console.log(user.password);
+    console.log(body.password);
+    if(!user)
+    {
+        res.status(404).json({msg : 'no such user'});
+        return;
+    }
+
+    var query = {};
+    if(await bcrypt.compare(body.OldPassword.password,user.password))
+    {
+        if(body.password)
+        {
+            encryptedPassword = await bcrypt.hash(body.password.password, 10);
+
+            query['password'] = encryptedPassword;
+        }
+    }else{
+        res.status(400).json({msg : 'the Old Password you have entered is not correct'});
+            return;
+    }
+
+    User.findByIdAndUpdate(user_id,query).then(async result =>{
+        const new_user = await User.findById(user_id);
+        res.json(new_user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json('the server has encountered an error sorry for disturbance');
+    })
+});
+
+router.get('/:_id',auth, async (req,res)=>{
+    const _id = req.params._id;
+    if(!mongoose.isValidObjectId(_id))
+    {
+        res.status(400).json({msg : 'the id is not valid'});
+        return;
+    }
+    const user = await User.findById(_id);
+    if(user)
+        res.json(user);
+    else
+        res.status(404).json({msg: 'there is no such user'});
+})
+//forget password api
+router.put('/forget_password', async(req,res)=>{
+    const body = req.body;
+    // checking user name
+    const username = body.username;
+    const email = body.email;
+    console.log(username);
+    console.log(email);
+    if(!username)
+    {
+        res.status(400).json({msg : 'you must provide your username'});
+        return;
+    }
+    // checking email
+    if(!email)
+    {
+        res.status(400).json({msg : 'you must provide your email'});
+        return;
+    }
+
+    // get user
+    const user = await User.findOne({'username': username});
+    if(!user)
+    {
+        res.status(404).json({msg : 'there is no user with such username'});
+        return;
+    }
+    // checking if the user have the same email
+    console.log(email);
+    console.log(user.email);
+    if(user.email!== email)
+    {
+        res.status(404).json({msg : 'your email is incorrect'});
+        return;
+    }
+    // creating new password
+    const new_password = Math.random().toString(36).slice(-8);
+
+    const encryptedPassword = await bcrypt.hash(new_password, 10);
+    await User.findOneAndUpdate({'username' : username}, {'password': encryptedPassword});
+
+    //sending mail to the user
+    await sendMail(user, new_password);
+
+    res.json({msg: 'an email has been sent to you, please check your email'});
+
+});
+
+async function sendMail(user, new_password)
+{
+    const text = `Dear Mr/Mrs ${user.first_name}
+we hope you are doing well. this mail is to confirm that you have requested to reset your password.
+new password: ${new_password}
+
+Regards,
+ACL team`;
+
+     
+
+     let transporter = nodemailer.createTransport({
+        service: 'gmail',
+      auth: {
+            user : process.env.user,
+            pass : process.env.password
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${process.env.user}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "Password Reset", // Subject line
+        text: text, // plain text body
+        
+      });
+      
+}
 
 function validateEmail (email){
     return String(email)

@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
+// import { promises } from 'stream';
  
 import SeatPicker from './react-seat-picker/distt'
- 
-
+const colors= require("../../colors")
 export default class Seats extends Component {
 
     
@@ -14,7 +14,7 @@ export default class Seats extends Component {
     loading: false
   }
   addSeatCallback = ({ row, number, id }, addCb) => {
-    this.props.addclbk(""+number,id);
+    this.props.addclbk(number+" ",id);
     this.setState({
         
       loading: true
@@ -53,7 +53,7 @@ export default class Seats extends Component {
   }
  
   removeSeatCallback = ({ row, number, id }, removeCb) => {
-    this.props.rmvclbk(""+number,id);
+    this.props.rmvclbk(number+" ",id);
     this.setState({
       loading: true
     }, async () => {
@@ -85,7 +85,7 @@ export default class Seats extends Component {
     const {loading} = this.state
     return (
       <div>
-        <h3>{Type}</h3>
+        <h3 style={{color:colors.c1}}>{Type}</h3>
         <div style={{marginTop: '5px'}}>
           <SeatPicker
             addSeatCallback={this.addSeatCallback}
@@ -118,3 +118,4 @@ export default class Seats extends Component {
     )
     }
 }
+

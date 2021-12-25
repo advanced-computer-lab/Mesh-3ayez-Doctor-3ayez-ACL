@@ -3,16 +3,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { Box } from '@mui/system';
-import { fabClasses, Typography } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
@@ -20,11 +16,10 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router-dom";
-import UserSearchResults from './UserSearchResults.js';
-import { Redirect } from 'react-router';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { withStyles } from '@mui/material';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -68,9 +63,10 @@ function UserSearch(props) {
     const location = useLocation();
     const [from, setFrom] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["from"] : '');
     const [to, setTo] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["to"] : '');
-    const date = location.state && location.state.searchInputs ? location.state.searchInputs["return_date"] : new Date();
+    const d1 = new Date();
+    const date = location.state && location.state.searchInputs ? location.state.searchInputs["return_date"] : { year: d1.getFullYear(), month: d1.getMonth() + 1, day: d1.getDate() };
     const [arrival_date, setArrivalTime] = React.useState(date);
-    const date2 = location.state && location.state.searchInputs ? location.state.searchInputs["departure_date"] : new Date();
+    const date2 = location.state && location.state.searchInputs ? location.state.searchInputs["departure_date"] : { year: d1.getFullYear(), month: d1.getMonth() + 1, day: d1.getDate() };
     const [departure_date, setDepartureTime] = React.useState(date2);
     const [number_of_passengers, setPassengers] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["number_of_passengers"] : '');
     const [cabin_type, setCabin] = React.useState(location.state && location.state.searchInputs ? location.state.searchInputs["cabin_type"] : '');
@@ -81,7 +77,6 @@ function UserSearch(props) {
     const [errorMsg, setErrorMessage]=React.useState("");
     const handleClick = () => {
     };
-    console.log(props.user);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -105,8 +100,9 @@ function UserSearch(props) {
         axios.post("http://localhost:8000/api/flights/user_search_flights", data, { "Content-Type": "application/json" })
             .then(result => {
                 if(result.status==200){
+                    const path="searchResults"
                 history.push({
-                    pathname: '/user/searchResults', state:
+                    pathname: `/user/${path}`, state:
                     {
                         flights: result.data,
                         cabin_type: cabin_type,
@@ -168,8 +164,10 @@ function UserSearch(props) {
                         label="Departure date"
                         value={new Date(departure_date.year, departure_date.month - 1, departure_date.day)}
                         onChange={(newValue) => {
-                            console.log(newValue.getDate() + " " + (newValue.getMonth() + 1) + " " + newValue.getFullYear())
-                            setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
+                            {
+                                setDepartureTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            }
                         }}
 
                         renderInput={(params) => <TextField {...params} className={classes.root}
@@ -182,7 +180,10 @@ function UserSearch(props) {
                         value={new Date(arrival_date.year, arrival_date.month - 1, arrival_date.day)}
 
                         onChange={(newValue) => {
-                            setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            if(newValue && (newValue.getDate()+1) && (newValue.getMonth()+1) && (newValue.getFullYear()+1))
+                            {
+                                setArrivalTime({ year: newValue.getFullYear(), month: newValue.getMonth() + 1, day: newValue.getDate() });
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} className={classes.root}
                             InputLabelProps={{ shrink: true, }} />}

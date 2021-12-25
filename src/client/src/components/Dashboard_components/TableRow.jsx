@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios'
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import BasicAlert from "../BasicAlert";
+
 
 function TableRow(probs) {
   const id = probs.id;
@@ -31,11 +33,32 @@ function TableRow(probs) {
   const [departure_time, setDepartureTime] = useState(row.departure_time);
   const [open2, setOpen2] = useState(false);
 
+  const [ecoPrice, setEcoPrice] = useState(row.economy_seats.price.$numberDecimal);                                             
+  const [ecoBaggageAllowance, setEcoBag] = useState(row.economy_seats.baggage_allowance.$numberDecimal);                            
+  const [ecoMaxSeats, setEcoMax] = useState(row.economy_seats.max_seats);                                           
+
+
+  const [busPrice, setBusPrice] = useState(row.business_seats.price.$numberDecimal);
+  const [busBaggageAllowance, setBusBag] = useState(row.business_seats.baggage_allowance.$numberDecimal);
+  const [busMaxSeats, setBusMax] = useState(row.business_seats.max_seats);
+
+
+  const [firPrice, setFirPrice] = useState(row.first_seats.price.$numberDecimal);
+  const [firBaggageAllowance, setFirBag] = useState(row.first_seats.baggage_allowance.$numberDecimal);
+  const [firMaxSeats, setFirMax] = useState(row.first_seats.max_seats);
+
+  
+  const [alert, setAlert] = useState(false);
+  const [succ, setSucc] = useState(false);
+  const [msg, setMsg] = useState("");
+
+
 
 
 
 
   function handleClickOpen2 (){
+    setAlert(false);
     setOpen2(true);
     setFlightNo(flight_no);
     setFrom(from);
@@ -48,6 +71,7 @@ function TableRow(probs) {
 };
 
 function handleCloseDone (){
+  setAlert(false);
   setFlightNo(flight_no?flight_no:row.flight_number);
   setFrom(from?from:row.from);
   setTo(to? to: row.to);
@@ -88,7 +112,11 @@ function foo2() {
       handleCloseDone();
     }
       )
-      .catch(err => console.log(err));
+      .catch(err =>{
+          setAlert(true);
+          setSucc(false);
+          setMsg(err.response.data.msg)
+      });
 }
 
  
@@ -249,12 +277,34 @@ function foo2() {
 
                         />
                     </div>
+                    <br></br>
+                    <div>
+                        <TextField
+
+                            id="outlined-number"
+                            label="First Class Baggage Allowance"
+                            type="number"
+                            value={firBaggageAllowance}
+
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function (e) {
+                                    setFirBag(e.target.value);
+                            }
+                            }
+                        />
+                        {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
+                    </div>
+                    
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" onClick={() => foo2()} autoFocus>
                         Done
                     </Button>
                     <Button variant="outlined" onClick={handleClose2}>Cancel</Button>
+                    
+
 
                 </DialogActions>
             </Dialog>
