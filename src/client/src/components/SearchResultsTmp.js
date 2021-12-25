@@ -9,14 +9,25 @@ import { Stack } from '@mui/material';
 import FlightCard from './FlightCard'
 import { useState } from 'react';
 import { useHistory } from 'react-router';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Login from './Login';
+import Signup from './Signup';
+
 const steps = ['Pick departure flight', 'Pick return flight'];
-const colors= require("../colors")
+const colors = require("../colors")
 export default function SearchResultsTmp(props) {
     console.log(localStorage);
-    console.log(localStorage.getItem("departureReserved"));
 
-    const [activeStep, setActiveStep] = React.useState(localStorage.getItem("activeStep")?parseInt(localStorage.getItem("activeStep")):0);
+    const [activeStep, setActiveStep] = React.useState(localStorage.getItem("activeStep") ? parseInt(localStorage.getItem("activeStep")) : 0);
     const [skipped, setSkipped] = React.useState(new Set());
+    const [openLog, setOpenLog] = useState(false);
+    const [openSign, setOpenSign] = useState(false);
+    const [retrunF, setReturn] = useState(false);
+    const [departureReserved, setDepartureReserved] = useState({});
+    const [returnReserved, setReturnReserved] = useState({});
 
     const isStepOptional = (step) => {
         return false;
@@ -29,37 +40,78 @@ export default function SearchResultsTmp(props) {
         setReturnReserved({});
         setDepartureReserved({});
         setActiveStep(0);
-        localStorage.setItem("activeStep",0);
+        localStorage.setItem("activeStep", 0);
         localStorage.removeItem("departureReserved");
     };
 
-    const [retrunF, setReturn] = useState(false);
-    const [departureReserved, setDepartureReserved] = useState({});
-    const [returnReserved, setReturnReserved] = useState({});
-    const history = useHistory();
+    function handleCloseLog() {
+        setOpenLog(false);
+        console.log(JSON.parse(localStorage.getItem("departureReserved")))
+        console.log(returnReserved)
 
-    const onClick = (reserved) => {
-        console.log(localStorage.getItem("activeStep"))
-        setDepartureReserved(reserved);
-        localStorage.setItem("activeStep",1);
-        setActiveStep(1);
-        console.log(activeStep)
-        localStorage.setItem("departureReserved",JSON.stringify(reserved));
-        console.log(JSON.parse(localStorage.getItem("departureReserved")));
-
-    }
-    const onClickReturn = (reserved) => {
-        console.log(JSON.parse(localStorage.getItem("departureReserved")));
-        setReturnReserved(reserved);
         history.push({
             pathname: '/user/ReserveSeats',
             state: {
                 departure: JSON.parse(localStorage.getItem("departureReserved")),
-                return: reserved
+                return: returnReserved
             }
         });
         localStorage.removeItem("activeStep");
         localStorage.removeItem("departureReserved");
+    }
+    function handleCloseSign() {
+        setOpenSign(false);
+        console.log(JSON.parse(localStorage.getItem("departureReserved")))
+        console.log(returnReserved)
+
+        history.push({
+            pathname: '/user/ReserveSeats',
+            state: {
+                departure: JSON.parse(localStorage.getItem("departureReserved")),
+                return: returnReserved
+            }
+        });
+        localStorage.removeItem("activeStep");
+        localStorage.removeItem("departureReserved");
+    }
+    function handleClickLog() {
+        setOpenLog(true);
+        setOpenSign(false);
+        
+    }
+    function handleClickSign() {
+        setOpenSign(true);
+        setOpenLog(false);
+    }
+
+    const history = useHistory();
+
+    const onClick = (reserved) => {
+        setDepartureReserved(reserved);
+        localStorage.setItem("activeStep", 1);
+        setActiveStep(1);
+        console.log(activeStep)
+        localStorage.setItem("departureReserved", JSON.stringify(reserved));
+
+
+    }
+    const onClickReturn = (reserved) => {
+        setReturnReserved(reserved);
+
+        if (!localStorage.getItem("token")) {
+            console.log("nadouda")
+            setOpenLog(true);
+        } else {
+            history.push({
+                pathname: '/user/ReserveSeats',
+                state: {
+                    departure: JSON.parse(localStorage.getItem("departureReserved")),
+                    return: reserved
+                }
+            });
+            localStorage.removeItem("activeStep");
+            localStorage.removeItem("departureReserved");
+        }
 
     }
 
@@ -90,7 +142,7 @@ export default function SearchResultsTmp(props) {
 
                         {props.flights['return_flights'].map((item) => {
                             const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
-                            const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`                  
+                            const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`
                             return (
                                 <FlightCard flight_number={item.flight_number}
                                     key={item._id}
@@ -104,7 +156,7 @@ export default function SearchResultsTmp(props) {
                                     cabin_type={props.cabin_type}
                                     number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']*props.number_of_passengers}
+                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal'] * props.number_of_passengers}
                                     onClick={onClickReturn}
                                     arrival_terminal={item.arrival_terminal}
                                     departure_terminal={item.departure_terminal}
@@ -122,7 +174,7 @@ export default function SearchResultsTmp(props) {
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
                             style={{
-                                color:activeStep===0?colors.c3:colors.c1
+                                color: activeStep === 0 ? colors.c3 : colors.c1
                             }}
                             disabled={activeStep === 0}
                             onClick={handleBack}
@@ -135,15 +187,42 @@ export default function SearchResultsTmp(props) {
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button> */}
                     </Box>
-
+                    <Dialog
+                        open={openLog}
+                        onClose={handleCloseLog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                            {/* <DialogContentText id="alert-dialog-description">
+                    </DialogContentText> */}
+                        </DialogContent>
+                        <DialogActions>
+                            <Login signClick={handleClickSign} handleClose={handleCloseLog}></Login>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={openSign}
+                        onClose={handleCloseSign}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                            {/* <DialogContentText id="alert-dialog-description">
+                    </DialogContentText> */}
+                        </DialogContent>
+                        <DialogActions>
+                            <Signup logClick={handleClickLog} handleClose={handleCloseSign}></Signup>
+                        </DialogActions>
+                    </Dialog>
                 </React.Fragment>
             ) : (
                 <React.Fragment>
                     <Stack sx={{ mt: 2, mb: 1 }} margin="auto" textAlign='center' spacing={2}>
                         {props.flights['departure_flights'].map((item) => {
-                        const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
-                        const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`  
-                                return (
+                            const d1 = (new Date(item.arrival_time) - new Date(item.departure_time)) / (1000);
+                            const d = `${parseInt(d1 / 3600)}h ${parseInt((d1 % 3600) / 60)}m`
+                            return (
                                 <FlightCard
                                     flight_number={item.flight_number}
                                     key={item._id}
@@ -158,7 +237,7 @@ export default function SearchResultsTmp(props) {
                                     cabin_type={props.cabin_type}
                                     number_of_passengers={props.number_of_passengers}
                                     baggage={item[`${props.cabin_type}_seats`].baggage_allowance['$numberDecimal']}
-                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal']*props.number_of_passengers}
+                                    price={item[`${props.cabin_type}_seats`].price['$numberDecimal'] * props.number_of_passengers}
 
                                     onClick={onClick}
 
@@ -173,7 +252,7 @@ export default function SearchResultsTmp(props) {
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Button
                             style={{
-                                color:colors.c1
+                                color: colors.c1
                             }}
                             disabled={activeStep === 0 && props.flights['departure_flights'].length > 0}
                             href="/"
@@ -186,6 +265,7 @@ export default function SearchResultsTmp(props) {
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button> */}
                     </Box>
+
                 </React.Fragment>
             )}
         </Box>

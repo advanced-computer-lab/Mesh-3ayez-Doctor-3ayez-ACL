@@ -28,15 +28,19 @@ export function SeatReservation() {
     const location = useLocation();
     const reserved = location.state.reserved;
     const reservation = location.state.reservation;
-    const ret=location.state.return?reserved:location.state.retFlight;
-    const departure=location.state.departure?reserved:location.state.depFlight;
+    const ret = location.state.return ? reserved : location.state.retFlight;
+    const departure = location.state.departure ? reserved : location.state.depFlight;
     console.log(location.state.retFlight);
     const diff = Number(reserved.price);
     const [flightSeats, setFlightSeats] = useState([]);
     const [seatsLoading, setSeatsLoading] = useState(true);
+    const [other, setOther] = useState([]);
+    const [load, setLoad] = useState(false);
+    const [newOther,setNewOther]=useState([]);
     let cabinType = reserved.cabin_type;
     useEffect(() => {
-        axios.get("http://localhost:8000/api/flights/all_seats/" + reserved.flight_id + "/" + cabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + reserved.flight_id + "/" + cabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
             .then(res => {
                 setFlightSeats(res.data);
                 setSeatsLoading(false);
@@ -44,33 +48,59 @@ export function SeatReservation() {
             .catch(() => {
                 console.log("BOOM");
             });
+
+        if (!load) {
+            if (location.state.return) {
+                axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.departure_flight + "/" + cabinType)
+                    .then(res => {
+                        for (var i = 0; i < res.data.length; i++) {
+                            if (res.data[i]['reservation_id'] == reservation._id) {
+                                setOther(other.push(res.data[i].seat_name+" "));
+                            }
+                        }
+                        setNewOther(other);
+                    })
+            } else {
+                axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.return_flight + "/" + cabinType)
+                    .then(res => {
+                        for (var i = 0; i < res.data.length; i++) {
+                            if (res.data[i]['reservation_id'] == reservation._id) {
+                                // other.push();
+                                setOther(other.push(res.data[i].seat_name+" "));
+                            }
+                        }
+                        setNewOther(other);
+                    })
+            }
+            setLoad(true);
+        }
     }, []);
     var Rows = [];
     buildSeatRows(flightSeats, Rows);
-    var old=0;
-    if(location.state.return){
-        if (cabinType.toLowerCase() === "economy"){
-           old=location.state.retFlight.economy_seats.price['$numberDecimal'];
+    var old = 0;
+    if (location.state.return) {
+        if (cabinType.toLowerCase() === "economy") {
+            old = location.state.retFlight.economy_seats.price['$numberDecimal'];
         }
-        else if (cabinType.toLowerCase() === "business"){
-            old=location.state.retFlight.business_seats.price['$numberDecimal'];
+        else if (cabinType.toLowerCase() === "business") {
+            old = location.state.retFlight.business_seats.price['$numberDecimal'];
         }
-        else{
-            old=location.state.retFlight.first_seats.price['$numberDecimal'];
+        else {
+            old = location.state.retFlight.first_seats.price['$numberDecimal'];
         }
-    
-    }else{
-        if (cabinType.toLowerCase() === "economy"){
-            old=location.state.depFlight.economy_seats.price['$numberDecimal'];
-         }
-         else if (cabinType.toLowerCase() === "business"){
-             old=location.state.depFlight.business_seats.price['$numberDecimal'];
-         }
-         else{
-             old=location.state.depFlight.first_seats.price['$numberDecimal'];
-         }
+
+    } else {
+        if (cabinType.toLowerCase() === "economy") {
+            old = location.state.depFlight.economy_seats.price['$numberDecimal'];
+        }
+        else if (cabinType.toLowerCase() === "business") {
+            old = location.state.depFlight.business_seats.price['$numberDecimal'];
+        }
+        else {
+            old = location.state.depFlight.first_seats.price['$numberDecimal'];
+        }
     }
-    var oneSeatPrice = Number(old)+(diff/(reservation.number_of_passengers));
+    var oneSeatPrice = Number(old) + (diff / (reservation.number_of_passengers));
     var oneSeatBag = reserved.baggage;
     // handle price
     const [open, setOpen] = useState(false);
@@ -109,6 +139,15 @@ export function SeatReservation() {
         setPaymentRef(false);
         setIt(false);
     }
+    function handleCloseIt() {
+        setConfirm(false);
+        setOpen(false);
+        setPaymentRef(false);
+        setIt(false);
+        history.push({
+            pathname: '/user/reservation',
+        });
+    }
     const tokenHandler = (token) => {
         reserve(token);
     }
@@ -123,7 +162,9 @@ export function SeatReservation() {
         };
         console.log(reservation);
         const oldFlight = location.state.return ? reservation.return_flight : reservation.departure_flight;
-        axios.put("http://localhost:8000/api/reservations/changeFlight/" + reservation._id + "/" + reservation.user_id + "/" + oldFlight, data).catch(err => {
+        axios.put("http://localhost:8000/api/reservations/changeFlight/" + reservation._id + "/" + reservation.user_id + "/" + oldFlight, data,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
+        .catch(err => {
             console.log(err.response.data.msg);
         })
         setConfirm(false);
@@ -162,7 +203,7 @@ export function SeatReservation() {
             row = [];
         }
     }
-    function reserveDone(){
+    function reserveDone() {
         handleClose();
         history.push({
             pathname: '/user/reservation',
@@ -283,7 +324,7 @@ export function SeatReservation() {
             >
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        You will get refunded with amount of {diff}$.
+                        You will get refunded with amount of {-1*diff}$.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -293,7 +334,7 @@ export function SeatReservation() {
             </Dialog>
             <Dialog
                 open={it}
-                onClose={handleClose}
+                onClose={handleCloseIt}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
@@ -301,28 +342,28 @@ export function SeatReservation() {
                 <DialogContent>
                     <ResItinerary />
                 </DialogContent>
-                <ResItinerary 
-                resId={reservation._id}
-                price={Number(reservation.price['$numberDecimal'])+diff}
-                depFrom={departure.from}
-                depDDay={new Date(departure.departure_time).getDate()+"/"+(new Date(departure.departure_time).getMonth()+1)+"/"+new Date(departure.departure_time).getFullYear()}
-                depDTime={new Date(departure.departure_time).getHours()+":"+new Date(departure.departure_time).getMinutes()}                            
-                depDT={departure.departure_terminal}
-                depTo={departure.to}
-                depADay={new Date(departure.arrival_time).getDate()+"/"+(new Date(departure.arrival_time).getMonth()+1)+"/"+new Date(departure.arrival_time).getFullYear()}
-                depATime={new Date(departure.arrival_time).getHours()+":"+new Date(departure.arrival_time).getMinutes()}                            
-                depAT={departure.arrival_terminal}
-                // depSeats={departureSeats}
-                cabin={cabinType}
-                retFrom={ret.from}
-                retDDay={new Date(ret.departure_time).getDate()+"/"+(new Date(ret.departure_time).getMonth()+1)+"/"+new Date(ret.departure_time).getFullYear()}
-                retDTime={new Date(ret.departure_time).getHours()+":"+new Date(ret.departure_time).getMinutes()}                            
-                retDT={ret.departure_terminal}
-                retTo={ret.to}
-                retADay={new Date(ret.arrival_time).getDate()+"/"+(new Date(ret.arrival_time).getMonth()+1)+"/"+new Date(ret.arrival_time).getFullYear()}
-                retATime={new Date(ret.arrival_time).getHours()+":"+new Date(ret.arrival_time).getMinutes()}                            
-                retAT={ret.arrival_terminal}
-                // retSeats={returnSeats}
+                <ResItinerary
+                    resId={reservation._id}
+                    price={Number(reservation.price['$numberDecimal']) + diff}
+                    depFrom={departure.from}
+                    depDDay={new Date(departure.departure_time).getDate() + "/" + (new Date(departure.departure_time).getMonth() + 1) + "/" + new Date(departure.departure_time).getFullYear()}
+                    depDTime={new Date(departure.departure_time).getHours() + ":" + new Date(departure.departure_time).getMinutes()}
+                    depDT={departure.departure_terminal}
+                    depTo={departure.to}
+                    depADay={new Date(departure.arrival_time).getDate() + "/" + (new Date(departure.arrival_time).getMonth() + 1) + "/" + new Date(departure.arrival_time).getFullYear()}
+                    depATime={new Date(departure.arrival_time).getHours() + ":" + new Date(departure.arrival_time).getMinutes()}
+                    depAT={departure.arrival_terminal}
+                    depSeats={location.state.departure?seats:other}
+                    cabin={cabinType}
+                    retFrom={ret.from}
+                    retDDay={new Date(ret.departure_time).getDate() + "/" + (new Date(ret.departure_time).getMonth() + 1) + "/" + new Date(ret.departure_time).getFullYear()}
+                    retDTime={new Date(ret.departure_time).getHours() + ":" + new Date(ret.departure_time).getMinutes()}
+                    retDT={ret.departure_terminal}
+                    retTo={ret.to}
+                    retADay={new Date(ret.arrival_time).getDate() + "/" + (new Date(ret.arrival_time).getMonth() + 1) + "/" + new Date(ret.arrival_time).getFullYear()}
+                    retATime={new Date(ret.arrival_time).getHours() + ":" + new Date(ret.arrival_time).getMinutes()}
+                    retAT={ret.arrival_terminal}
+                    retSeats={newOther}
                 />
                 <DialogActions>
                     <Button variant="outlined" onClick={reserveDone}>OK</Button>
