@@ -621,7 +621,8 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id',auth, async(req,r
 
     for(var i=0;i<reservation.number_of_passengers;i++)
     {
-        FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
+        console.log('updating old seats');
+        await FlightSeat.findOneAndUpdate({'reservation_id':reservation_id, 'flight_id':old_flight_id}, {'reservation_id':null});
     }
     await Flight.findByIdAndUpdate(old_flight_id, old_query);
     await Flight.findByIdAndUpdate(new_flight_id, new_query);

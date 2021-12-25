@@ -86,7 +86,8 @@ export default function EditSeats() {
     const [retFlag,setRetFlag]=useState(false);
     useEffect(() => {
         // console.log("I entered the use state");
-        axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.departure_flight + "/" + cabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.departure_flight + "/" + cabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
             .then(res => {
                 setDepSeats(res.data);
                 setDict(res.data);
@@ -104,7 +105,8 @@ export default function EditSeats() {
             .catch((err) => {
                 console.log(err);
             });
-        axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.return_flight + "/" + cabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + reservation.return_flight + "/" + cabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
             .then(res => {
                 // console.log(res.data);
                 setRetSeats(res.data);
@@ -258,11 +260,13 @@ export default function EditSeats() {
     function updateSeats(){
         if(resType=='departure'){
                 var data={seats:reservedDepSeats};
-                axios.put("http://localhost:8000/api/reservations/change_seats/"+reservation._id+"/"+reservation.user_id+"/"+reservation.departure_flight,data);
+                axios.put("http://localhost:8000/api/reservations/change_seats/"+reservation._id+"/"+reservation.user_id+"/"+reservation.departure_flight,data,
+                {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}});
 
             }else{
             var data={seats:reservedRetSeats};
-            axios.put("http://localhost:8000/api/reservations/change_seats/"+reservation._id+"/"+reservation.user_id+"/"+reservation.return_flight,data);
+            axios.put("http://localhost:8000/api/reservations/change_seats/"+reservation._id+"/"+reservation.user_id+"/"+reservation.return_flight,data,
+            {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}});
  
             }
         setConfirm(false);

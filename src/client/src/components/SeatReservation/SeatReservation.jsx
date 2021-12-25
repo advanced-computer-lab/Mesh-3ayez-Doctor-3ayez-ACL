@@ -36,7 +36,8 @@ export function SeatReservation() {
     const [seatsLoading, setSeatsLoading] = useState(true);
     let cabinType = reserved.cabin_type;
     useEffect(() => {
-        axios.get("http://localhost:8000/api/flights/all_seats/" + reserved.flight_id + "/" + cabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + reserved.flight_id + "/" + cabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
             .then(res => {
                 setFlightSeats(res.data);
                 setSeatsLoading(false);
@@ -123,7 +124,9 @@ export function SeatReservation() {
         };
         console.log(reservation);
         const oldFlight = location.state.return ? reservation.return_flight : reservation.departure_flight;
-        axios.put("http://localhost:8000/api/reservations/changeFlight/" + reservation._id + "/" + reservation.user_id + "/" + oldFlight, data).catch(err => {
+        axios.put("http://localhost:8000/api/reservations/changeFlight/" + reservation._id + "/" + reservation.user_id + "/" + oldFlight, data,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
+        .catch(err => {
             console.log(err.response.data.msg);
         })
         setConfirm(false);

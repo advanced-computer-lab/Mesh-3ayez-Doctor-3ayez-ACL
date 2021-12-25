@@ -37,7 +37,9 @@ export function SeatPick() {
     const [retSeats, setRetSeats] = useState([]);
     let retCabinType = ret.cabin_type;
     useEffect(() => {
-        axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+)
             .then(res => {
 
                 setDepSeats(res.data);
@@ -47,7 +49,9 @@ export function SeatPick() {
             .catch(() => {
                 console.log("BOOM");
             });
-        axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType)
+        axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+)
             .then(res => {
                 setRetSeats(res.data);
                 setRetSeatsLoading(false);
@@ -149,7 +153,9 @@ export function SeatPick() {
             stripeToken:token
         };
         console.log(data);
-        axios.post("http://localhost:8000/api/reservations", data).then(result =>{
+        axios.post("http://localhost:8000/api/reservations", data,
+        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
+        .then(result =>{
             setResId(result.data.reservation_id);
         });
         // history.go();
