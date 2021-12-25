@@ -128,6 +128,14 @@ export function SeatPick() {
         setOpen(false);
         setIt(false);
     }
+    function handleCloseIt() {
+        setConfirm(false);
+        setOpen(false);
+        setIt(false);
+        history.push({
+            pathname: '/user/reservation',
+        });
+    }
     const tokenHandler = (token) => {
         // handleToken(100, token)
         reserve(token);
@@ -395,7 +403,7 @@ export function SeatPick() {
             </Dialog>
             <Dialog
                 open={it}
-                onClose={handleClose}
+                onClose={handleCloseIt}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
