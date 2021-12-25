@@ -104,7 +104,6 @@ function EditProfile() {
                                     <TextField
                                         autoComplete="given-name"
                                         name="firstName"
-                                        required
                                         fullWidth
                                         id="firstName"
                                         label="First Name"
@@ -116,7 +115,6 @@ function EditProfile() {
                                 </Grid>
                                 <Grid item xs={12} >
                                     <TextField
-                                        required
                                         fullWidth
                                         id="lastName"
                                         label="Last Name"
@@ -129,7 +127,6 @@ function EditProfile() {
                                 
                                 <Grid item xs={12}>
                                     <TextField
-                                        required
                                         fullWidth
                                         id="email"
                                         label="Email Address"
@@ -141,7 +138,6 @@ function EditProfile() {
                                 
                                 <Grid item xs={12}>
                                     <TextField
-                                        required
                                         fullWidth
                                         name="passport"
                                         label="Passport"
