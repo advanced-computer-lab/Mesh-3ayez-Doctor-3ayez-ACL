@@ -148,7 +148,8 @@ function Signup(props) {
                     setErr(true);
                     setErrMsg(err.response.data.msg);
                 } else {
-                    console.log(err)
+                    setErr(true);
+                    setErrMsg(err.response.data.msg);
                 }
 
 
