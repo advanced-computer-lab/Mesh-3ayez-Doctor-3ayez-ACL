@@ -324,8 +324,158 @@ Visual Studio Code
  - Request type `GET`
  - Request Response
  ```
-
+{
+    _id:61c4e9af2c27d255710d8cac,
+    user_id:61bcd1e7bf1ace92644c0287,
+    departure_flight:61c4d7459f95b2bb051dd778,
+    return_flight:61bf2bc5c93bc7a6a0dee465,
+    cabin_type:"economy",
+    number_of_passengers:2,
+    price:550,
+    paid:0,
+    __v:0
+}
+//or
+{msg:"Flight Doesn't exist"}
 ```
+
+##### 7.User search for departure and return flights
+ - Route `flights\user_search_flights`
+ - Request type `POST`
+ - Request Body
+ ```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+    
+    //Any of the attributes given will be searched by
+}
+```
+-Response Body
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+    //List of all flights that match search
+}
+//or
+{msg: 'you need to specify the origin airport'}
+//or
+{msg: 'you need to specify the destination airport'}
+//or
+{msg: 'the departure date is not a valid date'}
+//or
+{msg: 'you need to specify the date of your departure'}
+//or
+{msg: 'the return date is not a valid date'}
+//or
+{msg: 'you need to specify the date of your return'}
+//or
+{msg: 'you need to specify the cabin type'}
+//or
+{msg: 'the number of passengers must be a valid integer'}
+//or
+{msg: 'the cabin type is not valid please choose between (economy, business, first)'}
+//or
+{msg: 'you can\'t specify the retun date before the departure date'}
+//or
+{msg: 'the departure date can\'t be before today\'s date'}
+//or
+{msg: 'there are no departure flights with this search criteria'}
+//or
+{msg: 'there are no return flights with this search criteria'}
+```
+
+##### 8.get the details of a flight with its id
+ - Route `flights\_id`
+ - Request type `GET`
+ - Request Response 
+ ```
+ {
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+}
+//or
+{msg:'flight with this id not found'}
+```
+
+##### 9.getting all seats of a specific flight
+ - Route `flights\all_seats\:flight_id`
+ - Request type `GET`
+ - Request Body
+
 
 
 # Code Style
