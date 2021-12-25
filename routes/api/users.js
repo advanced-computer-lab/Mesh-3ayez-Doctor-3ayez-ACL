@@ -258,6 +258,8 @@ router.put('/forget_password', async(req,res)=>{
     // checking user name
     const username = body.username;
     const email = body.email;
+    console.log(username);
+    console.log(email);
     if(!username)
     {
         res.status(400).json({msg : 'you must provide your username'});
@@ -294,7 +296,7 @@ router.put('/forget_password', async(req,res)=>{
     //sending mail to the user
     await sendMail(user, new_password);
 
-    res.json({mag: 'an email has been sent to you, please check your email'});
+    res.json({msg: 'an email has been sent to you, please check your email'});
 
 });
 

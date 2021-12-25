@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
+import {ResetPassword} from './ForgetPassword/ResetPassword';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert'
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,6 +11,9 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -75,10 +79,20 @@ export default function Login(props) {
 
     const [err, setErr] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [resetPassword,setResetPassword]=useState(false);
 
     const classes = useStyles()
     const history = useHistory();
     //  const [usernameErr, usernameErr]= useState("");
+
+
+    function handleSubmitResetPassword(){
+        
+        setResetPassword(true);
+    }
+    function handleCloseResetPassword(){
+        setResetPassword(false);
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -223,11 +237,11 @@ export default function Login(props) {
                                     Sign In
                                 </Button>
                                 <Grid container>
-                                    {/* <Grid item xs>
-                                    <Link href="#" variant="body2">
+                                    <Grid item xs>
+                                    <Link href="#" onClick = {handleSubmitResetPassword} variant="body2">
                                         Forgot password?
                                     </Link>
-                                </Grid> */}
+                                </Grid>
                                     <Grid item xs>
                                         <Link onClick={props.signClick} variant="body2" style={{ color: colors.c1, cursor:"pointer" }}>
                                             {"Don't have an account? Sign Up"}
@@ -236,6 +250,20 @@ export default function Login(props) {
                                 </Grid>
                                 {err && <Typography color="red" >{errMsg}</Typography>}
                                 <Copyright sx={{ mt: 5 }} />
+                                <Dialog
+                                    open={resetPassword}
+                                    onClose={handleCloseResetPassword}
+                                    fullWidth
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                >
+                                    <DialogContent>
+                                        <ResetPassword />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button variant="outlined" onClick={handleCloseResetPassword}>OK</Button>
+                                    </DialogActions>
+                                </Dialog>
                             </Box>
                         </Box>
                     </Grid>

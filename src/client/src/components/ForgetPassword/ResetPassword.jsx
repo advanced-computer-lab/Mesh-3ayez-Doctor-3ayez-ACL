@@ -28,12 +28,15 @@ export function ResetPassword(props) {
             email: data.get('u_email'),
             username: data.get('u_username'),
         };
-        axios.post("https://localhost:8000/api/user/forget_password", user).then(
+        console.log(user);
+        axios.put("http://localhost:8000/api/users/forget_password", user).then(
             res => {
+                
                 setMsg(res.data.msg);
                 setColor("green");
             }
         ).catch(err => {
+            console.log(err.response.data.msg);
             setMsg(err.response.data.msg);
             setColor("red");
         });
@@ -101,7 +104,7 @@ export function ResetPassword(props) {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Reset Password.
+                            Reset Password
                         </Button></div>
 
                         <div>
