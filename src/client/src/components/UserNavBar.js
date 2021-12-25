@@ -12,10 +12,16 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './TIJ (2).png'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import {useHistory} from'react-router-dom';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@mui/styles';
-
+import { withStyles } from '@material-ui/core';
+import Login from './Login';
+import Singup from './Signup';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
 const flag=false;
@@ -28,6 +34,10 @@ const UserNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [user, setUser] = React.useState(localStorage.user&&true);
+  const [openLog, setOpenLog] = useState(false);
+  const [openSign, setOpenSign] = useState(false);
+
+  const [confirm, setConfirm] = useState(false);
 
   const history = useHistory()
 
@@ -58,6 +68,22 @@ const UserNavBar = (props) => {
     localStorage.clear();
     handleCloseUserMenu();
   }
+function handleCloseLog() {
+    setOpenLog(false);
+}
+function handleCloseSign() {
+  setOpenSign(false);
+}
+function handleClickLog(){
+  setOpenLog(true);
+  setOpenSign(false);
+
+}
+function handleClickSign(){
+  setOpenSign(true);
+  setOpenLog(false);
+
+}
 
   return (
     <AppBar position="static" style={{ backgroundColor: colors.c1 }}>
@@ -170,10 +196,9 @@ const UserNavBar = (props) => {
                 </MenuItem>
               </Menu>
             </Box>}
-
           {!localStorage.getItem("token")&& <Box sx={{ flexGrow: 0 }}>
-            <Button style={{textAlign:"center"}} href='/login'>Login</Button>
-            <Button style={{textAlign:"center"}} href='/signup' >Sign up </Button>
+            <Button style={{textAlign:"center"}} onClick={handleClickLog}>Login</Button>
+            <Button style={{textAlign:"center"}} onClick={handleClickSign} >Sign up </Button>
 
           </Box>
 
@@ -181,7 +206,35 @@ const UserNavBar = (props) => {
 
         </Toolbar>
       </Container>
+      <Dialog
+                open={openLog}
+                onClose={handleCloseLog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    {/* <DialogContentText id="alert-dialog-description">
+                    </DialogContentText> */}
+                </DialogContent>
+                <DialogActions>
+                    <Login signClick={handleClickSign} handleClose={handleCloseLog}></Login>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openSign}
+                onClose={handleCloseSign}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    {/* <DialogContentText id="alert-dialog-description">
+                    </DialogContentText> */}
+                </DialogContent>
+                <DialogActions>
+                    <Singup logClick={handleClickLog} handleClose={handleCloseSign}></Singup> 
+                </DialogActions>
+            </Dialog>
     </AppBar>
   );
 };
-export default (UserNavBar);
+export default withStyles() (UserNavBar);
