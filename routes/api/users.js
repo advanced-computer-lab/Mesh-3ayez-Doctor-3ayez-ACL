@@ -8,6 +8,7 @@ var bcrypt = require('bcryptjs');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
 const auth =require("./middleware/auth.js");
+var bcrypt = require('bcryptjs');
 require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
 var bcrypt = require('bcryptjs');
@@ -146,7 +147,7 @@ router.get('/itinerary/:user_id/:reservation_id', auth, async(req,res)=>{
 });
 
 // edit user info
-router.put('/:user_id', auth, async(req,res)=>{
+router.put('/edit_user/:user_id', auth, async(req,res)=>{
     const body = req.body;
     const user_id = req.params.user_id;
     if(!mongoose.isValidObjectId(user_id))
@@ -251,6 +252,80 @@ router.get('/:_id',auth, async (req,res)=>{
     else
         res.status(404).json({msg: 'there is no such user'});
 })
+//forget password api
+router.put('/forget_password', async(req,res)=>{
+    const body = req.body;
+    // checking user name
+    const username = body.username;
+    const email = body.email;
+    if(!username)
+    {
+        res.status(400).json({msg : 'you must provide your username'});
+        return;
+    }
+    // checking email
+    if(!email)
+    {
+        res.status(400).json({msg : 'you must provide your email'});
+        return;
+    }
+
+    // get user
+    const user = await User.findOne({'username': username});
+    if(!user)
+    {
+        res.status(404).json({msg : 'there is no user with such username'});
+        return;
+    }
+    // checking if the user have the same email
+    console.log(email);
+    console.log(user.email);
+    if(user.email!== email)
+    {
+        res.status(404).json({msg : 'your email is incorrect'});
+        return;
+    }
+    // creating new password
+    const new_password = Math.random().toString(36).slice(-8);
+
+    const encryptedPassword = await bcrypt.hash(new_password, 10);
+    await User.findOneAndUpdate({'username' : username}, {'password': encryptedPassword});
+
+    //sending mail to the user
+    await sendMail(user, new_password);
+
+    res.json({mag: 'an email has been sent to you, please check your mail'});
+
+});
+
+async function sendMail(user, new_password)
+{
+    const text = `Dear Mr/Mrs ${user.first_name}
+we hope you are doing well. this mail is to confirm that you have requested to reset your password.
+new password: ${new_password}
+
+Regards,
+ACL team`;
+
+     
+
+     let transporter = nodemailer.createTransport({
+        service: 'gmail',
+      auth: {
+            user : process.env.user,
+            pass : process.env.password
+      }
+    });
+
+    let info = await transporter.sendMail({
+        from: `${process.env.user}`, // sender address
+        to: `${user.email}`, // list of receivers
+        subject: "Password Reset", // Subject line
+        text: text, // plain text body
+        
+      });
+      
+}
 
 function validateEmail (email){
     return String(email)
