@@ -180,7 +180,7 @@ Visual Studio Code
     //Any of the Attributes given will be updated and the others will remain the same
 }
 ```
--Response Body 
+- Response Body 
 ```
 {
     flight_number:15,
@@ -267,7 +267,7 @@ Visual Studio Code
     //Any of the attributes given will be searched by
 }
 ```
--Response Body
+- Response Body
 ```
 {
     flight_number:15,
@@ -375,7 +375,7 @@ Visual Studio Code
     //Any of the attributes given will be searched by
 }
 ```
--Response Body
+- Response Body
 ```
 {
     flight_number:15,
@@ -474,9 +474,112 @@ Visual Studio Code
 ##### 9.getting all seats of a specific flight
  - Route `flights\all_seats\:flight_id`
  - Request type `GET`
+ - Request Response
+```
+{
+    _id:61aa2bf03c1776af5683b9b7,
+    flight_id:61aa2bf03c1776af5683b9b2,
+    reservation_id:null,
+    seat_type:"economy",
+    seat_name:"C3",
+    __v:0
+    //get all seats that have the same flight id
+}
+//or
+{msg : "no such flight"}
+```
+
+##### 10.get all seats from a flight with the cabin
+ - Route `flights\all_seats\:flight_id`
+ - Request type `GET`
+ - Request Response
+ ```
+ {
+    _id:61aa2bf03c1776af5683b9b7,
+    flight_id:61aa2bf03c1776af5683b9b2,
+    reservation_id:null,
+    seat_type:"economy",
+    seat_name:"C3",
+    __v:0
+    //get all seats that have the same flight id and cabin
+}
+//or
+{msg : "the cabin type is not valid. please choose between economy, business and first"}
+//or
+{msg : "the flight id you have passed is not a valid id"}
+}
+```
+
+### Seats
+
+##### 1.Get a seat
+- Route `flightSeats\seats_id`
+ - Request type `GET`
+ - Request Response
+ ```
+ {
+  {
+    _id:61aa2bf03c1776af5683b9b7,
+    flight_id:61aa2bf03c1776af5683b9b2,
+    reservation_id:null,
+    seat_type:"economy",
+    seat_name:"C3",
+    __v:0
+    //get all seats that have the same flight id and cabin
+}
+//or
+{msg: 'there is no such seat'}
+//or
+{msg : 'the seat id is not a valid id'}
+```
+### Login
+- Route `login\`
+ - Request type `POST`
  - Request Body
-
-
+ ```
+ {
+    username:"nadaabdo558"
+    password:"$2a$10$UVmu9E2PrmLWcafVc3PG8u27E60gSYnCiO1lIkgkdpTrqK3mAjyWy"
+}
+```
+- Request Response
+```
+{msgSrc:"email",msg:"Username is required"}
+//or
+{msgSrc:"password",msg:"Password is required"}
+//or
+{msgSrc:"username-credentials",msg:"Username does not exist"}
+//or
+{msgSrc:"password-credentials",msg:"Incorrect password"}
+//or
+{"token":token,"user":user}
+```
+### Register
+- Route `Register\`
+ - Request type `POST`
+ - Request Body
+ ```
+ {
+     _id:61bcd1e7bf1ace92644c0287,
+    username:"nadaabdo558",
+    password:"$2a$10$UVmu9E2PrmLWcafVc3PG8u27E60gSYnCiO1lIkgkdpTrqK3mAjyWy",
+    first_name:"nada",
+    last_name:"abdo",
+    email:"body5045@gmail.com",
+    passport:1234,
+    __v:0
+}
+```
+- Request Response
+```
+{token:token,user:user}
+//or
+{msgSrc:"taken",msg:"User already exists. Please Login"}
+//or
+{msgSrc: "email", msg: "Please enter a valid email"}
+//or
+{msgSrc:"missing input",msg:"All input is required"}
+```
 
 # Code Style
 * Readability counts.
