@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -82,7 +82,7 @@ function handleClickSign(){
 }
 
   return (
-    <AppBar position="static" style={{ backgroundColor: colors.c1 }}>
+    <AppBar position="fixed" top="0" style={{ backgroundColor: colors.c1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters >
         <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={27}>
@@ -154,8 +154,9 @@ function handleClickSign(){
             {pages.map((page) => (
               <Button
                 key={page}
+                
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2,  display: 'block' }}
                 
               >
                 {page}
