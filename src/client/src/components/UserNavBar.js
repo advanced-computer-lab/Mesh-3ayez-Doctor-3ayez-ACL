@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,7 +18,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import Login from './Login';
@@ -101,7 +101,7 @@ const UserNavBar = (props) => {
                 sx={{ mr: 2, display: { xs: 'none', md: 'flex', width: "50px", height: "50px" } }}
               >
                 <Avatar alt="Remy Sharp" src={logo} sx={{ width: "40px", height: "40px" }} />
-                <Typography style={{ textAlign: "center", margin: "auto" }} fontWeight="bold" color="white" onclick={handleNavToHome}>TIJWAL</Typography>
+                <Typography style={{ textAlign: "center", margin: "auto" }} fontWeight="bold" color="white" onClick={handleNavToHome}>TIJWAL</Typography>
 
               </IconButton>
 

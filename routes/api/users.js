@@ -4,12 +4,14 @@ const Flight = require('../../src/Models/Flight');
 const Reservation = require('../../src/Models/Reservation')
 const FlightSeat = require('../../src/Models/FlightSeat');
 const User = require('../../src/Models/User');
+var bcrypt = require('bcryptjs');
+const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
 const auth =require("./middleware/auth.js");
 var bcrypt = require('bcryptjs');
 require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
-
+var bcrypt = require('bcryptjs');
 // user cancel a reservation
 
 router.delete('/reservation/:user_id/:reservation_id', auth, async(req,res)=>{
@@ -197,6 +199,59 @@ router.put('/edit_user/:user_id', auth, async(req,res)=>{
     })
 });
 
+router.put('/changePassword/:user_id',auth, async(req,res)=>{
+    const body = req.body;
+    const user_id = req.params.user_id;
+    if(!mongoose.isValidObjectId(user_id))
+    {
+        res.status(400).json({msg : 'the id you have sent is not a valid id'});
+        return;
+    }
+    const user = await User.findById(user_id);
+    console.log(user.password);
+    console.log(body.password);
+    if(!user)
+    {
+        res.status(404).json({msg : 'no such user'});
+        return;
+    }
+
+    var query = {};
+    if(await bcrypt.compare(body.OldPassword.password,user.password))
+    {
+        if(body.password)
+        {
+            encryptedPassword = await bcrypt.hash(body.password.password, 10);
+
+            query['password'] = encryptedPassword;
+        }
+    }else{
+        res.status(400).json({msg : 'the Old Password you have entered is not correct'});
+            return;
+    }
+
+    User.findByIdAndUpdate(user_id,query).then(async result =>{
+        const new_user = await User.findById(user_id);
+        res.json(new_user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json('the server has encountered an error sorry for disturbance');
+    })
+});
+
+router.get('/:_id',auth, async (req,res)=>{
+    const _id = req.params._id;
+    if(!mongoose.isValidObjectId(_id))
+    {
+        res.status(400).json({msg : 'the id is not valid'});
+        return;
+    }
+    const user = await User.findById(_id);
+    if(user)
+        res.json(user);
+    else
+        res.status(404).json({msg: 'there is no such user'});
+})
 //forget password api
 router.put('/forget_password', async(req,res)=>{
     const body = req.body;
