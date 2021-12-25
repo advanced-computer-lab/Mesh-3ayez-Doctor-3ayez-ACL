@@ -28,7 +28,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-
+import profile from './images/profile.png'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -37,7 +37,7 @@ import { set } from 'mongoose';
 
 
 export default function UserProfile(probs) {
-    const history= useHistory();
+    const history = useHistory();
     function Copyright(props) {
         return (
             <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -50,57 +50,15 @@ export default function UserProfile(probs) {
             </Typography>
         );
     }
-    localStorage.getItem("activeStep")&&localStorage.removeItem("activeStep");
-    localStorage.getItem("departureReserved")&&localStorage.removeItem("departureReserved");
+    localStorage.getItem("activeStep") && localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved") && localStorage.removeItem("departureReserved");
     var id = localStorage.getItem("user_id");
-    id=id.substring(1,id.length-1);
-    
+    id = id.substring(1, id.length - 1);
 
-    // const [vantaEffect, setVantaEffect] = useState(0)
-    // const myRef = useRef(null)
-    // useEffect(() => {
-    //     if (!vantaEffect) {
-    //         setVantaEffect(CLOUDS({
-    //             el: myRef.current,
-    //             THREE: THREE,
-    //             mouseControls: true,
-    //             touchControls: true,
-    //             gyroControls: false,
-    //             minHeight: 754.00,
-    //             minWidth: 200.00,
-    //             speed: 1.00,
-    //             baseColor: 0xffffff
-    //         }))
-    //     }
-    //     return () => {
-    //         if (vantaEffect) vantaEffect.destroy()
-    //     }
-    // }, [vantaEffect])
-    
+
     const theme = createTheme();
     const colors = require("../colors.js");
-    
-    // const [vantaEffect, setVantaEffect] = useState(0)
-    // const myRef = useRef(null)
-    // useEffect(() => {
-    //     if (!vantaEffect) {
-    //         setVantaEffect(CLOUDS({
-    //             el: myRef.current,
-    //             THREE: THREE,
-    //             mouseControls: true,
-    //             touchControls: true,
-    //             gyroControls: false,
-    //             minHeight: 754.00,
-    //             minWidth: 200.00,
-    //             speed: 1.00,
-    //             baseColor: 0xffffff
-    //         }))
-    //     }
-    //     return () => {
-    //         if (vantaEffect) vantaEffect.destroy()
-    //     }
-    // }, [vantaEffect])
-   
+
     const [username, setUsername] = useState(probs.username)
     const [FirstName, setFirstName] = useState(probs.FirstName)
     const [LastName, setLastName] = useState(probs.LastName)
@@ -110,46 +68,32 @@ export default function UserProfile(probs) {
     const [countryCode, setCountryCode] = useState(probs.CountryCode)
     const [mobile, setMobile] = useState(probs.Mobile)
 
-    useEffect(()=>{
-        axios.get("http://localhost:8000/api/users/"+id,{headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
-        .then(res=>{
-            setUsername(res.data.username);
-            setEmail(res.data.email);
-            setFirstName(res.data.first_name);
-            setLastName(res.data.last_name);
-            setPassport(res.data.passport);
-            setHomeAddress(res.data.home_address);
-            setCountryCode(res.data.country_code);
-            setMobile(res.data.mobile_number);
+    useEffect(() => {
+        axios.get("http://localhost:8000/api/users/" + id, { headers: { 'authentication-token': localStorage.getItem('token'), "Content-Type": "application/json" } })
+            .then(res => {
+                setUsername(res.data.username);
+                setEmail(res.data.email);
+                setFirstName(res.data.first_name);
+                setLastName(res.data.last_name);
+                setPassport(res.data.passport);
+                setHomeAddress(res.data.home_address);
+                setCountryCode(res.data.country_code);
+                setMobile(res.data.mobile_number);
 
-            
-            console.log(res);
 
-        }).catch(err => {
-            console.log(err);
-        });
+                console.log(res);
+
+            }).catch(err => {
+                console.log(err);
+            });
     }, []);
     return (
         <ThemeProvider theme={theme} >
-                     <UserNavBar></UserNavBar>
+            <UserNavBar></UserNavBar>
 
-            <Grid container component="main" sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "3%", marginBottom: "3%" }} >
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://live.staticflickr.com/8367/8507160908_ec45d733ed_b.jpg)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square >
-                    <CssBaseline />
+            <Container maxWidth="md">
+                <CssBaseline />
+                <Paper elevation={4} style={{paddingTop:"2%", marginTop:"2%"}}>
                     <Box
                         sx={{
                             my: 8,
@@ -159,71 +103,68 @@ export default function UserProfile(probs) {
                             alignItems: 'center',
                         }}
                     >
-                         <Avatar sx={{ m: 1, bgcolor: colors.c1 }}src="/broken-image.jpg" />
-                         <Typography component="h1" variant="h5" color={colors.c1}>
-                            My Account
-                        </Typography>
+                        <img sx={{ bgcolor: colors.c1 }} width="100px" height="100px" src={profile} />
                         <br></br>
                         <Box>
-                            <Grid container spacing={2}>
-                            <Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>username: </strong>{username}
-                            
-                        </Typography>
+                            <Grid container spacing={2} sx={{ alignItems: "center" }}>
+                                <Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>username: </strong>{username}
+
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>First Name: </strong>
+                                        {FirstName}
+
+                                    </Typography>
+                                </Grid><Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Last Name: </strong>
+                                        {LastName}
+
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Email: </strong>
+                                        {email}
+
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Passport Number: </strong>
+                                        {Passport}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Home Address: </strong>
+                                        {homeAddress}
+                                    </Typography>
+                                </Grid><Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Country Code: </strong>
+                                        {countryCode}
+                                    </Typography>
+                                </Grid><Grid item xs={12} >
+                                    <Typography variant="h5" textAlign="left" marginLeft="0px" color="#616666" gutterBottom component="div">
+                                        <strong>Mobile Number: </strong>
+                                        0{mobile}
+                                    </Typography>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>First Name: </strong>
-                            {FirstName}
-                                                     
-                        </Typography>
-                            </Grid><Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Last Name: </strong>
-                            {LastName}
-                                                        
-                        </Typography>
-                            </Grid>
-                            <Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Email: </strong>
-                            {email}
-                                                          
-                        </Typography>
-                            </Grid>
-                            <Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Passport Number: </strong>
-                            {Passport}                               
-                        </Typography>
-                            </Grid>
-                            <Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Home Address: </strong>
-                            {homeAddress}                               
-                        </Typography>
-                            </Grid><Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Country Code: </strong>
-                            {countryCode}                               
-                        </Typography>
-                            </Grid><Grid item xs={12} >
-                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
-                            <strong>Mobile Number: </strong>
-                            0{mobile}                               
-                        </Typography>
-                            </Grid>
-                            </Grid>
-                        
-                        <Button
+
+                            <Button
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                                 style={{
                                     borderRadius: 5,
                                     backgroundColor: colors.c1,
-                                }}href="/user/EditProfile"
+                                }} href="/user/EditProfile"
                             >
                                 Edit Account Info
                             </Button><Button
@@ -233,13 +174,13 @@ export default function UserProfile(probs) {
                                 style={{
                                     borderRadius: 5,
                                     backgroundColor: colors.c1,
-                                }}href="/user/changePassword"
+                                }} href="/user/changePassword"
                             >
                                 Change Password
                             </Button><Button
                                 fullWidth
                                 variant="contained"
-                                onClick={()=>history.goBack()}
+                                onClick={() => history.goBack()}
                                 sx={{ mt: 0, mb: 2 }}
                                 style={{
                                     borderRadius: 5,
@@ -247,16 +188,16 @@ export default function UserProfile(probs) {
                                 }}
                             >Back
                             </Button>
-                            </Box>
+                        </Box>
 
-              
+
                     </Box>
                     <Copyright sx={{ mt: 5 }} />
-                </Grid>
-            </Grid>
-
+                </Paper>
+            </Container>
+     
         </ThemeProvider>
     );
-    
+
 }
 

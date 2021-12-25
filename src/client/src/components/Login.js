@@ -117,7 +117,7 @@ export default function Login(props) {
                         //     }
                         // });
                         props.handleClose();
-                      
+
                     }
 
                 }
@@ -159,7 +159,7 @@ export default function Login(props) {
                             backgroundPosition: 'center',
                         }}
                     /> */}
-                    <Grid item  component={Paper} elevation={6} square>
+                    <Grid item component={Paper} elevation={6} square>
                         <Box
                             sx={{
                                 my: 8,
@@ -223,7 +223,7 @@ export default function Login(props) {
                                     }
                                     }
                                 />
-                            
+
                                 <Button
                                     style={{
                                         borderRadius: 5,
@@ -237,17 +237,21 @@ export default function Login(props) {
                                     Sign In
                                 </Button>
                                 <Grid container>
+                                    
                                     <Grid item xs>
-                                    <Link href="#" onClick = {handleSubmitResetPassword} variant="body2">
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
-                                    <Grid item xs>
-                                        <Link onClick={props.signClick} variant="body2" style={{ color: colors.c1, cursor:"pointer" }}>
-                                            {"Don't have an account? Sign Up"}
+                                        <Link href="#" variant="body2" onClick = {handleSubmitResetPassword} variant="body2" style={{ color: colors.c1, cursor: "pointer" }}>
+                                            Forgot password?
                                         </Link>
                                     </Grid>
                                 </Grid>
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link onClick={props.signClick} variant="body2" style={{ color: colors.c1, cursor: "pointer" }}>
+                                            Don't have an account? Sign Up
+                                        </Link>
+                                    </Grid>
+                                </Grid>
+
                                 {err && <Typography color="red" >{errMsg}</Typography>}
                                 <Copyright sx={{ mt: 5 }} />
                                 <Dialog

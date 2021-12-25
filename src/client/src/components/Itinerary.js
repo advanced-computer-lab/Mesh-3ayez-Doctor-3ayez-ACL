@@ -31,7 +31,7 @@ import Payment from './Payment';
 import Stack from '@mui/material/Stack'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-import loader from './Ajux_loader.gif'
+import loader from './images/Ajux_loader.gif'
 
 
 
