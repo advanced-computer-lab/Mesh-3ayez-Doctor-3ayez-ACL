@@ -39,7 +39,8 @@ function EditSearchResults(props) {
                 departure: props.src==='editDep',
                 departure_id:location.state.reservation.departure_flight,
                 return_id:location.state.reservation.return_flight,
-
+                depFlight: location.state.depFlight,
+                retFlight: location.state.retFlight
             }
         });
     }
