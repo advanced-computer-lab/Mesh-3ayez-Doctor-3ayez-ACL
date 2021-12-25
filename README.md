@@ -1,7 +1,6 @@
 ![Tijwal (1)](https://user-images.githubusercontent.com/83404871/147373192-68de0612-6e7c-42d7-ba48-f4af78489dd1.jpg)
 # Tijwal
-An Airline Reservation web application through which individuals can reserve and pay for flights in order to travel to different countries and sometimes domestic cities.
-
+The theme of the project, is to create a complete Airline Reservation System. An Airline Reservation System is a web application through which individuals can reserve and pay for flights in order to travel to different countries and sometimes domestic cities. Each airline usually has its own website through which reservations (bookings) can be made. Such websites include EgyptAir.com, Emirates.com, Lufthansa.com and AirCanada.com.
 # Content
 - [Tijwal](#tijwal)
 - [Motivation](#motivation)
@@ -77,14 +76,15 @@ An Airline Reservation web application through which individuals can reserve and
 * Learn the process of following a given set of System Requirements to develop a software. 
 # Tech/ Framework used
 ### we used MERN Stack framework to create the Application
+MERN stack is a software stack that includes four open-source technologies: (MongoDB, Express.js, React, and Node.js). These components provide an end-to-end framework for building dynamic web sites and web applications.
 ##### Database 
-* [Mongo DB](https://www.mongodb.com/) - The only database that harnesses the innovations of NoSQL.
+* [Mongo DB](https://www.mongodb.com/) - The only database that harnesses the innovations of NoSQL. MongoDB is a source-available cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with optional schemas. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License.
 ##### Node.js Framework
-* [Express JS](http://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
+* [Express JS](http://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js.Express.js, or simply Express, is a back end web application framework for Node.js, released as free and open-source software under the MIT License. It is designed for building web applications and APIs. It has been called the de facto standard server framework for Node.js.
 ##### Front end
-* [React JS](https://reactjs.org/) - A declarative, efficient, and flexible JavaScript library for building user interfaces.
+* [React JS](https://reactjs.org/) - A declarative, efficient, and flexible JavaScript library for building user interfaces.React is a free and open-source front-end JavaScript library for building user interfaces based on UI components. It is maintained by Meta and a community of individual developers and companies. React can be used as a base in the development of single-page or mobile applications.
 ##### Back end
-* [Node JS](http://nodejs.org/) - A platform built on Chrome's JS runtime for easily building fast, scalable network apps.
+* [Node JS](http://nodejs.org/) - A platform built on Chrome's JS runtime for easily building fast, scalable network apps. Node.js is an open-source, cross-platform, back-end JavaScript runtime environment that runs on the V8 engine and executes JavaScript code outside a web browser.
 # How to use?
 ## Built with
 Visual Studio Code [Download from here](https://code.visualstudio.com/download)
@@ -101,77 +101,77 @@ Visual Studio Code [Download from here](https://code.visualstudio.com/download)
 ## Navigation
 
 ### signup using button in navigation bar:
-You have to specify your
-* username
-* first name
-* last name
-* email
-* passport number
-* Address
-* country code
-* mobile number
-![signup](https://user-images.githubusercontent.com/83404871/147391856-7facc2fb-113b-40ff-bee2-68a6eefc7f85.png)
+>You have to specify your
+>* username
+>* first name
+>* last name
+>* email
+>* passport number
+>* Address
+>* country code
+>* mobile number
+>![signup](https://user-images.githubusercontent.com/83404871/147391856-7facc2fb-113b-40ff-bee2-68a6eefc7f85.png)
 ### Login if you already signed up before using:
-* username
-* password
-![login](https://user-images.githubusercontent.com/83404871/147391901-168234f5-2d2e-4d58-9e9f-05a58d0d730f.png)
+>* username
+>* password
+>![login](https://user-images.githubusercontent.com/83404871/147391901-168234f5-2d2e-4d58-9e9f-05a58d0d730f.png)
 
 ### Your Home should look like this:
-![User Home](https://user-images.githubusercontent.com/83404871/147391948-896a2043-a737-4f84-b3d7-5ff5b6eeb03a.png)
+>![User Home](https://user-images.githubusercontent.com/83404871/147391948-896a2043-a737-4f84-b3d7-5ff5b6eeb03a.png)
 
 ### View your profile info By clicking on profile in the navigation bar:
-![Profile](https://user-images.githubusercontent.com/83404871/147392002-1060a2e2-228b-45e5-90b5-e6f2b724aea8.png)
+>![Profile](https://user-images.githubusercontent.com/83404871/147392002-1060a2e2-228b-45e5-90b5-e6f2b724aea8.png)
 
 ### edit profile info:
-you can change your:
-* first name
-* last name
-* email
-* passport
-![edit profile](https://user-images.githubusercontent.com/83404871/147392053-1ae59bbf-1c71-4bc4-a3b9-b24b7c76c3c1.png)
+>you can change your:
+>* first name
+>* last name
+>* email
+>* passport
+>![edit profile](https://user-images.githubusercontent.com/83404871/147392053-1ae59bbf-1c71-4bc4-a3b9-b24b7c76c3c1.png)
 
 ### change your Password:
-![password](https://user-images.githubusercontent.com/83404871/147392087-ff6cb823-8057-47d4-859c-e8ba7e9e8c69.png)
+>![password](https://user-images.githubusercontent.com/83404871/147392087-ff6cb823-8057-47d4-859c-e8ba7e9e8c69.png)
 
 
 ### Searching for Flights:
-select departure flight
+>select departure flight
 ![264084117_4816018441753058_6427254638577618211_n](https://user-images.githubusercontent.com/83404871/147392161-34470c03-6d5a-491e-8f74-11d7d3c2cc2d.png)
 
 ### after clicking reserve this will give you the list of all possible return flights like this:
-![264391135_241762758032223_505865153648017193_n](https://user-images.githubusercontent.com/83404871/147392222-ba2f7999-2af1-4dbb-948c-d4721a14c8c0.png)
+>![264391135_241762758032223_505865153648017193_n](https://user-images.githubusercontent.com/83404871/147392222-ba2f7999-2af1-4dbb-948c-d4721a14c8c0.png)
 
 ### when reserving your return flight this will navigate you to selecting your preferred seats on the plane:
-* you are allowed to reserve up to 3 seats/flight
-![267236310_684965332884764_2867850062151290321_n](https://user-images.githubusercontent.com/83404871/147392285-725a8af1-2ae5-4aff-8cac-13a8110e5a14.png)
+>* you are allowed to reserve up to 3 seats/flight
+>![267236310_684965332884764_2867850062151290321_n](https://user-images.githubusercontent.com/83404871/147392285-725a8af1-2ae5-4aff-8cac-13a8110e5a14.png)
 
 ### when pressing on confirm:
-![269932859_1058812101356524_6092159770024377494_n](https://user-images.githubusercontent.com/83404871/147392496-2282b40f-4f78-4679-be2d-e52b30120a1b.png)
+>![269932859_1058812101356524_6092159770024377494_n](https://user-images.githubusercontent.com/83404871/147392496-2282b40f-4f78-4679-be2d-e52b30120a1b.png)
 ### confirmation will lead you to online payment where you have to specify:
-* your card id
-* expiration date
-* CSV
-![267745259_717452489220252_5944662319792235373_n](https://user-images.githubusercontent.com/83404871/147392318-fc9c3da4-2a35-4ad6-ae11-f8ee20f5599c.png)
+>* your card id
+>* expiration date
+>* CSV
+>![267745259_717452489220252_5944662319792235373_n](https://user-images.githubusercontent.com/83404871/147392318-fc9c3da4-2a35-4ad6-ae11-f8ee20f5599c.png)
 
 
 ### after payment a brief about Your Itenerary will appear where you will get the opportunity to cancel reservations:
-![267749894_223356439948945_6298808428255626415_n](https://user-images.githubusercontent.com/83404871/147392375-cc6c1fbe-e20a-420c-8db5-a32b23ef1188.png)
+>![267749894_223356439948945_6298808428255626415_n](https://user-images.githubusercontent.com/83404871/147392375-cc6c1fbe-e20a-420c-8db5-a32b23ef1188.png)
 
 ### if you choose to cancel you will be Automatically refunded:
-![267826159_1008464426682420_218440884847535797_n](https://user-images.githubusercontent.com/83404871/147392426-8889b23e-9a14-47cc-843f-67ce4ef5d372.png)
+>![267826159_1008464426682420_218440884847535797_n](https://user-images.githubusercontent.com/83404871/147392426-8889b23e-9a14-47cc-843f-67ce4ef5d372.png)
 
 
 ### if you logged out and you want to check you reservations:
-* click on your profile icon in the navbar
-* click on Dash board
+>* click on your profile icon in the navbar
+>* click on Dash board
 
-![267865779_599568691155316_6054516382772229699_n](https://user-images.githubusercontent.com/83404871/147392572-f32e9b89-08ae-488b-955a-e8df44596f7f.png)
+>![267865779_599568691155316_6054516382772229699_n](https://user-images.githubusercontent.com/83404871/147392572-f32e9b89-08ae-488b-955a-e8df44596f7f.png)
 
 ### open any of the to view full details:
 
-![269608535_503053430991019_962950745107906975_n](https://user-images.githubusercontent.com/83404871/147392584-89dc9665-64d3-4b3a-85b8-b52ba0cef7cc.png)
+>![269608535_503053430991019_962950745107906975_n](https://user-images.githubusercontent.com/83404871/147392584-89dc9665-64d3-4b3a-85b8-b52ba0cef7cc.png)
 
-in this view you can cancel any of your reservations at anytime and you can also email it to yourself to save a copy of it
+>in this view you can cancel any of your reservations at anytime and you can also email it to yourself to save a copy of it
 # API reaferences
 
 ### Flights
