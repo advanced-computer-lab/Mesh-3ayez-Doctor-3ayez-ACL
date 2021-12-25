@@ -32,13 +32,16 @@ import { withStyles } from '@mui/styles';
 
         }
     }, [])
+    const cabin=location.state.reservation.cabin_type
+    const price=location.state.flight[`${cabin}_seats`].price['$numberDecimal']
     return (
         <div style={{ position: 'relative', textAlign: "center" }}>
 
             <Stack textAlign="center">
                 <UserNavBar></UserNavBar>
-                <EditFlightSearchBar src='editRet' flight={location.state.flight} number_of_passengers={location.state.reservation.number_of_passengers} res={location.state.reservation}></EditFlightSearchBar>
-                {!loading && <EditSearchResults margin="Auto" textAlign= "center" flights={returnFlight} src='editRet' res={location.state.reservation}
+                <EditFlightSearchBar src='editRet' flight={location.state.flight} number_of_passengers={location.state.reservation.number_of_passengers} res={location.state.reservation}
+                depFlight={location.state.depFlight} retFlight={location.state.retFlight}></EditFlightSearchBar>
+                {!loading && <EditSearchResults margin="Auto" textAlign= "center" flights={returnFlight} src='editRet' res={location.state.reservation} oldPrice={price} flight={location.state.flight}
                 ></EditSearchResults>}
             </Stack>
 

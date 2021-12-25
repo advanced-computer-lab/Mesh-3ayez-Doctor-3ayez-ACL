@@ -36,8 +36,8 @@ const colors = require("../colors.js");
 
 
 function EditProfile() {
-    const id="61c39db080532b1c2d5b6a1"
-    
+    var id = localStorage.getItem("user_id");
+    id=id.substring(1,id.length-1);    
 
     
     const [alert, setAlert] = useState(false);
@@ -51,7 +51,6 @@ function EditProfile() {
         const user = {
             first_name: data.get('firstName'),
             last_name: data.get('lastName'),
-            username: data.get('username'),
             email: data.get('email'),
             passport: data.get('passport'),
         };
@@ -144,17 +143,7 @@ function EditProfile() {
                                         
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="username"
-                                        label="Username"
-                                        name="username"
-                                        autoComplete="username"
-                                        
-                                    />
-                                </Grid>
+                                
                                 <Grid item xs={12}>
                                     <TextField
                                         required
@@ -196,6 +185,7 @@ function EditProfile() {
                             <Button
                                 fullWidth
                                 variant="contained"
+                                href="/user/profile"
                                 sx={{ mt: 0, mb: 2 }}
                                 style={{
                                     borderRadius: 5,

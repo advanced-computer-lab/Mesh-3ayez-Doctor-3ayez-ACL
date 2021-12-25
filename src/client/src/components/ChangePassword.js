@@ -26,7 +26,6 @@ import UserNavBar from './UserNavBar';
 import { withStyles } from '@material-ui/core';
 import Avatar from '@mui/material/Avatar';
 // import { Console } from 'console';
-var bcrypt = require('bcryptjs');
 
 function Copyright(props) {
     return (
@@ -45,7 +44,8 @@ const theme = createTheme();
 const colors = require("../colors.js");
 
 export default function PasswordChange(probs) {
-    const id = "61c39db0805325b1c2d5b6a1";
+    var id = localStorage.getItem("user_id");
+    id=id.substring(1,id.length-1);
     // const [vantaEffect, setVantaEffect] = useState(0)
     // const myRef = useRef(null)
     // useEffect(() => {
@@ -130,19 +130,12 @@ export default function PasswordChange(probs) {
     const onSubmit = function (e) {
         // console.log("onsubmit")
         e.preventDefault()
-        var s="";
-        axios.get("http://localhost:8000/api/users/" + id)
-                .then(result => {
-                    s=result.password;
-                }
-                )
-                .catch(err => console.log(err));
-        const match=bcrypt.compare(Password.password,s)        
-        console.log(match)
-        if (match){
+       
+                
             console.log("Entered")
             if(Password1.password===Password2.password){
-            const data = {"password":Password1}
+            const data = {"OldPassword":Password,
+                "password":Password1}
             axios.put("http://localhost:8000/api/users/changePassword/" + id, data, { "Content-Type": "application/json" })
                 .then(result => {
                     console.log("added")
@@ -151,20 +144,14 @@ export default function PasswordChange(probs) {
                     setAlert(true);
                 }
                 )
-                .catch(err => {setSucc(false);
-                setMsg(err);
-                setAlert(true);});
+                .catch(err => console.log(err));
             }else{
                 console.log(Password1+" "+Password2);
                 setSucc(false);
                     setMsg("Passwords Don't match")
                     setAlert(true);
             }
-        }else{
-            setSucc(false);
-            setMsg("Old Password is wrong")
-            setAlert(true);
-        }
+        
     }
     return (
         <div   >

@@ -9,7 +9,7 @@ const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
 require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
-
+var bcrypt = require('./bcryptjs');
 // user cancel a reservation
 
 router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
@@ -74,6 +74,7 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
 
         // sending email to the user
         await send_cancellation_mail(user, reservation.price, reservation, departure_flight.from, departure_flight.to);
+        console.log('mail sent');
         res.json({msg:"deleted successfully"});
 
     }
@@ -115,6 +116,7 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
 
 router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
     const user_id = req.params.user_id;
+    console.log(user_id);
     const reservation_id = req.params.reservation_id;
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id' : user_id});
     if(reservation)
@@ -211,11 +213,17 @@ router.put('/changePassword/:user_id',async(req,res)=>{
     }
 
     var query = {};
-    if(body.password)
+    if(await bcrypt.compare(body.OldPassword,user.password))
     {
-        encryptedPassword = await bcrypt.hash(body.password, 10);
+        if(body.password)
+        {
+            encryptedPassword = await bcrypt.hash(body.password, 10);
 
-        query['password'] = encryptedPassword;
+            query['password'] = encryptedPassword;
+        }
+    }else{
+        res.status(400).json({msg : 'the Old Password you have entered is not correct'});
+            return;
     }
 
     User.findByIdAndUpdate(user_id,query).then(async result =>{

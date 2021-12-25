@@ -49,6 +49,32 @@ export default function UserProfile(probs) {
             </Typography>
         );
     }
+    localStorage.getItem("activeStep")&&localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved")&&localStorage.removeItem("departureReserved");
+    var id = localStorage.getItem("user_id");
+    id=id.substring(1,id.length-1);
+    
+
+    // const [vantaEffect, setVantaEffect] = useState(0)
+    // const myRef = useRef(null)
+    // useEffect(() => {
+    //     if (!vantaEffect) {
+    //         setVantaEffect(CLOUDS({
+    //             el: myRef.current,
+    //             THREE: THREE,
+    //             mouseControls: true,
+    //             touchControls: true,
+    //             gyroControls: false,
+    //             minHeight: 754.00,
+    //             minWidth: 200.00,
+    //             speed: 1.00,
+    //             baseColor: 0xffffff
+    //         }))
+    //     }
+    //     return () => {
+    //         if (vantaEffect) vantaEffect.destroy()
+    //     }
+    // }, [vantaEffect])
     
     const theme = createTheme();
     const colors = require("../colors.js");
@@ -79,8 +105,10 @@ export default function UserProfile(probs) {
     const [LastName, setLastName] = useState(probs.LastName)
     const [email, setEmail] = useState(probs.email);
     const [Passport, setPassport] = useState(probs.Passport)
+    const [homeAddress, setHomeAddress] = useState(probs.homeAddress)
+    const [countryCode, setCountryCode] = useState(probs.CountryCode)
+    const [mobile, setMobile] = useState(probs.Mobile)
 
-    const id="61c39db0805325b1c2d5b6a1";
     useEffect(()=>{
         axios.get("http://localhost:8000/api/users/"+id)
         .then(res=>{
@@ -89,6 +117,11 @@ export default function UserProfile(probs) {
             setFirstName(res.data.first_name);
             setLastName(res.data.last_name);
             setPassport(res.data.passport);
+            setHomeAddress(res.data.home_address);
+            setCountryCode(res.data.country_code);
+            setMobile(res.data.mobile_number);
+
+            
             console.log(res);
 
         }).catch(err => {
@@ -164,6 +197,22 @@ export default function UserProfile(probs) {
                             {Passport}                               
                         </Typography>
                             </Grid>
+                            <Grid item xs={12} >
+                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
+                            <strong>Home Address: </strong>
+                            {homeAddress}                               
+                        </Typography>
+                            </Grid><Grid item xs={12} >
+                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
+                            <strong>Country Code: </strong>
+                            {countryCode}                               
+                        </Typography>
+                            </Grid><Grid item xs={12} >
+                            <Typography variant="h5" textAlign= "left" marginLeft="0px"color= "#616666" gutterBottom component="div">
+                            <strong>Mobile Number: </strong>
+                            0{mobile}                               
+                        </Typography>
+                            </Grid>
                             </Grid>
                         
                         <Button
@@ -183,7 +232,7 @@ export default function UserProfile(probs) {
                                 style={{
                                     borderRadius: 5,
                                     backgroundColor: colors.c1,
-                                }}href="/user/EdiProfile"
+                                }}href="/user/changePassword"
                             >
                                 Change Password
                             </Button><Button

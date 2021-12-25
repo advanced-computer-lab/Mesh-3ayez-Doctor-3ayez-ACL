@@ -28,6 +28,9 @@ import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
 import { withStyles } from '@mui/styles';
 import Payment from './Payment';
+import Stack from '@mui/material/Stack'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 
 
@@ -36,6 +39,7 @@ import Payment from './Payment';
 function Itinerary() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [rsvids, setrsvids] = useState([]);
   const [thersv, setTheRsv] = useState('');
   const [isLoading, setLoading] = useState(true);
@@ -47,14 +51,21 @@ function Itinerary() {
   var theflightdisplay;
   
   useEffect(() => {
+    localStorage.getItem("activeStep") && localStorage.removeItem("activeStep");
+    localStorage.getItem("departureReserved") && localStorage.removeItem("departureReserved");
     var tinyjsons = []
     var tinyjsons2 = []
+    
     if(isLoading){
-    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")
+        var user_id = localStorage.getItem('user_id')
+      user_id = user_id.substring(1, user_id.length-1);
+    axios.get(`http://localhost:8000/api/flights/user/${user_id}`)//61bcd1e7bf1ace92644c0287")
         .then(res =>{
             setrsvids(res.data);
             setLoading(false);
         }).catch(err => {
+            console.log(user_id);
+            console.log("hi");
             console.log(err);
         });
     }
@@ -88,9 +99,20 @@ function Itinerary() {
   }
 
   function handleCancellation(){
-        axios.delete("http://localhost:8000/api/users/reservation/61bcd1e7bf1ace92644c0287/"+thersv);
+      var user_id = localStorage.getItem('user_id')
+      user_id = user_id.substring(1, user_id.length-1);
+        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv).then(data=>{
+            console.log(data);
+        }).catch(err=>{
+            console.log(err.response);
+        });
         handleClose();
         history.go();
+  }
+
+  function showMessage(){
+      setErrorMsg("Email sent!");
+      setOpen2(true);
   }
   
 
@@ -112,7 +134,7 @@ function Itinerary() {
                     key = {index+"PP"}
                     reservation = {thing}
                     delete_callback = {openCancellation}
-                    payment_callback = {openPayment}
+                    message_callback = {showMessage}
                 />
                 )
         })}
@@ -148,22 +170,14 @@ function Itinerary() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog
-                open={open2}
-                onClose={handleClose2}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogContent>
-                    <Payment
-                        name=""
-                        price="5000"
-                        productby = "Tijwal"
-                    >
-
-                    </Payment>
-                </DialogContent>
-            </Dialog>
+            
+            <Stack width="100%">
+                    <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
+                        <Alert onClose={handleClose2} severity="success" sx={{ width: '100%' }}>
+                            {errorMsg}
+                        </Alert>
+                    </Snackbar>
+            </Stack>
                 
       
     </div>

@@ -27,8 +27,11 @@ function ReservationAccordion(probs){
     const [theJsons2, updateTheJsons2] = useState([]);
 
     useEffect(() => {
+        
         if(isLoading){
-        axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
+            var user_id = localStorage.getItem('user_id')
+        user_id = user_id.substring(1, user_id.length-1);
+        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString()).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -100,7 +103,8 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
-                flight: theJsons[0].flight_details[0],
+                depflight: theJsons[0].flight_details[0],
+                retflight: theJsons2[0].flight_details[0],
                 src:"editDep"
 
             }
@@ -112,7 +116,8 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
-                flight: theJsons2[0].flight_details[0],
+                retflight: theJsons2[0].flight_details[0],
+                depflight: theJsons[0].flight_details[0],
                 src:"editRet"
             }
         });
@@ -144,8 +149,11 @@ function ReservationAccordion(probs){
         });
     }
 
-    function handlePayment(){
-        probs.payment_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id);
+    function handleEmailing(){
+        probs.message_callback();
+        var user_id = localStorage.getItem('user_id')
+        user_id = user_id.substring(1, user_id.length-1);
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id);
     }
 
     
@@ -164,10 +172,10 @@ if(theJsons[0]!=undefined)
                     aria-label="Acknowledge"
                     onClick={event => event.stopPropagation()}
                     onFocus={event => event.stopPropagation()}
-                    label={' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
-    +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}
     control={<Button key="buttonkey" variant="outlined" color="error"  onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right'}} >Cancel reservation</Button>}
                   />
+                  <label style={{marginTop: 7, marginLeft: -20}}>{' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
+    +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}</label>
                 
                 
     
@@ -176,8 +184,9 @@ if(theJsons[0]!=undefined)
 
                     <div>
                     <div>
-                    {/*<div style={{float:'right'}}><Button variant="outlined" color="success" onClick={handlePayment}>Pay</Button></div>*/}
+                    <div><Button variant="outlined" color="success" onClick={handleEmailing}>Email Me a Copy of My Itinerary</Button></div>
                     {/*<Payment style={{float:'right'}} name="ThePayment" price={(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)} productby="Tijwal"></Payment>*/}
+
                     <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
                     <Box sx={{ flexGrow: 1, float:"left" }}><label style={{marginLeft: 10}}>{"Number: "+(theJsons[0]==undefined?'':theJsons[0].reservation_number)}</label></Box>
                     <br/>

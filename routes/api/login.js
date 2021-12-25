@@ -7,7 +7,6 @@ var bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const dotenv=require('dotenv');
 dotenv.config({path:__dirname+'/../../config/.env'});
-
 const key= process.env.SECRETKEY;
 router.post("/", async (req, res) => {
   // Our login logic starts here
