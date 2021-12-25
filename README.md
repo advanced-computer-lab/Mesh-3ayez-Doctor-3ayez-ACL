@@ -1,48 +1,50 @@
 ![Tijwal (1)](https://user-images.githubusercontent.com/83404871/147373192-68de0612-6e7c-42d7-ba48-f4af78489dd1.jpg)
 # Tijwal
 An Airline Reservation web application through which individuals can reserve and pay for flights in order to travel to different countries and sometimes domestic cities.
-# content
+
+# Content
+- [Tijwal](#tijwal)
 - [Motivation](#motivation)
-          + [The following are the objectives of this project:](#the-following-are-the-objectives-of-this-project-)
-- [Tech/Framework used](#tech-framework-used)
+          + [The following are the objectives of this project:](#the-following-are-the-objectives-of-this-project)
+- [Tech/ Framework used](#tech-framework-used)
     + [we used MERN Stack framework to create the Application](#we-used-mern-stack-framework-to-create-the-application)
         * [Database](#database)
         * [Node.js Framework](#nodejs-framework)
         * [Front end](#front-end)
         * [Back end](#back-end)
-- [How to use?](#how-to-use-)
-    + [Built with](#built-with)
-    + [Prerequisets](#prerequisets)
-    + [Navigation](#navigation)
-        * [signup using button in navigation bar](#signup-using-button-in-navigation-bar)
-        * [Login if you already signed up before using:](#login-if-you-already-signed-up-before-using)
-        * [Your Home should look like this](#your-home-should-look-like-this)
-        * [View your profile info By clicking on profile in the navigation bar](#view-your-profile-info-by-clicking-on-profile-in-the-navigation-bar)
-        * [edit profile info](#edit-profile-info)
-        * [change your Password](#change-your-password)
-        * [Searching for Flights](#searching-for-flights)
-        * [after clicking reserve this will give you the list of all possible return flights like this](#after-clicking-reserve-this-will-give-you-the-list-of-all-possible-return-flights-like-this)
-        * [when reserving your return flight this will navigate you to selecting your preferred seats on the plane](#when-reserving-your-return-flight-this-will-navigate-you-to-selecting-your-preferred-seats-on-the-plane)
-        * [when pressing on confirm](#when-pressing-on-confirm)
-        * [confirmation will lead you to online payment where you have to specify](#confirmation-will-lead-you-to-online-payment-where-you-have-to-specify)
-        * [after payment a brief about Your Itenerary will appear where you will get the opportunity to cancel reservations](#after-payment-a-brief-about-your-itenerary-will-appear-where-you-will-get-the-opportunity-to-cancel-reservations)
-        * [if you choose to cancel you will be Automatically refunded](#if-you-choose-to-cancel-you-will-be-automatically-refunded)
-        * [if you logged out and you want to check you reservations](#if-you-logged-out-and-you-want-to-check-you-reservations)
-        * [open any of the to view full details](#open-any-of-the-to-view-full-details)
+- [How to use?](#how-to-use)
+  * [Built with](#built-with)
+  * [Prerequisets](#prerequisets)
+  * [Navigation](#navigation)
+    + [signup using button in navigation bar:](#signup-using-button-in-navigation-bar)
+    + [Login if you already signed up before using:](#login-if-you-already-signed-up-before-using)
+    + [Your Home should look like this:](#your-home-should-look-like-this)
+    + [View your profile info By clicking on profile in the navigation bar:](#view-your-profile-info-by-clicking-on-profile-in-the-navigation-bar)
+    + [edit profile info:](#edit-profile-info)
+    + [change your Password:](#change-your-password)
+    + [Searching for Flights:](#searching-for-flights)
+    + [after clicking reserve this will give you the list of all possible return flights like this:](#after-clicking-reserve-this-will-give-you-the-list-of-all-possible-return-flights-like-this)
+    + [when reserving your return flight this will navigate you to selecting your preferred seats on the plane:](#when-reserving-your-return-flight-this-will-navigate-you-to-selecting-your-preferred-seats-on-the-plane)
+    + [when pressing on confirm:](#when-pressing-on-confirm)
+    + [confirmation will lead you to online payment where you have to specify:](#confirmation-will-lead-you-to-online-payment-where-you-have-to-specify)
+    + [after payment a brief about Your Itenerary will appear where you will get the opportunity to cancel reservations:](#after-payment-a-brief-about-your-itenerary-will-appear-where-you-will-get-the-opportunity-to-cancel-reservations)
+    + [if you choose to cancel you will be Automatically refunded:](#if-you-choose-to-cancel-you-will-be-automatically-refunded)
+    + [if you logged out and you want to check you reservations:](#if-you-logged-out-and-you-want-to-check-you-reservations)
+    + [open any of the to view full details:](#open-any-of-the-to-view-full-details)
 - [API reaferences](#api-reaferences)
     + [Flights](#flights)
-        * [1.Show all flights](#1show-all-flights)
-        * [2.Create a flights](#2create-a-flights)
-        * [3.Update Flight details](#3update-flight-details)
-        * [4.Search for flights](#4search-for-flights)
+        * [1. Show all flights](#1-show-all-flights)
+        * [2. Create a flights](#2-create-a-flights)
+        * [3. Update Flight details](#3-update-flight-details)
+        * [4. Search for flights](#4-search-for-flights)
         * [5.Delete a Flight](#5delete-a-flight)
-        * [6.Get All Reserved Flights by a user](#6get-all-reserved-flights-by-a-user)
-        * [7.User search for departure and return flights](#7user-search-for-departure-and-return-flights)
-        * [8.get the details of a flight with its id](#8get-the-details-of-a-flight-with-its-id)
-        * [9.getting all seats of a specific flight](#9getting-all-seats-of-a-specific-flight)
-        * [10.get all seats from a flight with the cabin](#10get-all-seats-from-a-flight-with-the-cabin)
+        * [6. Get All Reserved Flights by a user](#6-get-all-reserved-flights-by-a-user)
+        * [7. User search for departure and return flights](#7-user-search-for-departure-and-return-flights)
+        * [8. get the details of a flight with its id](#8-get-the-details-of-a-flight-with-its-id)
     + [Seats](#seats)
         * [1.Get a seat](#1get-a-seat)
+        * [2. getting all seats of a specific flight](#2-getting-all-seats-of-a-specific-flight)
+        * [3. get all seats from a flight with the cabin](#3-get-all-seats-from-a-flight-with-the-cabin)
     + [Login](#login)
     + [Register](#register)
     + [Reservations](#reservations)
@@ -66,13 +68,14 @@ An Airline Reservation web application through which individuals can reserve and
 - [LICENSE](#license)
 
 
+
 # Motivation
 ###### The following are the objectives of this project:
 * Master working with *MERN Stack*.
 * Work using the Agile Methodology to plan out a project and develop the software.
 * Practice working together as a team on GitHub.
 * Learn the process of following a given set of System Requirements to develop a software. 
-# Tech/Framework used
+# Tech/ Framework used
 ### we used MERN Stack framework to create the Application
 ##### Database 
 * [Mongo DB](https://www.mongodb.com/) - The only database that harnesses the innovations of NoSQL.
@@ -172,7 +175,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 # API reaferences
 
 ### Flights
-##### 1.Show all flights
+##### 1. Show all flights
  - Route `flights\`
  - Request type `GET`
  - Response Body
@@ -210,7 +213,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 ```
 
 
-##### 2.Create a flights
+##### 2. Create a flights
  - Route `flights\`
  - Request type `POST`
  - Request Body
@@ -281,7 +284,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 {msg: "you are not authorized to add a new flight"}
 
 ```
-##### 3.Update Flight details
+##### 3. Update Flight details
  - Route `flights\_id`
  - Request type `PUT`
  - Request Body
@@ -369,7 +372,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 ```
 
 
-##### 4.Search for flights
+##### 4. Search for flights
  - Route `flights\search`
  - Request type `POST`
  - Request Body
@@ -457,7 +460,7 @@ in this view you can cancel any of your reservations at anytime and you can also
  {msg: 'you are not authorized to delete any flights'}
  ```
 
-##### 6.Get All Reserved Flights by a user
+##### 6. Get All Reserved Flights by a user
  - Route `flights\user\_id`
  - Request type `GET`
  - Request Response
@@ -477,7 +480,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 {msg:"Flight Doesn't exist"}
 ```
 
-##### 7.User search for departure and return flights
+##### 7. User search for departure and return flights
  - Route `flights\user_search_flights`
  - Request type `POST`
  - Request Body
@@ -572,7 +575,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 {msg: 'there are no return flights with this search criteria'}
 ```
 
-##### 8.get the details of a flight with its id
+##### 8. get the details of a flight with its id
  - Route `flights\_id`
  - Request type `GET`
  - Request Response 
@@ -609,44 +612,7 @@ in this view you can cancel any of your reservations at anytime and you can also
 {msg:'flight with this id not found'}
 ```
 
-##### 9.getting all seats of a specific flight
- - Route `flights\all_seats\:flight_id`
- - Request type `GET`
- - Request Response
-```
-{
-    _id:61aa2bf03c1776af5683b9b7,
-    flight_id:61aa2bf03c1776af5683b9b2,
-    reservation_id:null,
-    seat_type:"economy",
-    seat_name:"C3",
-    __v:0
-    //get all seats that have the same flight id
-}
-//or
-{msg : "no such flight"}
-```
 
-##### 10.get all seats from a flight with the cabin
- - Route `flights\all_seats\:flight_id`
- - Request type `GET`
- - Request Response
- ```
- {
-    _id:61aa2bf03c1776af5683b9b7,
-    flight_id:61aa2bf03c1776af5683b9b2,
-    reservation_id:null,
-    seat_type:"economy",
-    seat_name:"C3",
-    __v:0
-    //get all seats that have the same flight id and cabin
-}
-//or
-{msg : "the cabin type is not valid. please choose between economy, business and first"}
-//or
-{msg : "the flight id you have passed is not a valid id"}
-}
-```
 
 ### Seats
 
@@ -669,6 +635,45 @@ in this view you can cancel any of your reservations at anytime and you can also
 {msg: 'there is no such seat'}
 //or
 {msg : 'the seat id is not a valid id'}
+```
+
+##### 2. getting all seats of a specific flight
+ - Route `flights\all_seats\:flight_id`
+ - Request type `GET`
+ - Request Response
+```
+{
+    _id:61aa2bf03c1776af5683b9b7,
+    flight_id:61aa2bf03c1776af5683b9b2,
+    reservation_id:null,
+    seat_type:"economy",
+    seat_name:"C3",
+    __v:0
+    //get all seats that have the same flight id
+}
+//or
+{msg : "no such flight"}
+```
+
+##### 3. get all seats from a flight with the cabin
+ - Route `flights\all_seats\:flight_id`
+ - Request type `GET`
+ - Request Response
+ ```
+ {
+    _id:61aa2bf03c1776af5683b9b7,
+    flight_id:61aa2bf03c1776af5683b9b2,
+    reservation_id:null,
+    seat_type:"economy",
+    seat_name:"C3",
+    __v:0
+    //get all seats that have the same flight id and cabin
+}
+//or
+{msg : "the cabin type is not valid. please choose between economy, business and first"}
+//or
+{msg : "the flight id you have passed is not a valid id"}
+}
 ```
 ### Login
 - Route `login\`
