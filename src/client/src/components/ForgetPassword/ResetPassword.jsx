@@ -10,6 +10,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl'
 import Typography from '@mui/material/Typography'
+import image from './info.png';
 const colors = require('../../colors');
 export function ResetPassword(props) {
     const [usernameErr, setUsernameErr] = useState(false);
@@ -49,7 +50,7 @@ export function ResetPassword(props) {
                 <Paper elevation={4} >
                     <Box style={{ margin: "15% 0" }} component="form" noValidate onSubmit={handleSubmit} sx={{ '& .MuiTextField-root': { m: 1, width: '30ch' }, height: '60vh' }}>
                         <div >
-                            <ErrorOutlineIcon style={{ margin: "10% 0" }} color="primary" fontSize="large" />
+                            <img src = {image} width = "15%" style = {{padding : "7% 0", marginTop : "3%"}}/>
                         </div>
                         <div><TextField
                             required
