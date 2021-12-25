@@ -16,9 +16,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import SeatPick from '../SeatPick';
+import { ResItinerary } from "./ResItinerary";
+import UserNavBar from "../UserNavBar";
 
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
+const colors= require("../../colors");
+
 var dict = {};
 function setDict(arr){
     for(var i=0;i<arr.length;i++){
@@ -66,6 +69,7 @@ export default function EditSeats() {
     const [flag,setFlag]=useState(false);
     const [open, setOpen] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const [it, setIt] = useState(false);
     const [depSeatsLoading, setDepSeatsLoading] = useState(true);
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
     const [depSeats, setDepSeats] = useState([]);
@@ -242,6 +246,13 @@ export default function EditSeats() {
     function handleClose() {
         setConfirm(false);
         setOpen(false);
+        setIt(false);
+    }
+    function reserveDone(){
+        handleClose();
+        history.push({
+            pathname: '/user/reservation',
+        });
     }
     
     function updateSeats(){
@@ -255,11 +266,12 @@ export default function EditSeats() {
  
             }
         setConfirm(false);
+        setIt(true);
 
     }
     return (
-        <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
-            <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div>           
+        <div className="App" style={{ backgroundColor: "#FFFFFF", height: "1000px" }}>
+            <UserNavBar/>
 
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
                 <Box gridColumn="span 8">
@@ -267,7 +279,7 @@ export default function EditSeats() {
                         <CssBaseline />
                         <Container maxWidth="sm">
                             <Paper elevation={3}>
-                                <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                 <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                     <List
                                         sx={{
@@ -276,25 +288,25 @@ export default function EditSeats() {
                                         }}
                                     >
                                         <ListItem>
-                                            <ListItemText primary="Flight Number" secondary={departure.flight_number} />
-                                            <ListItemText primary="From" secondary={departure.from} />
-                                            <ListItemText primary="To" secondary={departure.to} />
+                                            <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={departure.flight_number} />
+                                            <ListItemText style={{color:colors.c1}} primary="From" secondary={departure.from} />
+                                            <ListItemText style={{color:colors.c1}} primary="To" secondary={departure.to} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Terminals" secondary={departure.departure_terminal} />
-                                            <ListItemText primary="Arrival Terminals" secondary={departure.arrival_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={departure.departure_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={departure.arrival_terminal} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Time" secondary={departure.departure_time}/>
-                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={departure.departure_time}/>
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={departure.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Seats" secondary={departureSeats} />
-                                            <ListItemText primary="Price" secondary={priceDep} />
-                                            <ListItemText primary="Baggage Allowance" secondary={bagDep} />
+                                            <ListItemText style={{color:colors.c1}} primary="Seats" secondary={departureSeats} />
+                                            <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceDep} />
+                                            <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagDep} />
 
                                         </ListItem>
                                     </List>
@@ -318,7 +330,7 @@ export default function EditSeats() {
                             <CssBaseline />
                             <Container maxWidth="sm">
                                 <Paper elevation={3}>
-                                    <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                    <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                     <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                         <List
                                             sx={{
@@ -327,25 +339,25 @@ export default function EditSeats() {
                                             }}
                                         >
                                             <ListItem>
-                                                <ListItemText primary="Flight Number" secondary={ret.flight_number} />
-                                                <ListItemText primary="From" secondary={ret.from} />
-                                                <ListItemText primary="To" secondary={ret.to} />
+                                                <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={ret.flight_number} />
+                                                <ListItemText style={{color:colors.c1}} primary="From" secondary={ret.from} />
+                                                <ListItemText style={{color:colors.c1}} primary="To" secondary={ret.to} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Departure Terminals" secondary={ret.departure_terminal} />
-                                                <ListItemText primary="Arrival Terminals" secondary={ret.arrival_terminal} />
+                                                <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={ret.departure_terminal} />
+                                                <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={ret.arrival_terminal} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Departure Time" secondary={ret.departure_time} />
-                                                <ListItemText primary="Arrival Time" secondary={ret.arrival_time} />
+                                                <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={ret.departure_time} />
+                                                <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={ret.arrival_time} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Seats" secondary={returnSeats} />
-                                                <ListItemText primary="Price" secondary={priceRet} />
-                                                <ListItemText primary="Baggage Allowance" secondary={bagRet}/>
+                                                <ListItemText style={{color:colors.c1}} primary="Seats" secondary={returnSeats} />
+                                                <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceRet} />
+                                                <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagRet}/>
 
                                             </ListItem>
                                         </List>
@@ -369,7 +381,11 @@ export default function EditSeats() {
                 <Box gridColumn="span 3">
                 </Box>
                 <Box gridColumn="span 5">
-                    <Button variant="contained" size="medium" onClick={submitHandler} > confirm </Button>
+                    <Button style={{
+                            borderRadius: 5,
+                            backgroundColor: colors.c1,
+                            marginTop: "25px",
+                        }} variant="contained" size="medium" onClick={submitHandler} > confirm </Button>
 
                 </Box>
                 <Box gridColumn="span 4">
@@ -405,6 +421,43 @@ export default function EditSeats() {
                 <DialogActions>
                     <Button variant="outlined" onClick={updateSeats}>GO ON</Button>
                     <Button variant="outlined" onClick={handleClose}>NO</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={it}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+            >
+                <DialogContent>
+                    <ResItinerary />
+                </DialogContent>
+                <ResItinerary 
+                resId={reservation._id}
+                price={priceDep+priceRet}
+                depFrom={departure.from}
+                depDDay={new Date(departure.departure_time).getDate()+"/"+(new Date(departure.departure_time).getMonth()+1)+"/"+new Date(departure.departure_time).getFullYear()}
+                depDTime={new Date(departure.departure_time).getHours()+":"+new Date(departure.departure_time).getMinutes()}                            
+                depDT={departure.departure_terminal}
+                depTo={departure.to}
+                depADay={new Date(departure.arrival_time).getDate()+"/"+(new Date(departure.arrival_time).getMonth()+1)+"/"+new Date(departure.arrival_time).getFullYear()}
+                depATime={new Date(departure.arrival_time).getHours()+":"+new Date(departure.arrival_time).getMinutes()}                            
+                depAT={departure.arrival_terminal}
+                depSeats={departureSeats}
+                cabin={cabinType}
+                retFrom={ret.from}
+                retDDay={new Date(ret.departure_time).getDate()+"/"+(new Date(ret.departure_time).getMonth()+1)+"/"+new Date(ret.departure_time).getFullYear()}
+                retDTime={new Date(ret.departure_time).getHours()+":"+new Date(ret.departure_time).getMinutes()}                            
+                retDT={ret.departure_terminal}
+                retTo={ret.to}
+                retADay={new Date(ret.arrival_time).getDate()+"/"+(new Date(ret.arrival_time).getMonth()+1)+"/"+new Date(ret.arrival_time).getFullYear()}
+                retATime={new Date(ret.arrival_time).getHours()+":"+new Date(ret.arrival_time).getMinutes()}                            
+                retAT={ret.arrival_terminal}
+                retSeats={returnSeats}
+                />
+                <DialogActions>
+                <Button variant="outlined" onClick={reserveDone}>OK</Button>
                 </DialogActions>
             </Dialog>
 

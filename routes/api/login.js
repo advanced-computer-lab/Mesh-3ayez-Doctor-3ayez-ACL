@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     }
      else {
       // Validate if user exist in our database
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username: username.toLowerCase()});
       console.log(password)
       if(!user)
       {

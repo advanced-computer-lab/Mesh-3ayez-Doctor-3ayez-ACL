@@ -26,7 +26,7 @@ import { textAlign } from '@mui/system';
 import { unstable_getScrollbarSize } from '@mui/utils';
 import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 import Payment from './Payment';
 import Stack from '@mui/material/Stack'
 import Snackbar from '@mui/material/Snackbar'
@@ -55,12 +55,17 @@ function Itinerary() {
     localStorage.getItem("departureReserved") && localStorage.removeItem("departureReserved");
     var tinyjsons = []
     var tinyjsons2 = []
+    
     if(isLoading){
-    axios.get("http://localhost:8000/api/flights/user/61bcd1e7bf1ace92644c0287")//61bcd1e7bf1ace92644c0287")
+        var user_id = localStorage.getItem('user_id')
+      user_id = user_id.substring(1, user_id.length-1);
+    axios.get(`http://localhost:8000/api/flights/user/${user_id}`)//61bcd1e7bf1ace92644c0287")
         .then(res =>{
             setrsvids(res.data);
             setLoading(false);
         }).catch(err => {
+            console.log(user_id);
+            console.log("hi");
             console.log(err);
         });
     }
@@ -94,7 +99,13 @@ function Itinerary() {
   }
 
   function handleCancellation(){
-        axios.delete("http://localhost:8000/api/users/reservation/61bcd1e7bf1ace92644c0287/"+thersv);
+      var user_id = localStorage.getItem('user_id')
+      user_id = user_id.substring(1, user_id.length-1);
+        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv).then(data=>{
+            console.log(data);
+        }).catch(err=>{
+            console.log(err.response);
+        });
         handleClose();
         history.go();
   }

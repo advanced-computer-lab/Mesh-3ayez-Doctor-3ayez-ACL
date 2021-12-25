@@ -34,6 +34,7 @@ function EditSearchResults(props) {
         history.push({
             pathname: '/user/seatReservation',
             state: {
+                reservation:location.state.reservation,
                 reserved: reserved,
                 return: props.src==='editRet',
                 departure: props.src==='editDep',
