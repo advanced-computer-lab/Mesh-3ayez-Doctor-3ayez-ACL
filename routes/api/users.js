@@ -72,6 +72,7 @@ router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
 
         // sending email to the user
         await send_cancellation_mail(user, reservation.price, reservation, departure_flight.from, departure_flight.to);
+        console.log('mail sent');
         res.json({msg:"deleted successfully"});
 
     }
@@ -113,6 +114,7 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
 
 router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
     const user_id = req.params.user_id;
+    console.log(user_id);
     const reservation_id = req.params.reservation_id;
     const reservation = await Reservation.findOne({'_id':reservation_id, 'user_id' : user_id});
     if(reservation)
