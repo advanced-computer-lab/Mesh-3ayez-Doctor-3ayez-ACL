@@ -21,7 +21,6 @@
   "homepage": "https://github.com/advanced-computer-lab/Mesh-3ayez-Doctor-3ayez-ACL#readme",
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
-    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "concurrently": "^6.3.0",
     "cors": "^2.8.5",

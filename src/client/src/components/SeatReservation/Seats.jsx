@@ -1,77 +1,77 @@
-// import React, {Component} from 'react'
-// import { promises } from 'stream';
+import React, {Component} from 'react'
+import { promises } from 'stream';
  
 import SeatPicker from './react-seat-picker/distt'
  const colors= require("../../colors")
 export default class Seats extends Component {
 
     
-//     constructor(props){
-//         super(props);
+    constructor(props){
+        super(props);
         
-//     }
-//   state = {
-//     loading: false
-//   }
-//   addSeatCallback = ({ row, number, id }, addCb) => {
-//     this.props.addclbk(number+" ",id);
-//     this.setState({
+    }
+  state = {
+    loading: false
+  }
+  addSeatCallback = ({ row, number, id }, addCb) => {
+    this.props.addclbk(number+" ",id);
+    this.setState({
         
-//       loading: true
-//     }, async () => {
+      loading: true
+    }, async () => {
         
-//       await new Promise(resolve => setTimeout(resolve, 100))
-//       console.log(`Added seat ${number}, row ${row}, id ${id}`)
-//       const newTooltip = `tooltip for id-${id} added by callback`
-//       addCb(row, number, id, newTooltip)
-//       this.setState({ loading: false })
-//       this.props.priceCallBack((prevState) => {
-//           return prevState + Number(this.props.price);
-//       })
-//       this.props.bagCB((prevState)=>{
-//         return prevState + Number(this.props.bag);
-//       })
+      await new Promise(resolve => setTimeout(resolve, 100))
+      console.log(`Added seat ${number}, row ${row}, id ${id}`)
+      const newTooltip = `tooltip for id-${id} added by callback`
+      addCb(row, number, id, newTooltip)
+      this.setState({ loading: false })
+      this.props.priceCallBack((prevState) => {
+          return prevState + Number(this.props.price);
+      })
+      this.props.bagCB((prevState)=>{
+        return prevState + Number(this.props.bag);
+      })
       
-//     })
-//   }
+    })
+  }
  
-//   addSeatCallbackContinousCase = ({ row, number, id }, addCb, params, removeCb) => {
-//     this.setState({
-//       loading: true
-//     }, async () => {
-//       if (removeCb) {
-//         await new Promise(resolve => setTimeout(resolve, 750))
-//         console.log(`Removed seat ${params.number}, row ${params.row}, id ${params.id}`)
-//         removeCb(params.row, params.number)
-//       }
-//       await new Promise(resolve => setTimeout(resolve, 750))
-//       console.log(`Added seat ${number}, row ${row}, id ${id}`)
-//       const newTooltip = `tooltip for id-${id} added by callback`
-//       addCb(row, number, id, newTooltip)
-//       this.setState({ loading: false })
-//     })
-//   }
+  addSeatCallbackContinousCase = ({ row, number, id }, addCb, params, removeCb) => {
+    this.setState({
+      loading: true
+    }, async () => {
+      if (removeCb) {
+        await new Promise(resolve => setTimeout(resolve, 750))
+        console.log(`Removed seat ${params.number}, row ${params.row}, id ${params.id}`)
+        removeCb(params.row, params.number)
+      }
+      await new Promise(resolve => setTimeout(resolve, 750))
+      console.log(`Added seat ${number}, row ${row}, id ${id}`)
+      const newTooltip = `tooltip for id-${id} added by callback`
+      addCb(row, number, id, newTooltip)
+      this.setState({ loading: false })
+    })
+  }
  
-//   removeSeatCallback = ({ row, number, id }, removeCb) => {
-//     this.props.rmvclbk(number+" ",id);
-//     this.setState({
-//       loading: true
-//     }, async () => {
+  removeSeatCallback = ({ row, number, id }, removeCb) => {
+    this.props.rmvclbk(number+" ",id);
+    this.setState({
+      loading: true
+    }, async () => {
 
-//       await new Promise(resolve => setTimeout(resolve, 100))
-//       console.log(`Removed seat ${number}, row ${row}, id ${id}`)
-//       // A value of null will reset the tooltip to the original while '' will hide the tooltip
-//       const newTooltip = ['A', 'B', 'C'].includes(row) ? null : ''
-//       removeCb(row, number, newTooltip)
-//       this.setState({ loading: false })
-//       this.props.priceCallBack((prevState) => {
-//           return prevState -Number(this.props.price);
-//       })
-//       this.props.bagCB((prevState)=>{
-//         return prevState - Number(this.props.bag);
-//       })
-//     })
-//   }
+      await new Promise(resolve => setTimeout(resolve, 100))
+      console.log(`Removed seat ${number}, row ${row}, id ${id}`)
+      // A value of null will reset the tooltip to the original while '' will hide the tooltip
+      const newTooltip = ['A', 'B', 'C'].includes(row) ? null : ''
+      removeCb(row, number, newTooltip)
+      this.setState({ loading: false })
+      this.props.priceCallBack((prevState) => {
+          return prevState -Number(this.props.price);
+      })
+      this.props.bagCB((prevState)=>{
+        return prevState - Number(this.props.bag);
+      })
+    })
+  }
  
   render() {
     var Type = this.props.type;
