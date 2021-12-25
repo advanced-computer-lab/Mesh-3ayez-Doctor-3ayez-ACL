@@ -6,7 +6,6 @@ import { Button, FormLabel } from '@mui/material';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Icon from '@mui/material/Icon';
-import PersistentDrawerRight from './PersistentDrawerRight';
 import Ticket from './Ticket_components/Ticket';
 import ReservationAccordion from './ReservationAccordion';
 import FlightDisplay from './Ticket_components/FlightDisplay';
