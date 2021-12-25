@@ -75,7 +75,7 @@ Visual Studio Code
 ##### 2.Create a flights
  - Route `flights\`
  - Request type `POST`
- - Response Request
+ - Request Body
 
 ```
 {
@@ -106,20 +106,226 @@ Visual Studio Code
     arrival_time:2021-12-16T03:00:00.000+00:00,
     __v:0
 }
-   // All the available flights in the database
 ```
 - Response Body
 
 ```
-{msg: 'Reservation added successfully', reservationId: reservation._id}
-   ```
+{msg : 'flight created successfully'}
 // or 
-   ```
-{msg:'flight number must be an integer'}}
+{msg:'flight number must be an integer'}
+// or 
+{msg:'the origin airport is a required field'}
+// or 
+{msg:'the origin airport terminal is not valid'}
+// or 
+{msg:'the destination airport terminal is not valid'}
+// or 
+{msg:'the number of economy seats must be an integer'}
+// or 
+{msg:'the price of economy seats must be a valid decimal'}
+// or 
+{msg:'the ammount of baggage allowed for economy class must be a valid decimal'}
+// or 
+{msg:'the number of first class seats must be an integer'}
+// or 
+{msg:'the price of first class seats must be a valid decimal'}
+// or 
+{msg:'the ammount of baggage allowed for first class must be a valid decimal'}
+// or 
+{msg:'the departure time is not a valid date time'}
+// or 
+{msg:'the arrival date and time is a required field'}
+// or 
+{msg:'the arrival time is not a valid date time'}
+// or 
+{msg : 'flight aready exists'}
+// or 
+{msg: "you are not authorized to add a new flight"}
+
+```
+##### 3.Update Flight details
+ - Route `flights\_id`
+ - Request type `PUT`
+ - Request Body
+
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+    
+    //Any of the Attributes given will be updated and the others will remain the same
+}
+```
+-Response Body 
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+}
+// or 
+{msg : "flight number should be a valid integer"}
+// or 
+{msg : "a flight with the same flight number already exists"}
+// or 
+{msg : "the departure terminal should be a valid integer"}
+// or 
+{msg : "the arrival terminal should be a valid integer"}
+// or 
+{msg:'departure time is not a valid date time'}
+// or 
+{msg:'arrival time is not a valid date time'}
+// or 
+{msg:'you are not authorized to update any flights'}
+// or 
+{msg:"there is not flight with such id"}
+// or 
+{msg:'the allowed baggage of first class seats should be a valid double'}
 ```
 
 
+##### 4.Search for flights
+ - Route `flights\search`
+ - Request type `POST`
+ - Request Body
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+    
+    //Any of the attributes given will be searched by
+}
+```
+-Response Body
+```
+{
+    flight_number:15,
+    from:"Munich",
+    departure_terminal:2,
+    to:"Cairo",
+    arrival_terminal:15,
+    economy_seats:{
+            max_seats:20,
+            available:20,
+            price:15.5,
+            baggage_allowance:22
+            },
+    business_seats:{
+            max_seats:8,
+            available:8,
+            price:50,
+            baggage_allowance:30.5,
+            }
+    first_seats:{
+            max_seats:1,
+            available:1,
+            price:1550.99,
+            baggage_allowance:45.9
+            }
+    departure_time:2021-12-15T22:00:00.000+00:00,
+    arrival_time:2021-12-16T03:00:00.000+00:00,
+    __v:0
+    //List of all flights that match search
+}
+//or
+{msg:'departure time is not a valid date time'}
+//or
+{msg:'arrival time is not a valid date time'}
+//or
+{msg: 'you are not authorized to search for flights'}
+```
 
+##### 5.Delete a Flight
+ - Route `flights\_id`
+ - Request type `DELETE`
+ - Request Response
+ 
+ ```
+ { msg: 'flight entry deleted successfully' }
+  //or
+ {msg : "the flight id you have passed is not valid"}
+ //or
+ {msg: 'you are not authorized to delete any flights'}
+ ```
+
+##### 6.Get All Reserved Flights by a user
+ - Route `flights\user\_id`
+ - Request type `GET`
+ - Request Response
+ ```
+
+```
 
 
 # Code Style
