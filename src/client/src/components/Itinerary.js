@@ -31,6 +31,7 @@ import Payment from './Payment';
 import Stack from '@mui/material/Stack'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import loader from './Ajux_loader.gif'
 
 
 
@@ -61,6 +62,11 @@ function Itinerary() {
       user_id = user_id.substring(1, user_id.length-1);
     axios.get(`http://localhost:8000/api/flights/user/${user_id}`)//61bcd1e7bf1ace92644c0287")
         .then(res =>{
+            for(var i=0;i<res.data.length;i++){
+                if(res.data[i] == undefined){
+                    res.data.splice(i,1);
+                }
+            }
             setrsvids(res.data);
             setLoading(false);
         }).catch(err => {
@@ -68,6 +74,7 @@ function Itinerary() {
             console.log("hi");
             console.log(err);
         });
+        
     }
 
     
@@ -103,9 +110,13 @@ function Itinerary() {
       user_id = user_id.substring(1, user_id.length-1);
         axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv).then(data=>{
             console.log(data);
+            if(rsvids.length==1){
+                setrsvids([]);
+            }
         }).catch(err=>{
             console.log(err.response);
         });
+        
         handleClose();
         history.go();
   }
@@ -127,8 +138,8 @@ function Itinerary() {
       />
       <div>
         <div id="main" style={{marginLeft:marginLeft,paddingLeft:paddingLeft,paddingRight:paddingRight}}>
-            
-        {rsvids.map((thing,index)=>{
+        <br/>
+        {isLoading?<img src={loader} alt="loading..." />:rsvids.length==0&&!isLoading?<label>You do not have any reserved flights now</label>:rsvids.map((thing,index)=>{
             
             return(thing==undefined?null:<ReservationAccordion
                     key = {index+"PP"}
