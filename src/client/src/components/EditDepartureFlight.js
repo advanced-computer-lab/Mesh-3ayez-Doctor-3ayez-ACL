@@ -17,8 +17,13 @@ function EditDepartureFlight() {
     const [departureFlight, setDepartureFlight] = React.useState([]);
     useEffect(() => {
         if (location.state.src === 'editDep') {
-
-            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, { "Content-Type": "application/json" }).then(
+            let config = {
+                headers: {
+                    'authentication-token': localStorage.getItem("token"),
+                    "Content-Type": "application/json"
+                }
+              }
+            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, config).then(
                 res => {
                     setDepartureFlight(res.data);
                     setLoading(false);
@@ -54,4 +59,4 @@ function EditDepartureFlight() {
     )
 }
 
-export default withStyles()(EditDepartureFlight);
+export default (EditDepartureFlight);

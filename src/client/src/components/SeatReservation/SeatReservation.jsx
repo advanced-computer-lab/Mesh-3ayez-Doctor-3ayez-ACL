@@ -205,7 +205,7 @@ export function SeatReservation() {
                                         <Divider component="li" />
                                         <ListItem>
                                             <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={reserved.departure_time} />
-                                            <ListItemText style={{color:colors.c1}}primary="Arrival Time" secondary={reserved.arrival_time} />
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={reserved.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>

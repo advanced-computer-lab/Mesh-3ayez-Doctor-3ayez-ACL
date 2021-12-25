@@ -7,13 +7,14 @@ const Reservation = require('../../src/Models/Reservation');
 const User = require('../../src/Models/User');
 const Flight = require('../../src/Models/Flight');
 const FlightSeat = require('../../src/Models/FlightSeat');
+const auth =require("./middleware/auth.js");
 require('dotenv').config({path : __dirname+'/../../config/.env'});
 const nodemailer = require('nodemailer');
 const {v4: uuidv4} = require('uuid');
 const stripe = require('stripe')(process.env.STRIPESECRETKEY);
 
 // create a new reservation
-router.post('/', async(req,res)=>{
+router.post('/', auth, async(req,res)=>{
     const body = req.body;
     var query = {};
     var departure_flight_update = {};
@@ -336,7 +337,7 @@ router.post('/', async(req,res)=>{
     
 });
 
-router.put('/change_seats/:reservation_id/:user_id/:flight_id', async(req,res)=>{
+router.put('/change_seats/:reservation_id/:user_id/:flight_id',auth, async(req,res)=>{
     const reservation_id = req.params.reservation_id;
     const user_id = req.params.user_id;
     const flight_id = req.params.flight_id;
@@ -445,7 +446,7 @@ router.put('/change_seats/:reservation_id/:user_id/:flight_id', async(req,res)=>
 }
 );
 
-router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>{
+router.put('/changeFlight/:reservation_id/:user_id/:flight_id',auth, async(req,res)=>{
     const old_flight_id = req.params.flight_id;
     const reservation_id = req.params.reservation_id;
     const user_id = req.params.user_id;
@@ -531,6 +532,7 @@ router.put('/changeFlight/:reservation_id/:user_id/:flight_id', async(req,res)=>
         //checking if the seat id is a valid id
         if(!mongoose.isValidObjectId(seat_id))
         {
+        
             res.status(400).json({msg:"one of the seats id is not a valid id"});
             return;
         }
@@ -674,7 +676,7 @@ ACL team
 }
 // getting all flights with to replace a reservation flight with the price difference
 
-router.get('/all_possible_flights/:reservation_id/:src', async(req,res)=>{
+router.get('/all_possible_flights/:reservation_id/:src',auth, async(req,res)=>{
     console.log("I'm here");
 
     const reservation_id = req.params.reservation_id;
@@ -742,7 +744,7 @@ router.get('/all_possible_flights/:reservation_id/:src', async(req,res)=>{
 });
 
 // search for a replacement for a flight in a reservation
-router.post('/find_flights/:reservation_id', async(req,res)=>{
+router.post('/find_flights/:reservation_id',auth, async(req,res)=>{
     const reservation_id = req.params.reservation_id;
     const body = req.body;
     //check if the reservation id is a valid id
@@ -858,7 +860,7 @@ function checkSameDay(d1, d2)
     return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
 }
 
-router.post('/send_me_mail/:reservation_id/:user_id', async(req, res)=>{
+router.post('/send_me_mail/:reservation_id/:user_id',auth, async(req, res)=>{
     const user_id = req.params.user_id;
     const reservation_id = req.params.reservation_id;
     // check if the ids are valid

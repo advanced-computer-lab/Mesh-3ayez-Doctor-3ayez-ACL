@@ -29,9 +29,11 @@ function ReservationAccordion(probs){
     useEffect(() => {
         
         if(isLoading){
-            var user_id = localStorage.getItem('user_id')
+
+        var user_id = localStorage.getItem('user_id')
         user_id = user_id.substring(1, user_id.length-1);
-        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString()).then(
+        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString(), {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        ).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -103,11 +105,11 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
+
                 depFlight: theJsons[0].flight_details[0],
                 retFlight: theJsons2[0].flight_details[0],
                 src:"editDep",
                 flight:theJsons[0].flight_details[0],
-
             }
         });
     }
@@ -117,6 +119,7 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
+
                 retFlight: theJsons2[0].flight_details[0],
                 depFlight: theJsons[0].flight_details[0],
                 src:"editRet",
@@ -155,7 +158,8 @@ function ReservationAccordion(probs){
         probs.message_callback();
         var user_id = localStorage.getItem('user_id')
         user_id = user_id.substring(1, user_id.length-1);
-        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id);
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id, {}, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        );
     }
 
     

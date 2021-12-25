@@ -15,8 +15,14 @@ import { withStyles } from '@material-ui/core';
 
     useEffect(() => {
         if (location.state.src === 'editRet') {
+            let config = {
+                headers: {
+                    'authentication-token': localStorage.getItem("token"),
+                    "Content-Type": "application/json"
+                }
+              }
             //search with all attributes except for the departure date and cabin class
-            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, { "Content-Type": "application/json" }).then(
+            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, config).then(
                 res => {
 
                     setReturnFlight(res.data);
@@ -48,4 +54,4 @@ import { withStyles } from '@material-ui/core';
         </div>
     )
 }
-export default withStyles()(EditReturnFlight);
+export default (EditReturnFlight);

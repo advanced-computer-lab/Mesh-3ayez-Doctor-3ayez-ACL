@@ -99,7 +99,8 @@ function EditFlightSearchBar(props) {
         } else {
             data["date"] = arrival_date
         }
-        axios.post(`http://localhost:8000/api/reservations/find_flights/${location.state.reservation._id}`, data, { "Content-Type": "application/json" })
+        axios.post(`http://localhost:8000/api/reservations/find_flights/${location.state.reservation._id}`, data, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        )
             .then(result => {
                 if (result.status == 200) {
                     const path = props.src === 'editDep' ? 'editDepartureFlight' : "editReturnFlight";
@@ -132,47 +133,8 @@ function EditFlightSearchBar(props) {
     }
     return (
         <Box style={{ position: props.position }} className="box" sx={{ '& > :not(style)': { m: 1, width: "18ch", marginTop: "20px", textAlign: "center" } }}>
-            {/* <TextField
-                    id="input-with-icon-textfield"
-                    label="From"
-                    value={from}
-                    className={classes.root}
-                    disabled={true}
-                    disabled={props.src==='editDep'||props.src=='editRet'}
-                    InputProps={{
-
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FlightTakeoffIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-
-                    onChange={function (e) {
-                        setFrom(e.target.value)
-                    }}
-                    varient="outlined"
-                /> */}
-            {/* <TextField
-                    id="input-with-icon-textfield"
-                    label="To"
-                    value={to}
-                    className={classes.root}
-                    disabled={true}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FlightLandIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={function (e) {
-                        setTo(e.target.value)
-                    }}
-                    varient="outlined"
-                /> */}
-            <Typography width="18Ch" color={colors.c1}> {from} ✈ {to}</Typography>
-            <Typography width="18Ch"color={colors.c1}> <FamilyRestroomIcon />{number_of_passengers}</Typography>
+        
+          {/* /  </Stack> */}
             {props.src == 'editDep' && <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                     label="Departure date"
@@ -203,26 +165,7 @@ function EditFlightSearchBar(props) {
                 />
             </LocalizationProvider>}
 
-            {/* <TextField
-                    id="input-with-icon-textfield"
-                    label="Passengers"
-                    type="number"
-                    value={number_of_passengers}
-                    disabled={true}
-                    className={classes.root}
-                    onChange={(e) => {
-                        setPassengers(e.target.value);
-                    }
-                    }
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FamilyRestroomIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    varient="outlined"
-                /> */}
+           
             <FormControl >
                 {/* <InputLabel id="demo-simple-select-label" >Cabin</InputLabel> */}
                 <TextField
@@ -263,4 +206,4 @@ function EditFlightSearchBar(props) {
         </Box>
     )
 }
-export default withStyles()( EditFlightSearchBar);
+export default ( EditFlightSearchBar);
