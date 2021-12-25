@@ -21,14 +21,14 @@ import { ResItinerary } from "./ResItinerary";
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 import { set } from "mongoose";
 import UserNavBar from "../UserNavBar";
-const colors= require("../../colors");
+const colors = require("../../colors");
 
 export function SeatPick() {
     const history = useHistory();
     const location = useLocation();
     const departure = location.state.departure;
     const ret = location.state.return;
-    const [resId,setResId]=useState("");
+    const [resId, setResId] = useState("");
     const [depSeats, setDepSeats] = useState([]);
     const [depSeatsLoading, setDepSeatsLoading] = useState(true);
     const [retSeatsLoading, setRetSeatsLoading] = useState(true);
@@ -38,8 +38,8 @@ export function SeatPick() {
     let retCabinType = ret.cabin_type;
     useEffect(() => {
         axios.get("http://localhost:8000/api/flights/all_seats/" + departure.flight_id + "/" + depCabinType,
-        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
-)
+            { headers: { 'authentication-token': localStorage.getItem('token'), "Content-Type": "application/json" } }
+        )
             .then(res => {
 
                 setDepSeats(res.data);
@@ -50,8 +50,8 @@ export function SeatPick() {
                 console.log("BOOM");
             });
         axios.get("http://localhost:8000/api/flights/all_seats/" + ret.flight_id + "/" + retCabinType,
-        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
-)
+            { headers: { 'authentication-token': localStorage.getItem('token'), "Content-Type": "application/json" } }
+        )
             .then(res => {
                 setRetSeats(res.data);
                 setRetSeatsLoading(false);
@@ -136,11 +136,14 @@ export function SeatPick() {
             pathname: '/user/reservation',
         });
     }
+    function backHandler() {
+        history.goBack();
+    }
     const tokenHandler = (token) => {
         // handleToken(100, token)
         reserve(token);
     }
-    function reserveDone(){
+    function reserveDone() {
         handleClose();
         history.push({
             pathname: '/user/reservation',
@@ -148,24 +151,24 @@ export function SeatPick() {
     }
     function reserve(token) {
         var user_id = localStorage.getItem('user_id');
-        user_id = user_id.substring(1, user_id.length-1);
+        user_id = user_id.substring(1, user_id.length - 1);
         console.log(localStorage.getItem('token'));
         var data = {
-            user_id:user_id, // to be handled
+            user_id: user_id, // to be handled
             departure_flight: departure.flight_id,
             return_flight: ret.flight_id,
             number_of_passengers: Number(departure.number_of_passengers),
             cabin_type: departure.cabin_type,
             departure_seats: reservedDepSeats,
             return_seats: reservedRetSeats,
-            stripeToken:token
+            stripeToken: token
         };
         console.log(data);
         axios.post("http://localhost:8000/api/reservations", data,
-        {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}})
-        .then(result =>{
-            setResId(result.data.reservation_id);
-        });
+            { headers: { 'authentication-token': localStorage.getItem('token'), "Content-Type": "application/json" } })
+            .then(result => {
+                setResId(result.data.reservation_id);
+            });
         // history.go();
         console.log("done");
         setConfirm(false);
@@ -222,7 +225,7 @@ export function SeatPick() {
         head = "First Class";
     return (
         <div className="App" style={{ backgroundColor: "White", height: "1000px" }}>
-            <UserNavBar/>
+            <UserNavBar />
             {/* <div style={{ height: "80px", backgroundColor: "#181D31" }}><h3 style={{ color: "whitesmoke", margin: "auto", padding: "30px" }}><strong>{head}</strong></h3></div> */}
             {/* <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={12} >
@@ -259,7 +262,7 @@ export function SeatPick() {
                         <CssBaseline />
                         <Container maxWidth="sm">
                             <Paper elevation={3}>
-                                <Box sx={{ bgcolor:colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
+                                <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                 <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                     <List
                                         sx={{
@@ -268,25 +271,25 @@ export function SeatPick() {
                                         }}
                                     >
                                         <ListItem>
-                                            <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={departure.flight_number} />
-                                            <ListItemText style={{color:colors.c1}} primary="From" secondary={departure.from} />
-                                            <ListItemText style={{color:colors.c1}} primary="To" secondary={departure.to} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Flight Number" secondary={departure.flight_number} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="From" secondary={departure.from} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="To" secondary={departure.to} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={departure.departure_terminal} />
-                                            <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={departure.arrival_terminal} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Departure Terminals" secondary={departure.departure_terminal} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Arrival Terminals" secondary={departure.arrival_terminal} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={departure.departure_time} />
-                                            <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={departure.arrival_time} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Departure Time" secondary={departure.departure_time} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Arrival Time" secondary={departure.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText style={{color:colors.c1}} primary="Seats" secondary={departureSeats} />
-                                            <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceDep} />
-                                            <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagDep} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Seats" secondary={departureSeats} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Price" secondary={priceDep} />
+                                            <ListItemText style={{ color: colors.c1 }} primary="Baggage Allowance" secondary={bagDep} />
                                         </ListItem>
                                     </List>
                                 </Box>
@@ -316,25 +319,25 @@ export function SeatPick() {
                                             }}
                                         >
                                             <ListItem>
-                                                <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={ret.flight_number} />
-                                                <ListItemText style={{color:colors.c1}} primary="From" secondary={ret.from} />
-                                                <ListItemText style={{color:colors.c1}} primary="To" secondary={ret.to} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Flight Number" secondary={ret.flight_number} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="From" secondary={ret.from} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="To" secondary={ret.to} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={ret.departure_terminal} />
-                                                <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={ret.arrival_terminal} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Departure Terminals" secondary={ret.departure_terminal} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Arrival Terminals" secondary={ret.arrival_terminal} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={ret.departure_time} />
-                                                <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={ret.arrival_time} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Departure Time" secondary={ret.departure_time} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Arrival Time" secondary={ret.arrival_time} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText style={{color:colors.c1}} primary="Seats" secondary={returnSeats} />
-                                                <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceRet} />
-                                                <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagRet} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Seats" secondary={returnSeats} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Price" secondary={priceRet} />
+                                                <ListItemText style={{ color: colors.c1 }} primary="Baggage Allowance" secondary={bagRet} />
                                             </ListItem>
                                         </List>
                                     </Box>
@@ -353,17 +356,38 @@ export function SeatPick() {
                     </div>
                 </Box>
                 <Box gridColumn="span 3">
+
                 </Box>
                 <Box gridColumn="span 5">
-                    <Button style={{
-                            borderRadius: 5,
-                            backgroundColor: colors.c1,
-                            marginTop: "25px",
-                        }} variant="contained" size="medium" onClick={submitHandler}> confirm </Button>
+
+
+                    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={1}>
+
+                        <Box gridColumn="span 2"  >
+                            <Button style={{
+                                borderRadius: 5,
+                                backgroundColor: colors.c1,
+                                marginTop: "25px",
+                                marginLeft: "200%"
+                            }} variant="contained" size="medium" onClick={backHandler}> back </Button>
+                        </Box>
+                        <Box gridColumn="span 10 " >
+                            <Button style={{
+                                borderRadius: 5,
+                                backgroundColor: colors.c1,
+                                marginTop: "25px",
+                            }} variant="contained" size="medium" onClick={submitHandler}> confirm </Button>
+                        </Box>
+                    </Box>
                 </Box>
+
+
                 <Box gridColumn="span 4">
                     <SeatGuide />
                 </Box>
+            </Box>
+            <Box sx={{ float: 'left', marginTop: -8.5, marginLeft: 28 }}>
+
             </Box>
             <Dialog
                 open={open}
@@ -392,7 +416,7 @@ export function SeatPick() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <div style={{marginRight:"1%"}}>
+                    <div style={{ marginRight: "1%" }}>
                         <Stripe
                             stripeKey='pk_test_51KACNtHLa29h6dWHVk2jjBX8fyb4f9blEHCnHoaLgaBJLGYNjp3UTBmBgi5EMifGmV9vfADqIwaArtgM8YwpeSl400CQ0mDxk8'
                             token={tokenHandler}
@@ -411,31 +435,31 @@ export function SeatPick() {
                 <DialogContent>
                     <ResItinerary />
                 </DialogContent>
-                <ResItinerary 
-                resId={resId}
-                price={priceDep+priceRet}
-                depFrom={departure.from}
-                depDDay={new Date(departure.departure_time).getDate()+"/"+(new Date(departure.departure_time).getMonth()+1)+"/"+new Date(departure.departure_time).getFullYear()}
-                depDTime={new Date(departure.departure_time).getHours()+":"+new Date(departure.departure_time).getMinutes()}                            
-                depDT={departure.departure_terminal}
-                depTo={departure.to}
-                depADay={new Date(departure.arrival_time).getDate()+"/"+(new Date(departure.arrival_time).getMonth()+1)+"/"+new Date(departure.arrival_time).getFullYear()}
-                depATime={new Date(departure.arrival_time).getHours()+":"+new Date(departure.arrival_time).getMinutes()}                            
-                depAT={departure.arrival_terminal}
-                depSeats={departureSeats}
-                cabin={departure.cabin_type}
-                retFrom={ret.from}
-                retDDay={new Date(ret.departure_time).getDate()+"/"+(new Date(ret.departure_time).getMonth()+1)+"/"+new Date(ret.departure_time).getFullYear()}
-                retDTime={new Date(ret.departure_time).getHours()+":"+new Date(ret.departure_time).getMinutes()}                            
-                retDT={ret.departure_terminal}
-                retTo={ret.to}
-                retADay={new Date(ret.arrival_time).getDate()+"/"+(new Date(ret.arrival_time).getMonth()+1)+"/"+new Date(ret.arrival_time).getFullYear()}
-                retATime={new Date(ret.arrival_time).getHours()+":"+new Date(ret.arrival_time).getMinutes()}                            
-                retAT={ret.arrival_terminal}
-                retSeats={returnSeats}
+                <ResItinerary
+                    resId={resId}
+                    price={priceDep + priceRet}
+                    depFrom={departure.from}
+                    depDDay={new Date(departure.departure_time).getDate() + "/" + (new Date(departure.departure_time).getMonth() + 1) + "/" + new Date(departure.departure_time).getFullYear()}
+                    depDTime={new Date(departure.departure_time).getHours() + ":" + new Date(departure.departure_time).getMinutes()}
+                    depDT={departure.departure_terminal}
+                    depTo={departure.to}
+                    depADay={new Date(departure.arrival_time).getDate() + "/" + (new Date(departure.arrival_time).getMonth() + 1) + "/" + new Date(departure.arrival_time).getFullYear()}
+                    depATime={new Date(departure.arrival_time).getHours() + ":" + new Date(departure.arrival_time).getMinutes()}
+                    depAT={departure.arrival_terminal}
+                    depSeats={departureSeats}
+                    cabin={departure.cabin_type}
+                    retFrom={ret.from}
+                    retDDay={new Date(ret.departure_time).getDate() + "/" + (new Date(ret.departure_time).getMonth() + 1) + "/" + new Date(ret.departure_time).getFullYear()}
+                    retDTime={new Date(ret.departure_time).getHours() + ":" + new Date(ret.departure_time).getMinutes()}
+                    retDT={ret.departure_terminal}
+                    retTo={ret.to}
+                    retADay={new Date(ret.arrival_time).getDate() + "/" + (new Date(ret.arrival_time).getMonth() + 1) + "/" + new Date(ret.arrival_time).getFullYear()}
+                    retATime={new Date(ret.arrival_time).getHours() + ":" + new Date(ret.arrival_time).getMinutes()}
+                    retAT={ret.arrival_terminal}
+                    retSeats={returnSeats}
                 />
                 <DialogActions>
-                <Button variant="outlined" onClick={reserveDone}>OK</Button>
+                    <Button variant="outlined" onClick={reserveDone}>OK</Button>
                 </DialogActions>
             </Dialog>
         </div>
