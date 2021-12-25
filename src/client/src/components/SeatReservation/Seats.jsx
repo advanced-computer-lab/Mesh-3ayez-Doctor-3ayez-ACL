@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import { promises } from 'stream';
+// import { promises } from 'stream';
  
 import SeatPicker from './react-seat-picker/distt'
- const colors= require("../../colors")
+const colors= require("../../colors")
 export default class Seats extends Component {
 
     
