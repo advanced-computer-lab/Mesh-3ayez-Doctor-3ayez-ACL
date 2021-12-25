@@ -19,7 +19,7 @@ function EditDepartureFlight() {
         if (location.state.src === 'editDep') {
             let config = {
                 headers: {
-                    'x-access-token': localStorage.getItem("token"),
+                    'authentication-token': localStorage.getItem("token"),
                     "Content-Type": "application/json"
                 }
               }

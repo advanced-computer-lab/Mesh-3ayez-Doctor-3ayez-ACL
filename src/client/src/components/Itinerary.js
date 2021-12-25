@@ -59,7 +59,8 @@ function Itinerary() {
     if(isLoading){
         var user_id = localStorage.getItem('user_id')
       user_id = user_id.substring(1, user_id.length-1);
-    axios.get(`http://localhost:8000/api/flights/user/${user_id}`)//61bcd1e7bf1ace92644c0287")
+    axios.get(`http://localhost:8000/api/flights/user/${user_id}`, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+    )//61bcd1e7bf1ace92644c0287")
         .then(res =>{
             setrsvids(res.data);
             setLoading(false);
@@ -101,7 +102,7 @@ function Itinerary() {
   function handleCancellation(){
       var user_id = localStorage.getItem('user_id')
       user_id = user_id.substring(1, user_id.length-1);
-        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv).then(data=>{
+        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv, {}, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}).then(data=>{
             console.log(data);
         }).catch(err=>{
             console.log(err.response);
