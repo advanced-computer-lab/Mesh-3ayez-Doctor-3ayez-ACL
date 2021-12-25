@@ -59,7 +59,7 @@ export default function SearchFlights(probs) {
             margin="auto"
         >
           <br/>
-          <Typography variant="h5" gutterBottom component="div" color="#274472">
+          <Typography variant="h5" gutterBottom component="div" color="#14274E">
             Find your flight!
             </Typography>
           <TextField
@@ -133,7 +133,10 @@ export default function SearchFlights(probs) {
                 />
           {/* <Button onClick={handleClose}>Cancel</Button> */}
           <br/>
-          <Button variant="contained" onClick={handleSearch}>Fliter flights</Button>
+          <Button style={{ borderRadius: 5,
+                            backgroundColor: "#14274E",
+                            marginTop: "25px"}}
+                            variant="contained" onClick={handleSearch}>Fliter flights</Button>
           <br/>
         </Box>
     </div>
