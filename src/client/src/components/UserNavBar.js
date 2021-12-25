@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import logo from './TIJ (2).png'
+import logo from './flight.png'
 import {useHistory} from'react-router-dom';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@mui/styles';
@@ -62,7 +62,10 @@ const UserNavBar = (props) => {
   return (
     <AppBar position="static" style={{ backgroundColor: colors.c1 }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters >
+        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={27}>
+
+<Box gridColumn="span 2" sx={{ height: '8vh',display:"flex",textAlign:"center", margin:"auto" }} >
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -72,13 +75,16 @@ const UserNavBar = (props) => {
             color="inherit"
             variant="h6"
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', width: "60px", height: "60px" } }}
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex', width: "50px", height: "50px" } }}
           >
-            <Avatar alt="Remy Sharp" src={logo} sx={{ width: "60px", height: "60px" }} />
+            <Avatar alt="Remy Sharp" src={logo} sx={{ width: "40px", height: "40px" }} />
+          <Typography style={{textAlign:"center", margin:"auto"}} fontWeight="bold" color="white" onclick={handleNavToHome}>TIJWAL</Typography>
 
-          </IconButton>
+          </IconButton>   
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+</Box>
+
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="medium"
               aria-label="account of current user"
@@ -133,12 +139,12 @@ const UserNavBar = (props) => {
                 {page}
               </Button>
             ))}
-          </Box>
-
+          </Box> */}
+<Box gridColumn="span 10" sx={{ height: '8vh',textAlign:"center",margin:"auto" }} >
           {localStorage.getItem("token")&&
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0 ,textAlign:"center",margin:"auto"}}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton style={{paddingTop:"12%"}} onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="U" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
@@ -160,25 +166,27 @@ const UserNavBar = (props) => {
               >
 
                 <MenuItem key="Profile" onClick={handleCloseNavMenu}>
-                  <Button style={{textAlign:"center"}} onClick={onClickProfile} >Profile </Button>
+                  <Button style={{textAlign:"center",color:colors.c1}} onClick={onClickProfile} >Profile </Button>
                 </MenuItem>
                 <MenuItem key="Dashboard" onClick={handleCloseNavMenu}>
-                  <Button style={{textAlign:"center"}} onClick={onClickDash}>Dashboard </Button>
+                  <Button style={{textAlign:"center",color:colors.c1}} onClick={onClickDash}>Dashboard </Button>
                 </MenuItem>
                 <MenuItem key="Logout" onClick={handleCloseNavMenu}>
-                  <Button style={{textAlign:"center"}} onClick={handleLogout}>Logout </Button>
+                  <Button style={{textAlign:"center",color:colors.c1}} onClick={handleLogout}>Logout </Button>
                 </MenuItem>
               </Menu>
             </Box>}
 
-          {!localStorage.getItem("token")&& <Box sx={{ flexGrow: 0 }}>
-            <Button style={{textAlign:"center"}} href='/login'>Login</Button>
-            <Button style={{textAlign:"center"}} href='/signup' >Sign up </Button>
+          {!localStorage.getItem("token")&& <Box  sx={{ flexGrow: 0, textAlign:"center", margin:"auto" }}>
+            <Button style={{paddingTop:"10%",color:"white"}} href='/login'>Login</Button>
+            <Button style={{paddingTop:"10%", margin:"auto",color:"white"}} href='/signup' >Sign up </Button>
 
           </Box>
 
           }
 
+</Box>
+</Box>
         </Toolbar>
       </Container>
     </AppBar>
