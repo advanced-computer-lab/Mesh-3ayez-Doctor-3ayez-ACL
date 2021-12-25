@@ -93,7 +93,7 @@ function ReservationAccordion(probs){
             
 
         ).catch(err => {
-            console.log(err);
+            console.log(err.reseponse.data.msg);
         })
     }
     })

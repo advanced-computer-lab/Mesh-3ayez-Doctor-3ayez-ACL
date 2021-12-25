@@ -109,13 +109,14 @@ function Itinerary() {
   function handleCancellation(){
       var user_id = localStorage.getItem('user_id')
       user_id = user_id.substring(1, user_id.length-1);
-        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv, {}, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}).then(data=>{
+      console.log(localStorage.getItem('token'));
+        axios.delete(`http://localhost:8000/api/users/reservation/${user_id}/`+thersv, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}).then(data=>{
             console.log(data);
             if(rsvids.length==1){
                 setrsvids([]);
             }
         }).catch(err=>{
-            console.log(err.response);
+            console.log(err);
         });
         
         handleClose();
