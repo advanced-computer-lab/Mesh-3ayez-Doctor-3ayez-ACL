@@ -21,6 +21,8 @@ import { ResItinerary } from "./ResItinerary";
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
 import { set } from "mongoose";
 import UserNavBar from "../UserNavBar";
+const colors= require("../../colors");
+
 export function SeatReservation() {
     const history = useHistory();
     const location = useLocation();
@@ -174,7 +176,7 @@ export function SeatReservation() {
     else
         head = "First Class";
     return (
-        <div className="App" style={{ backgroundColor: "#D4ECDD", minHeight: "750px" }}>
+        <div className="App" style={{ backgroundColor: "White", minHeight: "750px" }}>
             <UserNavBar />
             <Box style={{ marginTop: "100px" }} display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
                 <Box gridColumn="span 8">
@@ -182,7 +184,7 @@ export function SeatReservation() {
                         <CssBaseline />
                         <Container maxWidth="sm">
                             <Paper elevation={3}>
-                                <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                 <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                     <List
                                         sx={{
@@ -191,19 +193,19 @@ export function SeatReservation() {
                                         }}
                                     >
                                         <ListItem>
-                                            <ListItemText primary="Flight Number" secondary={reserved.flight_number} />
-                                            <ListItemText primary="From" secondary={reserved.from} />
-                                            <ListItemText primary="To" secondary={reserved.to} />
+                                            <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={reserved.flight_number} />
+                                            <ListItemText style={{color:colors.c1}} primary="From" secondary={reserved.from} />
+                                            <ListItemText style={{color:colors.c1}} primary="To" secondary={reserved.to} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Terminals" secondary={reserved.departure_terminal} />
-                                            <ListItemText primary="Arrival Terminals" secondary={reserved.arrival_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={reserved.departure_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={reserved.arrival_terminal} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Time" secondary={reserved.departure_time} />
-                                            <ListItemText primary="Arrival Time" secondary={reserved.arrival_time} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={reserved.departure_time} />
+                                            <ListItemText style={{color:colors.c1}}primary="Arrival Time" secondary={reserved.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
@@ -226,7 +228,11 @@ export function SeatReservation() {
                 <Box gridColumn="span 3">
                 </Box>
                 <Box gridColumn="span 5">
-                    <Button variant="contained" size="medium" onClick={submitHandler}> confirm </Button>
+                    <Button style={{
+                            borderRadius: 5,
+                            backgroundColor: colors.c1,
+                            marginTop: "25px",
+                        }} variant="contained" size="medium" onClick={submitHandler}> confirm </Button>
 
                 </Box>
                 <Box gridColumn="span 4">

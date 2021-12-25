@@ -20,6 +20,8 @@ import { ResItinerary } from "./ResItinerary";
 import UserNavBar from "../UserNavBar";
 
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Divider, Typography } from '@mui/material';
+const colors= require("../../colors");
+
 var dict = {};
 function setDict(arr){
     for(var i=0;i<arr.length;i++){
@@ -268,7 +270,7 @@ export default function EditSeats() {
 
     }
     return (
-        <div className="App" style={{ backgroundColor: "#D4ECDD", height: "1000px" }}>
+        <div className="App" style={{ backgroundColor: "#FFFFFF", height: "1000px" }}>
             <UserNavBar/>
 
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
@@ -277,7 +279,7 @@ export default function EditSeats() {
                         <CssBaseline />
                         <Container maxWidth="sm">
                             <Paper elevation={3}>
-                                <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                 <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                     <List
                                         sx={{
@@ -286,25 +288,25 @@ export default function EditSeats() {
                                         }}
                                     >
                                         <ListItem>
-                                            <ListItemText primary="Flight Number" secondary={departure.flight_number} />
-                                            <ListItemText primary="From" secondary={departure.from} />
-                                            <ListItemText primary="To" secondary={departure.to} />
+                                            <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={departure.flight_number} />
+                                            <ListItemText style={{color:colors.c1}} primary="From" secondary={departure.from} />
+                                            <ListItemText style={{color:colors.c1}} primary="To" secondary={departure.to} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Terminals" secondary={departure.departure_terminal} />
-                                            <ListItemText primary="Arrival Terminals" secondary={departure.arrival_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={departure.departure_terminal} />
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={departure.arrival_terminal} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Departure Time" secondary={departure.departure_time}/>
-                                            <ListItemText primary="Arrival Time" secondary={departure.arrival_time} />
+                                            <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={departure.departure_time}/>
+                                            <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={departure.arrival_time} />
                                         </ListItem>
                                         <Divider component="li" />
                                         <ListItem>
-                                            <ListItemText primary="Seats" secondary={departureSeats} />
-                                            <ListItemText primary="Price" secondary={priceDep} />
-                                            <ListItemText primary="Baggage Allowance" secondary={bagDep} />
+                                            <ListItemText style={{color:colors.c1}} primary="Seats" secondary={departureSeats} />
+                                            <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceDep} />
+                                            <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagDep} />
 
                                         </ListItem>
                                     </List>
@@ -328,7 +330,7 @@ export default function EditSeats() {
                             <CssBaseline />
                             <Container maxWidth="sm">
                                 <Paper elevation={3}>
-                                    <Box sx={{ bgcolor: '#F3950D', height: '2vh' }} style={{ marginTop: "2%" }} />
+                                    <Box sx={{ bgcolor: colors.c3, height: '2vh' }} style={{ marginTop: "2%" }} />
                                     <Box sx={{ bgcolor: 'whitesmoke', height: '47vh' }} >
                                         <List
                                             sx={{
@@ -337,25 +339,25 @@ export default function EditSeats() {
                                             }}
                                         >
                                             <ListItem>
-                                                <ListItemText primary="Flight Number" secondary={ret.flight_number} />
-                                                <ListItemText primary="From" secondary={ret.from} />
-                                                <ListItemText primary="To" secondary={ret.to} />
+                                                <ListItemText style={{color:colors.c1}} primary="Flight Number" secondary={ret.flight_number} />
+                                                <ListItemText style={{color:colors.c1}} primary="From" secondary={ret.from} />
+                                                <ListItemText style={{color:colors.c1}} primary="To" secondary={ret.to} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Departure Terminals" secondary={ret.departure_terminal} />
-                                                <ListItemText primary="Arrival Terminals" secondary={ret.arrival_terminal} />
+                                                <ListItemText style={{color:colors.c1}} primary="Departure Terminals" secondary={ret.departure_terminal} />
+                                                <ListItemText style={{color:colors.c1}} primary="Arrival Terminals" secondary={ret.arrival_terminal} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Departure Time" secondary={ret.departure_time} />
-                                                <ListItemText primary="Arrival Time" secondary={ret.arrival_time} />
+                                                <ListItemText style={{color:colors.c1}} primary="Departure Time" secondary={ret.departure_time} />
+                                                <ListItemText style={{color:colors.c1}} primary="Arrival Time" secondary={ret.arrival_time} />
                                             </ListItem>
                                             <Divider component="li" />
                                             <ListItem>
-                                                <ListItemText primary="Seats" secondary={returnSeats} />
-                                                <ListItemText primary="Price" secondary={priceRet} />
-                                                <ListItemText primary="Baggage Allowance" secondary={bagRet}/>
+                                                <ListItemText style={{color:colors.c1}} primary="Seats" secondary={returnSeats} />
+                                                <ListItemText style={{color:colors.c1}} primary="Price" secondary={priceRet} />
+                                                <ListItemText style={{color:colors.c1}} primary="Baggage Allowance" secondary={bagRet}/>
 
                                             </ListItem>
                                         </List>
@@ -379,7 +381,11 @@ export default function EditSeats() {
                 <Box gridColumn="span 3">
                 </Box>
                 <Box gridColumn="span 5">
-                    <Button variant="contained" size="medium" onClick={submitHandler} > confirm </Button>
+                    <Button style={{
+                            borderRadius: 5,
+                            backgroundColor: colors.c1,
+                            marginTop: "25px",
+                        }} variant="contained" size="medium" onClick={submitHandler} > confirm </Button>
 
                 </Box>
                 <Box gridColumn="span 4">

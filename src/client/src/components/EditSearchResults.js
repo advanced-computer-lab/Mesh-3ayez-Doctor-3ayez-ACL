@@ -13,7 +13,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContentText from '@mui/material/DialogContentText'
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 const colors = require("../colors.js");
 
 function EditSearchResults(props) {

@@ -7,7 +7,7 @@ import UserNavBar from './UserNavBar';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Stack from'@mui/material/Stack'
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 import EditReturnFlight from './EditReturnFlight';
 
 function EditDepartureFlight() {

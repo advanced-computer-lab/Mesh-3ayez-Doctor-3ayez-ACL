@@ -26,7 +26,7 @@ import { textAlign } from '@mui/system';
 import { unstable_getScrollbarSize } from '@mui/utils';
 import { Redirect, useHistory } from 'react-router';
 import UserNavBar from './UserNavBar';
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 import Payment from './Payment';
 import Stack from '@mui/material/Stack'
 import Snackbar from '@mui/material/Snackbar'
