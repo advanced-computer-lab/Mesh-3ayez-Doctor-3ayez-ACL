@@ -735,7 +735,7 @@ router.post('/user_search_flights', async(req,res)=>{
         res.status(400).json({msg: 'you can\'t specify the retun date before the departure date'});
         return;
     }
-    if(dep_date < new Date())
+    if(dep_date < new Date() && !checkSameDay(dep_date, new Date()))
     {
         res.status(400).json({msg: 'the departure date can\'t be before today\'s date'});
         return;
@@ -759,6 +759,11 @@ router.post('/user_search_flights', async(req,res)=>{
     res.json({'departure_flights' : depart_flights, 'return_flights':return_flights});
 
 });
+
+function checkSameDay(d1, d2)
+{
+    return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
+}
 
 // get the details of a flight with its id
 router.get('/:flight_id', async(req,res)=>{
