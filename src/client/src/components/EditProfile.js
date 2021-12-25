@@ -70,7 +70,7 @@ function EditProfile() {
             .catch(err => {
                     setSucc(false);
 
-                    setMsg("Couldn't update Info")
+                    setMsg(err.response.data.msg)
                     setAlert(true);
 
                     console.log(err)
