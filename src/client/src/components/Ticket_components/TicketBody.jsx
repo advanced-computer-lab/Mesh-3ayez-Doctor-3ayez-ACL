@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios'
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+const colors= require("../../colors")
 function TicketBody(probs) {
   const id = probs.id;
   const [row,setRow] = useState({
@@ -51,18 +51,18 @@ function TicketBody(probs) {
 
   return (
     <tr id={id}>
-      <td>{flight_number}</td>
-      <td>{from}</td>
-      <td>{departure_terminal}</td>
-      <td>{to}</td>
-      <td>{arrival_terminal}</td>
-      <td>{departure_time}</td>
-      <td>{parseInt((new Date(arrival_time).getTime()-new Date(departure_time).getTime())/1000/60/60)+" hours"}</td>
-      <td>{arrival_time}</td>
-      <td>{seat_type}</td>
-      <td>{seat_name}</td>
-      <td>{price}</td>
-      <td>{baggage_allowance}</td>
+      <td style={{color:colors.c1}}>{flight_number}</td>
+      <td style={{color:colors.c1}}>{from}</td>
+      <td style={{color:colors.c1}}>{departure_terminal}</td>
+      <td style={{color:colors.c1}}>{to}</td>
+      <td style={{color:colors.c1}}>{arrival_terminal}</td>
+      <td style={{color:colors.c1}}>{departure_time}</td>
+      <td style={{color:colors.c1}}>{parseInt((new Date(arrival_time).getTime()-new Date(departure_time).getTime())/1000/60/60)+" hours"}</td>
+      <td style={{color:colors.c1}}>{arrival_time}</td>
+      <td style={{color:colors.c1}}>{seat_type}</td>
+      <td style={{color:colors.c1}}>{seat_name}</td>
+      <td style={{color:colors.c1}}>{price}</td>
+      <td style={{color:colors.c1}}>{baggage_allowance}</td>
     </tr>
   )
 }

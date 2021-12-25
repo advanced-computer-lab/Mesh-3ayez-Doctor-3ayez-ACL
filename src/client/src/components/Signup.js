@@ -35,7 +35,7 @@ const theme = createTheme();
 const colors = require("../colors.js");
 
 
-function Signup() {
+function Signup(props) {
 
     const [firstNameErr, setFirstNameErr] = useState(false);
     const [firstNameMsg, setFirstNameMsg] = useState("");
@@ -93,13 +93,14 @@ function Signup() {
                     if (result.status == 200) {
                         localStorage.setItem('user_id', JSON.stringify(result.data.user._id));
                         localStorage.setItem('token', result.data.token);
-                        history.push({
-                            pathname: '/', state:
-                            {
-                                token: result.data.token,
-                                user: result.data.user
-                            }
-                        });
+                        // history.push({
+                        //     pathname: '/', state:
+                        //     {
+                        //         token: result.data.token,
+                        //         user: result.data.user
+                        //     }
+                        // });
+                        props.handleClose();
                   
                     }
 
@@ -155,10 +156,10 @@ function Signup() {
     };
     return (
         <div>
-            <UserNavBar></UserNavBar>
+            {/* <UserNavBar></UserNavBar> */}
             <ThemeProvider theme={theme} >
                 <Grid container component="main" sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "3%", marginBottom: "3%" }} >
-                    <Grid
+                    {/* <Grid
                         item
                         xs={false}
                         sm={4}
@@ -171,8 +172,8 @@ function Signup() {
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}
-                    />
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square >
+                    /> */}
+                    <Grid item component={Paper} elevation={6} square >
                         <CssBaseline />
                         <Box
                             sx={{
@@ -409,7 +410,7 @@ function Signup() {
                                 </Button>
                                 <Grid container justifyContent="flex-end">
                                     <Grid item xs>
-                                        <Link href="/login" variant="body2" style={{ color: colors.c1 }}>
+                                        <Link onClick={props.logClick} variant="body2" style={{ color: colors.c1, cursor:"pointer" }}>
                                             Already have an account? Sign in
                                         </Link>
                                     </Grid>

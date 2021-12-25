@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import im from './chanas-hclTKUfuf1U-unsplash.jpg'
 import fly from './flight@2x.webp'
+import passenger from './passenger.png'
 import bag from './travel-baggage.png'
 import seat from './seat.png'
 import fnum from './code.png'
@@ -76,6 +77,7 @@ function FlightCard(props) {
                 
                 action={
                     <Stack style={{textAlign:"center",margin:"auto"}} direction="row" spacing={2}>
+                        <Typography color={colors.c1}> <img src={passenger} width="20px" height="25px"/> {props.number_of_passengers}</Typography>
                         
                         <Typography color={colors.c1}> <img src={bag} width="20px" height="25px"/> {props.baggage}kg</Typography>
                        

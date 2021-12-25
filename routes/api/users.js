@@ -7,12 +7,13 @@ const User = require('../../src/Models/User');
 var bcrypt = require('bcryptjs');
 const authorization = require('../../config/mail');
 const nodemailer = require('nodemailer');
+const auth =require("./middleware/auth.js");
 require('dotenv').config({path : __dirname+'/../../config/.env'});
 const router = express.Router()
 var bcrypt = require('./bcryptjs');
 // user cancel a reservation
 
-router.delete('/reservation/:user_id/:reservation_id', async(req,res)=>{
+router.delete('/reservation/:user_id/:reservation_id', auth, async(req,res)=>{
     
     const user_id = req.params.user_id;
     const reservation_id = req.params.reservation_id;
@@ -114,7 +115,7 @@ async function send_cancellation_mail(user, refund, reservation, from, to)
 
 // get itinerary of a reservation
 
-router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
+router.get('/itinerary/:user_id/:reservation_id', auth, async(req,res)=>{
     const user_id = req.params.user_id;
     console.log(user_id);
     const reservation_id = req.params.reservation_id;
@@ -145,7 +146,7 @@ router.get('/itinerary/:user_id/:reservation_id', async(req,res)=>{
 });
 
 // edit user info
-router.put('/:user_id',async(req,res)=>{
+router.put('/:user_id', auth, async(req,res)=>{
     const body = req.body;
     const user_id = req.params.user_id;
     if(!mongoose.isValidObjectId(user_id))

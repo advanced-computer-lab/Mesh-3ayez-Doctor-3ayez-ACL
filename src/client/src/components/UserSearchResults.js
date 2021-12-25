@@ -21,4 +21,4 @@ function UserSearchResults() {
     )
 }
 
-export default withStyles() (UserSearchResults)
+export default (UserSearchResults)

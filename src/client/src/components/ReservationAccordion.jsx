@@ -18,7 +18,7 @@ import UserNavBar from './UserNavBar';
 import { withStyles } from '@material-ui/core';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-
+const colors = require("./../colors");
 function ReservationAccordion(probs){
 
     const [thereservation, updateReservation] = useState(probs.reservation);
@@ -29,9 +29,11 @@ function ReservationAccordion(probs){
     useEffect(() => {
         
         if(isLoading){
-            var user_id = localStorage.getItem('user_id')
+
+        var user_id = localStorage.getItem('user_id')
         user_id = user_id.substring(1, user_id.length-1);
-        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString()).then(
+        axios.get(`http://localhost:8000/api/users/itinerary/${user_id}/`+thereservation._id.toString(), {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        ).then(
             res => {
                 
                 updateTheJsons(res.data.departure_seats.map((sf) => {
@@ -103,10 +105,11 @@ function ReservationAccordion(probs){
             pathname: '/user/editDepartureFlight',
             state: {
                 reservation: thereservation,
-                depflight: theJsons[0].flight_details[0],
-                retflight: theJsons2[0].flight_details[0],
-                src:"editDep"
 
+                depFlight: theJsons[0].flight_details[0],
+                retFlight: theJsons2[0].flight_details[0],
+                src:"editDep",
+                flight:theJsons[0].flight_details[0],
             }
         });
     }
@@ -116,9 +119,11 @@ function ReservationAccordion(probs){
             pathname: '/user/editReturnFlight',
             state: {
                 reservation: thereservation,
-                retflight: theJsons2[0].flight_details[0],
-                depflight: theJsons[0].flight_details[0],
-                src:"editRet"
+
+                retFlight: theJsons2[0].flight_details[0],
+                depFlight: theJsons[0].flight_details[0],
+                src:"editRet",
+                flight:theJsons2[0].flight_details[0],
             }
         });
     }
@@ -153,7 +158,8 @@ function ReservationAccordion(probs){
         probs.message_callback();
         var user_id = localStorage.getItem('user_id')
         user_id = user_id.substring(1, user_id.length-1);
-        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id);
+        axios.post("http://localhost:8000/api/reservations/send_me_mail/"+thereservation._id+"/"+user_id, {}, {headers: {'authentication-token' : localStorage.getItem('token'), "Content-Type": "application/json"}}
+        );
     }
 
     
@@ -174,7 +180,7 @@ if(theJsons[0]!=undefined)
                     onFocus={event => event.stopPropagation()}
     control={<Button key="buttonkey" variant="outlined" color="error"  onClick={()=>probs.delete_callback(theJsons[0]==undefined?'':theJsons[0].reservation_id)} style={{marginRight: 20, textAlign: 'right'}} >Cancel reservation</Button>}
                   />
-                  <label style={{marginTop: 7, marginLeft: -20}}>{' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
+                  <label style={{color:colors.c1, marginTop: 7, marginLeft: -20}}>{' '+(theJsons[0]==undefined?'':theJsons[0].flight_details[0].from+" ✈ "
     +(theJsons[0]==undefined?'':theJsons[0].flight_details[0].to))}</label>
                 
                 
@@ -184,7 +190,7 @@ if(theJsons[0]!=undefined)
 
                     <div>
                     <div>
-                    <div><Button variant="outlined" color="success" onClick={handleEmailing}>Email Me a Copy of My Itinerary</Button></div>
+                    <div><Button style={{ color:colors.c1}} variant="outlined" onClick={handleEmailing}>Email Me a Copy of My Itinerary</Button></div>
                     {/*<Payment style={{float:'right'}} name="ThePayment" price={(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)} productby="Tijwal"></Payment>*/}
 
                     <Box sx={{ flexGrow: 1, float:"right" }}><label style={{marginRight: 10}}>{"Price: "+(theJsons[0]==undefined?'':theJsons[0].total_price.$numberDecimal)+" EGP"}</label></Box>
@@ -193,10 +199,10 @@ if(theJsons[0]!=undefined)
                     <br/>
                     </div>
                         <div>
-                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge gray"}}>
-                        <div style={{float:'left'}}><Button variant="outlined" color="success" onClick={editDepartureFlight}>Change Departure Flight</Button></div>
-                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" color="success" onClick={editDepartureSeats}>Change Departure Seats</Button></div>
-                        <h2>Departure Tickets</h2>
+                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge #00468c"}}>
+                        <div style={{float:'left'}}><Button variant="outlined" color="success"style={{ color:colors.c1}} onClick={editDepartureFlight}>Change Departure Flight</Button></div>
+                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" style={{ color:colors.c1}} onClick={editDepartureSeats}>Change Departure Seats</Button></div>
+                        <h2 style={{ color:colors.c1}}>Departure Tickets</h2>
                         {theJsons==undefined?[]:theJsons.map((js,inddex) => {
                             return <Ticket key={inddex+"A"} getRows= {js==undefined?[]:[js]}/>
                         })}
@@ -204,10 +210,10 @@ if(theJsons[0]!=undefined)
                         </div>
                         <br/>
                         <div>
-                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge gray"}}>
-                        <div style={{float:'left'}}><Button variant="outlined" color="success" onClick={editReturnFlight}>Change Return Flight</Button></div>
-                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" color="success" onClick={editReturnSeats}>Change Return Seats</Button></div>
-                        <h2>Return Tickets</h2>
+                        <Box sx={{background: '#EEEEEE', padding: "6px", border: "4px ridge #00468c"}}>
+                        <div style={{float:'left'}}><Button variant="outlined"  style={{ color:colors.c1}} onClick={editReturnFlight}>Change Return Flight</Button></div>
+                        <div style={{float:'right'}}><Button sx={{float:'right'}} variant="outlined" style={{ color:colors.c1}} onClick={editReturnSeats}>Change Return Seats</Button></div>
+                        <h2 style={{ color:colors.c1}}>Return Tickets </h2>
                         {theJsons2==undefined?[]:theJsons2.map((js,inddex) => {
                             return <Ticket key={inddex+"B"} getRows= {js==undefined?[]:[js]}/>
                         })}

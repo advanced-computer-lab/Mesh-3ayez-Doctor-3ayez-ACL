@@ -30,13 +30,14 @@ code {
   box-shadow: 0 0 20px rgb(212, 236, 221,0.1)
 }
 .styled-table thead tr {
-  background-color: #5885AF;
+  background-color: #9BA4B4;
   color: #ffffff;
 }
 
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;
+  
 }
 .styled-table tbody tr {
   border-bottom: 1px solid #ffffff;
@@ -64,7 +65,7 @@ code {
   box-shadow: 0 0 20px rgb(212, 236, 221,0.1)
 }
 .styled-table2 thead tr {
-  background-color: #ddd123;
+  background-color: #9BA4B4;
   color: #ffffff;
 }
 
@@ -81,7 +82,7 @@ code {
 }
 
 .styled-table2 tbody tr:last-of-type {
-  border-bottom: 2px solid #c4bc52;
+  border-bottom: 2px solid #9BA4B4;
 }
 .styled-table2 tbody tr.active-row {
   font-weight: bold;
@@ -99,7 +100,7 @@ code {
 }
 
 .styled-table3 thead tr {
-  background-color: #77bd71;
+  background-color: #9BA4B4;
   color: #ffffff;
 }
 
@@ -116,7 +117,7 @@ code {
 }
 
 .styled-table3 tbody tr:last-of-type {
-  border-bottom: 2px solid #52c452;
+  border-bottom: 2px solid #9BA4B4;
 }
 .styled-table3 tbody tr.active-row {
   font-weight: bold;
@@ -174,15 +175,23 @@ font-size: 16px;
   width: 50%;
 }
 .searchBack{
-  height: 300px;
+  height: 500px;
   position: relative;
   text-align: center;
 
 }
-
+.typo{
+  width:80%;
+  left: 2%;
+  margin-top: 7%;
+  margin-left: 10%;
+  text-align: center;
+  color: #ffffff;
+  -webkit-text-stroke: 1px #14274E;
+}
 .box {
   width:80%;
-  height:30%;
+  height:20%;
   bottom: 25px;
   left: 10%;
   margin:Auto;

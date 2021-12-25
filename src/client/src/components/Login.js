@@ -66,7 +66,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Login() {
+export default function Login(props) {
     const [usernameErr, setUsernameErr] = useState(false);
     const [usernameMsg, setUsernameMsg] = useState("");
 
@@ -94,14 +94,15 @@ export default function Login() {
                     if (result.status == 200) {
                         localStorage.setItem('user_id', JSON.stringify(result.data.user._id));
                         localStorage.setItem('token', result.data.token);
-                        history.push({
-                            pathname: '/', state:
-                            {
-                                token: result.data.token,
-                                user: result.data.user
+                        // history.push({
+                        //     pathname: '/', state:
+                        //     {
+                        //         token: result.data.token,
+                        //         user: result.data.user
 
-                            }
-                        });
+                        //     }
+                        // });
+                        props.handleClose();
                       
                     }
 
@@ -126,11 +127,11 @@ export default function Login() {
 
     return (
         <div>
-            <UserNavBar></UserNavBar>
+            {/* <UserNavBar></UserNavBar> */}
             <ThemeProvider theme={theme}>
                 <Grid container component="main" sx={{ height: '80vh', width: "70%", margin: "auto", marginTop: "4%" }}>
                     <CssBaseline />
-                    <Grid
+                    {/* <Grid
                         item
                         xs={false}
                         sm={4}
@@ -143,8 +144,8 @@ export default function Login() {
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}
-                    />
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    /> */}
+                    <Grid item  component={Paper} elevation={6} square>
                         <Box
                             sx={{
                                 my: 8,
@@ -228,7 +229,7 @@ export default function Login() {
                                     </Link>
                                 </Grid> */}
                                     <Grid item xs>
-                                        <Link href="/signup" variant="body2" style={{ color: colors.c1 }}>
+                                        <Link onClick={props.signClick} variant="body2" style={{ color: colors.c1, cursor:"pointer" }}>
                                             {"Don't have an account? Sign Up"}
                                         </Link>
                                     </Grid>

@@ -13,7 +13,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContentText from '@mui/material/DialogContentText'
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 const colors = require("../colors.js");
 
 function EditSearchResults(props) {
@@ -34,6 +34,7 @@ function EditSearchResults(props) {
         history.push({
             pathname: '/user/seatReservation',
             state: {
+                reservation:location.state.reservation,
                 reserved: reserved,
                 return: props.src==='editRet',
                 departure: props.src==='editDep',
@@ -104,4 +105,4 @@ function EditSearchResults(props) {
     )
 }
 
-export default withStyles() (EditSearchResults);
+export default (EditSearchResults);
