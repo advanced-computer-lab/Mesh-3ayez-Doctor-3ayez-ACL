@@ -192,6 +192,11 @@ router.post("/", async(req,res)=>{
             }
             else
                 query['departure_time'] = d1;
+            if(d1 < new Date())
+            {
+                res.status(400).json({msg : 'you can not create a flight in the past'});
+                return;
+            }
         }
 
         // arrival time
@@ -211,6 +216,10 @@ router.post("/", async(req,res)=>{
             }
             else
                 query['arrival_time'] = d1;
+            if(query['arrival_time'] < query['departure_time'])
+            {
+                res.status(400).json({msg : 'the arrival time can\'t be before the departure time'});
+            }
         }
 
 
@@ -274,6 +283,13 @@ router.put('/:_id',async (req, res) =>{
     if(await checkAdmin()){
     const body = req.body;
     
+    //check if the flight id is a valid id
+    if(!mongoose.isValidObjectId(req.params._id))
+    {
+        res.status(400).json({msg : 'the flight id is not a valid id'});
+        return;
+    }
+    const flight = await Flight.findById(req.params._id);
     var query = {}
 
     if(!mongoose.isValidObjectId(req.params._id))
@@ -355,6 +371,12 @@ router.put('/:_id',async (req, res) =>{
             
             query['departure_time'] = d1;
         }
+        if(d1 < new Date())
+        {
+            res.status(400).json({msg : 'the departure time can not be in the past'});
+            return;
+        }
+        
     }
 
     
@@ -371,6 +393,20 @@ router.put('/:_id',async (req, res) =>{
            
             query['arrival_time'] = d1
         }
+        if(query['departure_time'])
+        {
+            if(d1 < query['departure_time'])
+            {
+                res.status(400).json({msg : 'the arrival time can not be before the departure time'});
+                return;
+            }
+        }
+        else if(d1 < flight.arrival_time)
+        {
+            res.status(400).json({msg : 'the arrival time can not be before the departure time'});
+            return;
+        }
+        
     }
 
 
