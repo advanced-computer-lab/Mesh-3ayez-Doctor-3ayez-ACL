@@ -17,7 +17,7 @@ import { withStyles } from '@material-ui/core';
         if (location.state.src === 'editRet') {
             let config = {
                 headers: {
-                    'x-access-token': localStorage.getItem("token"),
+                    'authentication-token': localStorage.getItem("token"),
                     "Content-Type": "application/json"
                 }
               }
