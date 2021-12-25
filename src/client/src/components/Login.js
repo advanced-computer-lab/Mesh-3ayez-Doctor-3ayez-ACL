@@ -81,6 +81,7 @@ export default function Login(props) {
     const [errMsg, setErrMsg] = useState("");
     const [resetPassword,setResetPassword]=useState(false);
 
+
     const classes = useStyles()
     const history = useHistory();
     //  const [usernameErr, usernameErr]= useState("");
@@ -88,13 +89,24 @@ export default function Login(props) {
 
     function handleSubmitResetPassword(){
         
+        
         setResetPassword(true);
+        
+        
+        //props.loginCB(false);
     }
     function handleCloseResetPassword(){
+
         setResetPassword(false);
+        
     }
 
     const handleSubmit = (event) => {
+        if(resetPassword)
+        {
+            
+            return;
+        }
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         // eslint-disable-next-line no-console
@@ -233,6 +245,7 @@ export default function Login(props) {
                                     fullWidth
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2 }}
+                                    
                                 >
                                     Sign In
                                 </Button>
