@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import logo from './flight.png'
 import {useHistory} from'react-router-dom';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];

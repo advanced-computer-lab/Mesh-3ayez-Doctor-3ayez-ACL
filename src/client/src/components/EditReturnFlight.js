@@ -6,7 +6,7 @@ import UserNavBar from "./UserNavBar"
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import Stack from'@mui/material/Stack'
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 
  function EditReturnFlight() {
     const location = useLocation();
@@ -15,8 +15,14 @@ import { withStyles } from '@mui/styles';
 
     useEffect(() => {
         if (location.state.src === 'editRet') {
+            let config = {
+                headers: {
+                    'x-access-token': localStorage.getItem("token"),
+                    "Content-Type": "application/json"
+                }
+              }
             //search with all attributes except for the departure date and cabin class
-            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, { "Content-Type": "application/json" }).then(
+            axios.get(`http://localhost:8000/api/reservations/all_possible_flights/${location.state.reservation._id}/${location.state.src}`, config).then(
                 res => {
 
                     setReturnFlight(res.data);
@@ -48,4 +54,4 @@ import { withStyles } from '@mui/styles';
         </div>
     )
 }
-export default withStyles()(EditReturnFlight);
+export default (EditReturnFlight);

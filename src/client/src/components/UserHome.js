@@ -8,7 +8,7 @@ import UserSearch from './UserSearch';
 import UserSearchResults from './UserSearchResults';
 import UserNavBar from './UserNavBar';
 import { useLocation } from 'react-router-dom';
-import { withStyles } from '@mui/styles';
+import { withStyles } from '@material-ui/core';
 import { Stack } from '@mui/material';
 function UserHome() {
     localStorage.getItem("activeStep")&&localStorage.removeItem("activeStep");
@@ -19,8 +19,8 @@ function UserHome() {
      <UserNavBar ></UserNavBar>
          <Stack  className="typo">
          <Typography variant='h1' align='left' >TIJWAL</Typography>
-         <Typography  variant='h4' align='left' fonsize="36px"> your expert for air flight</Typography>
-         <Typography  variant='h4' align='left' fonsize="36px"> Explore the world with us!</Typography>
+         <Typography  variant='h4' align='left' fonsize="36px">   your expert for air flight</Typography>
+         <Typography  variant='h4' align='left' fonsize="36px">   Explore the world with us!</Typography>
          </Stack>
          <UserSearch  position="absolute"></UserSearch>
      </div>
@@ -28,5 +28,5 @@ function UserHome() {
     )
 }
 
-export default(UserHome)
+export default (UserHome)
  

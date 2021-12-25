@@ -29,6 +29,7 @@ function ReservationAccordion(probs){
     useEffect(() => {
         console.log(localStorage.user)
         if(isLoading){
+            
         axios.get("http://localhost:8000/api/users/itinerary/61bcd1e7bf1ace92644c0287/"+thereservation._id.toString()).then(
             res => {
                 
@@ -103,6 +104,7 @@ function ReservationAccordion(probs){
                 reservation: thereservation,
                 depflight: theJsons[0].flight_details[0],
                 retflight: theJsons2[0].flight_details[0],
+                flight: theJsons[0].flight_details[0],
                 src:"editDep"
 
             }
@@ -116,6 +118,8 @@ function ReservationAccordion(probs){
                 reservation: thereservation,
                 retflight: theJsons2[0].flight_details[0],
                 depflight: theJsons[0].flight_details[0],
+                retflight: theJsons[0].flight_details[0],
+
                 src:"editRet"
             }
         });
