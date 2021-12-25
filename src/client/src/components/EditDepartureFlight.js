@@ -51,9 +51,11 @@ function EditDepartureFlight() {
                 <UserNavBar></UserNavBar>
                 <EditFlightSearchBar src='editDep' flight={location.state.flight} number_of_passengers={location.state.reservation.number_of_passengers} res={location.state.reservation}
                 depFlight={location.state.depFlight} retFlight={location.state.retFlight}></EditFlightSearchBar>
-                {!loading && <EditSearchResults  margin="Auto" textAlign= "center" flights={departureFlight} src='editDep' 
+                {!loading && 
+                <EditSearchResults  margin="Auto" textAlign= "center" flights={departureFlight} src='editDep' 
                 res={location.state.reservation} oldPrice={price} flight={location.state.flight}>
-                    </EditSearchResults>}
+                </EditSearchResults>
+                }
             </Stack>
         </div>
     )

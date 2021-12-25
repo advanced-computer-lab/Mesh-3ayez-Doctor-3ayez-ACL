@@ -33,7 +33,7 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import loader from './images/Ajux_loader.gif'
 
-
+const colors= require("../colors")
 
 
 
@@ -176,10 +176,20 @@ function Itinerary() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" onClick={handleCancellation} autoFocus>
+                    <Button style={{
+                            borderRadius: 5,
+                            backgroundColor: colors.c1,
+                            marginTop: "25px",
+                        }}
+                        variant="contained" onClick={handleCancellation} autoFocus>
                         Cancel Reservation
                     </Button>
-                    <Button variant="outlined" onClick={handleClose} >Do Not Cancel Reservation</Button>
+                    <Button style={{
+                            borderRadius: 5,
+                            color: colors.c1,
+                            marginTop: "25px",
+                        }}
+                        variant="outlined" onClick={handleClose} >Do Not Cancel Reservation</Button>
                 </DialogActions>
             </Dialog>
 
