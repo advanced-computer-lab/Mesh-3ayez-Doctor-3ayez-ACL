@@ -133,8 +133,11 @@ export function SeatPick() {
         });
     }
     function reserve(token) {
+        var user_id = localStorage.getItem('user_id');
+        user_id = user_id.substring(1, user_id.length-1);
+        console.log(localStorage.getItem('token'));
         var data = {
-            user_id:"61bcd1e7bf1ace92644c0287", // to be handled
+            user_id:user_id, // to be handled
             departure_flight: departure.flight_id,
             return_flight: ret.flight_id,
             number_of_passengers: Number(departure.number_of_passengers),
