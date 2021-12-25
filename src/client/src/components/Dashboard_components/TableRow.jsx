@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios'
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import BasicAlert from "../BasicAlert";
+
 
 function TableRow(probs) {
     
@@ -542,14 +544,16 @@ function foo2() {
                             }
                             }
                         />
+                        {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
                     </div>
+                    
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" onClick={() => foo2()} autoFocus>
                         Done
                     </Button>
                     <Button variant="outlined" onClick={handleClose2}>Cancel</Button>
-                    {alert && <BasicAlert severity={succ ? "success" : "error"} msg={msg} />}
+                    
 
 
                 </DialogActions>
